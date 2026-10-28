@@ -8,9 +8,16 @@
 declare(strict_types=1);
 
 define('MTA_START', microtime(true));
-define('MTA_ROOT', dirname(__DIR__));
-define('MTA_APP', MTA_ROOT . '/app');
 define('MTA_PUBLIC', __DIR__);
+
+if (is_dir(__DIR__ . '/app')) {
+    define('MTA_ROOT', __DIR__);
+    define('MTA_APP', __DIR__ . '/app');
+} else {
+    define('MTA_ROOT', dirname(__DIR__));
+    define('MTA_APP', MTA_ROOT . '/app');
+}
+
 define('MTA_STORAGE', MTA_APP . '/storage');
 
 // -------------------------------------------------------------

@@ -9,14 +9,14 @@ declare(strict_types=1);
 if (!defined('MTA_START')) {
     define('MTA_START', microtime(true));
 }
-if (!defined('MTA_ROOT')) {
-    define('MTA_ROOT', dirname(__DIR__));
-}
 if (!defined('MTA_APP')) {
-    define('MTA_APP', MTA_ROOT . '/app');
+    define('MTA_APP', __DIR__);
+}
+if (!defined('MTA_ROOT')) {
+    define('MTA_ROOT', dirname(MTA_APP));
 }
 if (!defined('MTA_PUBLIC')) {
-    define('MTA_PUBLIC', MTA_ROOT . '/public_html');
+    define('MTA_PUBLIC', is_dir(MTA_ROOT . '/public_html') ? (MTA_ROOT . '/public_html') : MTA_ROOT);
 }
 if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
