@@ -1,8 +1,8 @@
 ---
 deployment:
   tasks:
-    # 1. Target directory ($HOME automatically points to /home/your_cpanel_username)
-    - export DEPLOYPATH=$HOME
+    # 1. Target directory (exact server home path from cPanel)
+    - export DEPLOYPATH=/home/sites/28b/d/d1b38d28af
 
     # 2. Deploy backend core (/app) safely outside public_html
     - /bin/mkdir -p $DEPLOYPATH/app
