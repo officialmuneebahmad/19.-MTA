@@ -2,6 +2,7 @@
 app/config.php
 
 # Storage runtime files & cache
+app/storage/*.sqlite
 app/storage/cache/*
 !app/storage/cache/.gitkeep
 app/storage/logs/*
