@@ -1,0 +1,45 @@
+name: Auto Deploy to Live Server
+
+on:
+  push:
+    branches:
+      - master
+
+# Prevent concurrent deployments from conflicting
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to StackCP Hosting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Sync Files to Live Server via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ vars.FTP_DIR || 'public_html/' }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/app/config.php
+            **/app/storage/*.sqlite*
+            **/app/storage/cache/**
+            **/app/storage/logs/**
+            **/app/storage/rate_limits/**
+            **/app/storage/*.lock
+            **/tests/**
+            **/.github/**
+            **/scratch/**
+            ANTIGRAVITY_PROMPT.md
+            README.md
