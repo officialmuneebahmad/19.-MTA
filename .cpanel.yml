@@ -15,3 +15,4 @@ deployment:
 
     # 4. Ensure storage directory write permissions
     - /bin/chmod -R 775 $DEPLOYPATH/app/storage
+
