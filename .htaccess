@@ -3,11 +3,11 @@
 # https://multantech.store
 # ============================================================
 
-# Disable Directory Browsing
-Options -Indexes -MultiViews
+# Disable Directory Browsing (commented out for shared host compatibility)
+# Options -Indexes -MultiViews
 
-# Follow Symbolic Links
-Options +FollowSymLinks
+# Follow Symbolic Links (commented out for shared host compatibility)
+# Options +FollowSymLinks
 
 # Set Default Character Set
 AddDefaultCharset UTF-8
