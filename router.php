@@ -8,7 +8,7 @@
 declare(strict_types=1);
 
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$publicDir = __DIR__ . '/public_html';
+$publicDir = __DIR__;
 $filePath = realpath($publicDir . $uri);
 
 // If the requested URI is an actual file inside public_html, serve it directly

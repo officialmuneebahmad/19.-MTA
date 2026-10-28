@@ -11,7 +11,7 @@
 declare(strict_types=1);
 
 define('MTA_INSTALLER', true);
-define('MTA_APP_DIR', dirname(__DIR__) . '/app');
+define('MTA_APP_DIR', is_dir(__DIR__ . '/app') ? (__DIR__ . '/app') : (dirname(__DIR__) . '/app'));
 define('MTA_STORAGE_DIR', MTA_APP_DIR . '/storage');
 define('MTA_LOCK_FILE', MTA_STORAGE_DIR . '/install.lock');
 define('MTA_CONFIG_FILE', MTA_APP_DIR . '/config.php');
