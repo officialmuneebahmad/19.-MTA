@@ -1,0 +1,19 @@
+# Application configuration & secrets
+app/config.php
+
+# Storage runtime files & cache
+app/storage/cache/*
+!app/storage/cache/.gitkeep
+app/storage/logs/*
+!app/storage/logs/.gitkeep
+app/storage/rate_limits/*
+!app/storage/rate_limits/.gitkeep
+app/storage/*.lock
+
+# System & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.tmp
+*.log

@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /storage/images/
+
+# Disallow cart, checkout, customer sensitive flows and search
+Disallow: /cart
+Disallow: /checkout
+Disallow: /order/
+Disallow: /track-order
+Disallow: /search
+Disallow: /api/
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Disallow: /*?*utm_*
+
+# Disallow Obfuscated Admin Paths
+Disallow: /*control-*
+
+Sitemap: https://multantech.store/sitemap.xml

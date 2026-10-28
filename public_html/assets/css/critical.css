@@ -1,0 +1,158 @@
+/**
+ * Multan Tech Accessories — Critical CSS
+ * Inlined in <head> for Core Web Vitals (0 CLS, instant LCP)
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: var(--theme-transition);
+  overflow-x: hidden;
+}
+
+/* Announcement Marquee Strip: Exactly 36px fixed height (No CLS) */
+.announcement-bar {
+  height: 36px;
+  background-color: var(--accent-strong);
+  color: var(--accent-contrast);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 50;
+  user-select: none;
+}
+
+.announcement-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 35s linear infinite;
+  padding-left: 100%;
+}
+
+.announcement-bar:hover .announcement-track,
+.announcement-bar:focus-within .announcement-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .announcement-track {
+    animation: none;
+    padding-left: 0;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+/* Site Header: Exactly 72px fixed height */
+.site-header {
+  position: sticky;
+  top: 0;
+  height: 72px;
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  transition: var(--theme-transition), transform 0.3s ease;
+}
+
+.site-header.header-hidden {
+  transform: translateY(-100%);
+}
+
+.header-container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* Hero Carousel Container: Reserved Aspect Ratio (No CLS) */
+.hero-carousel-wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin: 1.5rem auto 0;
+  padding: 0 1.25rem;
+}
+
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 6;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+  .hero-carousel {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-carousel {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Layout Container */
+.container {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.main-content {
+  flex: 1;
+  padding-bottom: 3.5rem;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+}
