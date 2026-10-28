@@ -33,8 +33,12 @@ AddDefaultCharset UTF-8
     RewriteRule ^app/ - [F,L]
     RewriteRule ^storage/ - [F,L]
 
-    # Force HTTPS and non-www (https://multantech.store)
-    RewriteCond %{HTTPS} off [OR]
+    # Force HTTPS and non-www (Reverse Proxy, Cloudflare & Host Safe)
+    RewriteCond %{HTTPS} !on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteCond %{HTTP:CF-Visitor} !'"scheme":"https"'
+    RewriteRule ^(.*)$ https://multantech.store/$1 [L,R=301]
+
     RewriteCond %{HTTP_HOST} ^www\.multantech\.store$ [NC]
     RewriteRule ^(.*)$ https://multantech.store/$1 [L,R=301]
 
