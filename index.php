@@ -7,10 +7,6 @@
 
 declare(strict_types=1);
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 define('MTA_START', microtime(true));
 define('MTA_PUBLIC', __DIR__);
 

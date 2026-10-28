@@ -17,6 +17,18 @@ use App\Core\View;
 
 class AuthController
 {
+    public function redirectToDashboard(): Response
+    {
+        $resp = new Response();
+        return $resp->redirect(mta_admin_path());
+    }
+
+    public function redirectToLogin(): Response
+    {
+        $resp = new Response();
+        return $resp->redirect(mta_admin_path('/login'));
+    }
+
     public function showLogin(): Response
     {
         $adminPath = mta_admin_path();

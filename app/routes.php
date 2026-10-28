@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 use App\Core\Router;
+use App\Core\Response;
 use App\Core\Middleware\AuthMiddleware;
 use App\Core\Middleware\CsrfMiddleware;
 
@@ -111,14 +112,8 @@ $router->get('/sitemap-pages.xml', [SeoController::class, 'pages']);
 $adminBase = trim((string)mta_config('app.admin_path', mta_setting('admin_path', 'mta-control-9872')), '/');
 
 // Admin Shortcuts / Convenience Redirects
-$router->get('/admin', function () {
-    $resp = new Response();
-    return $resp->redirect(mta_admin_path());
-});
-$router->get('/admin/login', function () {
-    $resp = new Response();
-    return $resp->redirect(mta_admin_path('/login'));
-});
+$router->get('/admin', [AdminAuthController::class, 'redirectToDashboard']);
+$router->get('/admin/login', [AdminAuthController::class, 'redirectToLogin']);
 
 // Admin Auth Routes (No auth middleware)
 $router->get("/{$adminBase}/login", [AdminAuthController::class, 'showLogin']);
