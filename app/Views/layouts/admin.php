@@ -13,7 +13,13 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= e($meta_title ?? 'Admin Dashboard — Multan Tech Accessories') ?></title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" href="/assets/images/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/design-tokens.css">
   <style>
     :root {
@@ -291,11 +297,7 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
   <!-- Admin Sidebar -->
   <aside class="admin-sidebar">
     <div class="admin-brand">
-      <div class="admin-brand-icon">M</div>
-      <div>
-        <div class="admin-brand-title">MultanTech</div>
-        <div class="admin-brand-sub">Management Suite</div>
-      </div>
+      <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" style="height: 38px; width: auto; object-fit: contain; max-width: 170px;">
     </div>
 
     <nav class="admin-nav">

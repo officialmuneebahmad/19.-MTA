@@ -26,9 +26,9 @@ return [
         'charset' => 'utf8mb4',
     ],
     'supplier' => [
-        'api_url' => 'https://api.computerzone.pk/products', // During dev, use mock: http://127.0.0.1:8080/products
+        'api_url' => 'https://api.computerzone.pk/products',
         'auth_header_format' => 'raw', // 'raw' (Authorization: <token>) or 'bearer' (Authorization: Bearer <token>)
-        'token' => 'YOUR_SUPPLIER_API_TOKEN_HERE', // Placeholder: never commit real tokens
+        'token' => 'd65090a5f72172720b1806a9d37aa9a4',
         'timeout' => 120,
     ],
     'pricing' => [

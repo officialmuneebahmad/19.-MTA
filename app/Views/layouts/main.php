@@ -20,6 +20,17 @@
   <meta name="theme-color" content="#FAF9F5">
   <link rel="canonical" href="<?= e($canonical_url ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
 
+  <!-- Favicon (Rounded) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <!-- Google Fonts: Space Grotesk & Sora Bold (Geometric Tech Sans-Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
   <?php if (!empty($noindex)): ?>
     <meta name="robots" content="noindex, follow">
   <?php else: ?>
@@ -109,14 +120,10 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
 
-      <!-- Brand Logo -->
+      <!-- Brand Logo (Day & Night Adaptive) -->
       <a href="/" class="header-logo" aria-label="Multan Tech Accessories Homepage">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-          <line x1="8" y1="21" x2="16" y2="21"></line>
-          <line x1="12" y1="17" x2="12" y2="21"></line>
-        </svg>
-        <span>Multan Tech</span>
+        <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="165" height="42">
+        <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="165" height="42">
       </a>
 
       <!-- Desktop Search -->
@@ -132,11 +139,6 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
-        <!-- Call Direct -->
-        <a href="tel:+923070655275" class="action-btn action-btn-call" aria-label="Call Store" title="Call Store: 0307-0655275">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-        </a>
-
         <!-- WhatsApp Direct -->
         <a href="<?= e(mta_whatsapp_url('923070655275', 'Hello Multan Tech Accessories, I would like to inquire about products.')) ?>" target="_blank" rel="noopener noreferrer" class="action-btn action-btn-whatsapp" aria-label="Chat on WhatsApp" title="WhatsApp 0307-0655275">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
@@ -260,11 +262,6 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
 
-    <!-- Call Quick Contact (48px Bordered) -->
-    <a href="tel:+923070655275" class="btn-float-call" aria-label="Call Us" title="Call Multan Store: 0307-0655275">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-    </a>
-
     <!-- WhatsApp Quick Contact (56px) -->
     <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories, I have an inquiry.')) ?>" target="_blank" rel="noopener noreferrer" class="btn-float-wa" aria-label="Chat on WhatsApp" title="WhatsApp 0307-0655275">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
@@ -275,7 +272,10 @@
   <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
   <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">
     <div class="drawer-header">
-      <span style="font-weight: 700; font-size: 1.1rem;">Menu</span>
+      <div style="display:flex; align-items:center;">
+        <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="130" height="34">
+        <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="130" height="34">
+      </div>
       <button id="mobile-drawer-close" aria-label="Close Menu" style="padding: 0.5rem;">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
@@ -309,13 +309,9 @@
         
         <!-- About Blurb -->
         <div>
-          <div class="header-logo" style="margin-bottom: 1rem;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 26px; height: 26px; color: var(--accent-strong);">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-            <span>Multan Tech Accessories</span>
+          <div style="margin-bottom: 1rem;">
+            <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="150" height="38">
+            <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="150" height="38">
           </div>
           <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
             Your trusted destination for genuine computer hardware, mobile accessories, chargers, cables, and gaming gear in Pakistan. Shipped across Multan and nationwide with Cash on Delivery.

@@ -11,6 +11,13 @@ $adminPath = mta_admin_path();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login — Multan Tech Accessories</title>
   <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/design-tokens.css">
   <style>
     body {
@@ -115,7 +122,7 @@ $adminPath = mta_admin_path();
 
   <div class="login-card">
     <div class="brand-header">
-      <div class="brand-logo">M</div>
+      <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" style="height: 48px; width: auto; object-fit: contain; margin-bottom: 0.85rem; max-width: 220px;">
       <h1 class="brand-title">Multan Tech Accessories</h1>
       <div class="brand-subtitle">Authorized Administrator Control Access</div>
     </div>

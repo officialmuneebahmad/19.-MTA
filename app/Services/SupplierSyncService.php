@@ -24,6 +24,11 @@ class SupplierSyncService
         $this->config = mta_config('supplier', []);
     }
 
+    public function run(?string $overrideUrl = null): array
+    {
+        return $this->sync($overrideUrl);
+    }
+
     /**
      * Run synchronization from API or local mock
      *
@@ -32,9 +37,22 @@ class SupplierSyncService
      */
     public function sync(?string $overrideUrl = null): array
     {
-        $apiUrl = $overrideUrl ?? $this->config['api_url'] ?? 'http://127.0.0.1:8080/products';
-        $authFormat = $this->config['auth_header_format'] ?? 'raw';
-        $token = $this->config['token'] ?? 'TODO-OWNER';
+        $defaultUrl = 'https://api.computerzone.pk/products';
+        $apiUrl = $overrideUrl 
+            ?? (!empty($this->config['api_url']) && !str_contains($this->config['api_url'], '127.0.0.1') ? $this->config['api_url'] : null)
+            ?? (mta_setting('supplier_api_url') && !str_contains(mta_setting('supplier_api_url'), '127.0.0.1') ? mta_setting('supplier_api_url') : null)
+            ?? $defaultUrl;
+
+        $authFormat = $this->config['auth_header_format'] 
+            ?? mta_setting('supplier_auth_header_format', 'raw');
+
+        $cfgToken = $this->config['token'] ?? '';
+        $token = (!empty($cfgToken) && $cfgToken !== 'TODO-OWNER' && !str_starts_with($cfgToken, 'YOUR_'))
+            ? $cfgToken
+            : (mta_setting('supplier_token') !== 'TODO-OWNER' && !empty(mta_setting('supplier_token'))
+                ? mta_setting('supplier_token')
+                : 'd65090a5f72172720b1806a9d37aa9a4');
+
         $timeout = (int)($this->config['timeout'] ?? 120);
 
         $authHeader = ($authFormat === 'bearer') ? "Bearer {$token}" : $token;

@@ -106,6 +106,55 @@ body {
   gap: 1.5rem;
 }
 
+/* Brand Logo (Adaptive Day & Night) */
+.mta-logo {
+  height: 40px;
+  width: auto;
+  max-width: 175px;
+  object-fit: contain;
+  display: block;
+}
+
+.mta-logo-night {
+  display: none !important;
+}
+
+.mta-logo-day {
+  display: block !important;
+}
+
+[data-theme="dark"] .mta-logo-day {
+  display: none !important;
+}
+
+[data-theme="dark"] .mta-logo-night {
+  display: block !important;
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    height: 64px;
+  }
+  .header-container {
+    padding: 0 0.85rem;
+    gap: 0.65rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header {
+    height: 56px;
+  }
+  .header-container {
+    padding: 0 0.45rem;
+    gap: 0.35rem;
+  }
+  .mta-logo {
+    height: 30px;
+    max-width: 120px;
+  }
+}
+
 /* Hero Carousel Container: Reserved Aspect Ratio (No CLS) */
 .hero-carousel-wrap {
   width: 100%;

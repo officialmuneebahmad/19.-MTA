@@ -57,12 +57,17 @@ class SyncController
             $result = $syncService->run();
 
             if ($result['status'] === 'success') {
+                $feedCount = $result['feed_count'] ?? $result['products_received'] ?? 0;
+                $imported = $result['imported_count'] ?? $result['products_inserted'] ?? 0;
+                $updated = $result['updated_count'] ?? $result['products_updated'] ?? 0;
+                $unchanged = $result['unchanged_count'] ?? $result['products_unchanged'] ?? 0;
                 Session::flash(
                     'success',
-                    "Sync Completed: {$result['products_received']} items received. ({$result['products_inserted']} inserted, {$result['products_updated']} updated, {$result['products_unchanged']} unchanged). Duration: {$result['duration_seconds']}s."
+                    "Supplier Sync Completed: {$feedCount} products processed ({$imported} imported, {$updated} updated, {$unchanged} unchanged)."
                 );
             } else {
-                Session::flash('error', "Sync aborted or encountered an error: " . ($result['error'] ?? 'Unknown error'));
+                $err = $result['error_message'] ?? $result['error'] ?? 'Unknown error';
+                Session::flash('error', "Sync aborted or encountered an error: " . $err);
             }
         } catch (\Throwable $e) {
             Session::flash('error', 'Supplier sync exception: ' . $e->getMessage());
