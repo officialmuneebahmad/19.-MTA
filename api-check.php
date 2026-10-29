@@ -24,36 +24,57 @@ $message = null;
 $messageType = 'info';
 
 // -------------------------------------------------------------
-// Handle One-Click Import Action
+// Handle Database Actions
 // -------------------------------------------------------------
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'populate_catalog') {
+    $db = Database::getInstance();
+
+    if ($_POST['action'] === 'purge_and_sync') {
         @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
         try {
-            $backupFile = $appRoot . '/tools/mock_supplier/products.json';
-            if (!file_exists($backupFile)) {
-                throw new RuntimeException("Backup file not found at: {$backupFile}");
+            // 1. Wipe all existing products
+            $db->execute("DELETE FROM products");
+            if ($db->getDriver() === 'sqlite') {
+                try { $db->execute("DELETE FROM sqlite_sequence WHERE name='products'"); } catch (Throwable) {}
             }
+            try { $db->execute("UPDATE categories SET product_count = 0"); } catch (Throwable) {}
+
+            // 2. Fetch fresh live feed strictly from Computer Zone API
             $syncService = new SupplierSyncService();
-            $result = $syncService->run('file://' . $backupFile);
+            $result = $syncService->run();
             if ($result['status'] === 'success') {
-                $message = "SUCCESS! {$result['feed_count']} products imported and active in store! Categories and brands are now fully populated.";
+                $message = "SUCCESS! All old products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API!";
                 $messageType = 'success';
             } else {
-                $message = "Import error: " . ($result['error_message'] ?? 'Unknown error');
+                $message = "Database cleared, but live Computer Zone sync returned: " . ($result['error_message'] ?? 'Unknown error');
                 $messageType = 'error';
             }
         } catch (Throwable $e) {
-            $message = "Exception during import: " . $e->getMessage();
+            $message = "Exception during purge & sync: " . $e->getMessage();
+            $messageType = 'error';
+        }
+    } elseif ($_POST['action'] === 'purge_all_products') {
+        try {
+            $db->execute("DELETE FROM products");
+            if ($db->getDriver() === 'sqlite') {
+                try { $db->execute("DELETE FROM sqlite_sequence WHERE name='products'"); } catch (Throwable) {}
+            }
+            try { $db->execute("UPDATE categories SET product_count = 0"); } catch (Throwable) {}
+            $message = "SUCCESS: All products have been deleted. Database is now completely empty.";
+            $messageType = 'success';
+        } catch (Throwable $e) {
+            $message = "Error cleaning database: " . $e->getMessage();
             $messageType = 'error';
         }
     } elseif ($_POST['action'] === 'run_live_sync') {
         @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
         try {
             $syncService = new SupplierSyncService();
             $result = $syncService->run();
             if ($result['status'] === 'success') {
-                $message = "SUCCESS! Live sync completed with {$result['feed_count']} products.";
+                $message = "SUCCESS! Live sync completed with {$result['feed_count']} products imported/updated from Computer Zone.";
                 $messageType = 'success';
             } else {
                 $message = "Live sync returned error: " . ($result['error_message'] ?? 'Unknown error');
@@ -262,51 +283,40 @@ try {
       </div>
     <?php endif; ?>
 
-    <?php if (($testResults['Test A1: Raw Authorization Header with Accept: */*']['code'] ?? 0) === 200): ?>
-      <div class="card" style="border: 2px solid #0EB4A9; background: #ECFDF5; padding: 1.5rem;">
-        <h2 style="color: #065F46; font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          🎉 Supplier API Handshake is 100% SUCCESSFUL! (HTTP 200)
-        </h2>
-        <p style="color: #047857; font-size: 0.95rem; margin-bottom: 1.25rem;">
-          Computer Zone has successfully recognized your token and server IP (<code>45.8.227.175</code>)! The live feed is responding with real-time stock & pricing. Click either button below to populate your website right now:
-        </p>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <form method="POST">
-            <input type="hidden" name="action" value="run_live_sync">
-            <button type="submit" class="btn btn-orange" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
-              🔄 Sync Live Products From Computer Zone Now &rarr;
-            </button>
-          </form>
-          <form method="POST">
-            <input type="hidden" name="action" value="populate_catalog">
-            <button type="submit" class="btn btn-teal" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
-              ⚡ Instant Populate Store (5 Seconds) &rarr;
-            </button>
-          </form>
-          <a href="/" target="_blank" class="btn" style="background: #FFFFFF; border: 1px solid #0EB4A9; color: #065F46;">
-            View Storefront &rarr;
-          </a>
-        </div>
-      </div>
-    <?php endif; ?>
-
-    <!-- 1. Instant Solution Card: One-Click Populate -->
-    <div class="card" style="border: 2px solid #0EB4A9; background: #F7FEFD;">
-      <div class="card-title" style="color: #0E7064;">
-        <span>⚡ Instant Solution: Make Products Visible Right Now</span>
+    <!-- Action Controls: Strict Computer Zone Sync & Purge -->
+    <div class="card" style="border: 2px solid #FF6223; background: #FFFBF9;">
+      <div class="card-title" style="color: #FF6223;">
+        <span>🎯 Computer Zone Live Catalog Management</span>
       </div>
       <p style="font-size: 0.95rem; color: #374151; margin-bottom: 1.25rem;">
-        If you want your store to immediately display all <strong>991 products</strong> with pictures, prices, and categories on <strong>multantech.store</strong>, click the button below. It seeds the verified catalog feed straight into your store database in 5 seconds!
+        Your store is connected directly to <strong>api.computerzone.pk</strong>. Choose an action below:
       </p>
-      <form method="POST" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <input type="hidden" name="action" value="populate_catalog">
-        <button type="submit" class="btn btn-teal">
-          📥 Populate Store with 991 Products Now &rarr;
-        </button>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+        <form method="POST">
+          <input type="hidden" name="action" value="purge_and_sync">
+          <button type="submit" class="btn btn-orange" onclick="return confirm('This will delete any old products and pull fresh 100% genuine products from Computer Zone. Proceed?');">
+            🧹 Delete Old & Sync Fresh from Computer Zone &rarr;
+          </button>
+        </form>
+
+        <form method="POST">
+          <input type="hidden" name="action" value="run_live_sync">
+          <button type="submit" class="btn btn-teal">
+            🔄 Update / Sync Products from Computer Zone &rarr;
+          </button>
+        </form>
+
+        <form method="POST">
+          <input type="hidden" name="action" value="purge_all_products">
+          <button type="submit" class="btn" style="background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5;" onclick="return confirm('Are you sure you want to delete ALL products from the database?');">
+            🗑️ Delete All Products
+          </button>
+        </form>
+
         <a href="/" target="_blank" class="btn" style="background: #FFFFFF; border: 1px solid #E8E6DC; color: #141413;">
           View Storefront &rarr;
         </a>
-      </form>
+      </div>
     </div>
 
     <!-- 2. Current Storefront State -->
