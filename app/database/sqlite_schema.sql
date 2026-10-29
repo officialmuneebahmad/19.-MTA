@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS products (
   sell_price REAL NOT NULL DEFAULT 0.00,
   price_override REAL NULL,
   status INTEGER NOT NULL DEFAULT 1,
+  stock_status TEXT NOT NULL DEFAULT 'in_stock',
   primary_image_url TEXT NULL,
   image_400 TEXT NULL,
   image_800 TEXT NULL,

@@ -17,7 +17,7 @@ require_once $appRoot . '/app/bootstrap.php';
 use App\Core\Database;
 use App\Services\SupplierSyncService;
 
-$token = 'd65090a5f72172720b1806a9d37aa9a4';
+$token = 'f1f3b0294c3f7c2328e41d42e59d2877';
 $apiUrl = 'https://api.computerzone.pk/products';
 
 $message = null;
@@ -26,7 +26,7 @@ $messageType = 'info';
 // -------------------------------------------------------------
 // Handle One-Click Import Action
 // -------------------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'populate_catalog') {
         @set_time_limit(300);
         try {
@@ -70,20 +70,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 // 1. Check Server Outbound IP
 // -------------------------------------------------------------
 $outboundIp = 'Unknown';
-try {
-    $ch = curl_init('https://api.ipify.org');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $res = curl_exec($ch);
-    if ($res) $outboundIp = trim((string)$res);
-    curl_close($ch);
-} catch (Throwable) {}
+if (function_exists('curl_init')) {
+    try {
+        $ch = curl_init('https://api.ipify.org');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $res = curl_exec($ch);
+        if ($res) $outboundIp = trim((string)$res);
+        curl_close($ch);
+    } catch (Throwable) {}
+}
 
 // -------------------------------------------------------------
 // 2. Perform API Handshake Tests with Token Variations
 // -------------------------------------------------------------
 function testCurl(string $url, array $headers = []): array {
+    if (!function_exists('curl_init')) {
+        return [
+            'code' => 0,
+            'duration' => 0,
+            'error' => 'cURL extension is not enabled in this PHP environment.',
+            'body' => '',
+        ];
+    }
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
@@ -111,26 +121,41 @@ function testCurl(string $url, array $headers = []): array {
 }
 
 $tests = [
-    'Test A: Raw Authorization Header (Exact CZ Spec)' => [
+    'Test A1: Raw Authorization Header with Accept: */*' => [
         'url' => $apiUrl,
         'headers' => [
             "Authorization: {$token}",
-            "Accept: application/json",
+            "Accept: */*",
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         ],
     ],
-    'Test B: Bearer Authorization Header' => [
+    'Test A2: Raw Authorization Header (No Accept Header)' => [
+        'url' => $apiUrl,
+        'headers' => [
+            "Authorization: {$token}",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        ],
+    ],
+    'Test B1: Bearer Header with Accept: */*' => [
         'url' => $apiUrl,
         'headers' => [
             "Authorization: Bearer {$token}",
-            "Accept: application/json",
+            "Accept: */*",
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         ],
     ],
-    'Test C: URL Query Parameter (?token=...)' => [
+    'Test C1: URL Query Parameter (?token=...) with Accept: */*' => [
         'url' => $apiUrl . '?token=' . $token,
         'headers' => [
-            "Accept: application/json",
+            "Accept: */*",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        ],
+    ],
+    'Test D: X-API-KEY Header' => [
+        'url' => $apiUrl,
+        'headers' => [
+            "X-API-KEY: {$token}",
+            "Accept: */*",
             "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
         ],
     ],
@@ -142,14 +167,45 @@ foreach ($tests as $title => $cfg) {
 }
 
 // -------------------------------------------------------------
-// 3. Current Database Stats
+// 3. Current Database Stats & Schema Verification
 // -------------------------------------------------------------
 $db = Database::getInstance();
-$productCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products");
-$activeProductCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products WHERE is_active = 1");
-$categoryCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM categories");
-$brandCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM brands");
-$sampleProducts = $db->fetchAll("SELECT id, title, sell_price, stock_status, is_active FROM products ORDER BY id DESC LIMIT 5");
+
+// Auto-migrate stock_status if absent in SQLite/MySQL
+try {
+    if ($db->getDriver() === 'sqlite') {
+        $cols = $db->fetchAll("PRAGMA table_info(products)");
+        $colNames = array_column($cols, 'name');
+        if (!empty($colNames) && !in_array('stock_status', $colNames, true)) {
+            $db->getPdo()->exec("ALTER TABLE products ADD COLUMN stock_status TEXT NOT NULL DEFAULT 'in_stock'");
+        }
+    } elseif ($db->getDriver() === 'mysql') {
+        $check = $db->fetch("SHOW COLUMNS FROM products LIKE 'stock_status'");
+        if (!$check) {
+            $db->getPdo()->exec("ALTER TABLE products ADD COLUMN stock_status VARCHAR(20) NOT NULL DEFAULT 'in_stock'");
+        }
+    }
+} catch (Throwable $e) {}
+
+$productCount = 0;
+$activeProductCount = 0;
+$categoryCount = 0;
+$brandCount = 0;
+$sampleProducts = [];
+
+try {
+    $productCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products");
+    $activeProductCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products WHERE is_active = 1");
+    $categoryCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM categories");
+    $brandCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM brands");
+    $sampleProducts = $db->fetchAll("SELECT id, title, sell_price, stock_status, is_active FROM products ORDER BY id DESC LIMIT 5");
+} catch (Throwable $e) {
+    try {
+        $sampleProducts = $db->fetchAll("SELECT id, title, sell_price, is_active FROM products ORDER BY id DESC LIMIT 5");
+    } catch (Throwable $e2) {
+        $sampleProducts = [];
+    }
+}
 
 ?>
 <!DOCTYPE html>
@@ -281,10 +337,21 @@ $sampleProducts = $db->fetchAll("SELECT id, title, sell_price, stock_status, is_
     <div class="card">
       <div class="card-title">
         <span>Computer Zone API Live Handshake Test</span>
-        <span class="badge <?= $outboundIp !== 'Unknown' ? 'badge-pass' : 'badge-fail' ?>">Server IP: <?= htmlspecialchars($outboundIp) ?></span>
+        <span class="badge <?= $outboundIp !== 'Unknown' ? 'badge-pass' : 'badge-fail' ?>">Server Outbound IP: <?= htmlspecialchars($outboundIp) ?></span>
+      </div>
+      <div style="background: #F3F4F6; padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1rem;">
+        <div><strong>Registered Whitelist Host IP:</strong> <code>185.151.30.200</code></div>
+        <div><strong>Live Outbound cURL IP:</strong> <code><?= htmlspecialchars($outboundIp) ?></code>
+          <?php if ($outboundIp === '185.151.30.200' || str_starts_with($outboundIp, '185.151.30.')): ?>
+            <span style="color: #0E7064; font-weight: 700; margin-left: 0.5rem;">✅ IP Match Confirmed</span>
+          <?php else: ?>
+            <span style="color: #D97706; font-weight: 600; margin-left: 0.5rem;">⚠️ Different Outbound IP</span>
+          <?php endif; ?>
+        </div>
+        <div><strong>Registered Token:</strong> <code><?= htmlspecialchars(substr($token, 0, 8) . '...' . substr($token, -4)) ?></code></div>
       </div>
       <p style="font-size: 0.85rem; color: #5E5D59; margin-bottom: 1rem;">
-        Computer Zone API requires requests to originate from your server's whitelisted IP. Below are the raw results of contacting <code><?= htmlspecialchars($apiUrl) ?></code> with key <code><?= htmlspecialchars(substr($token, 0, 8) . '...' . substr($token, -4)) ?></code>:
+        Computer Zone API requires requests to originate from your server's whitelisted IP. Below are the raw live results of contacting <code><?= htmlspecialchars($apiUrl) ?></code>:
       </p>
 
       <?php foreach ($testResults as $testName => $r): ?>

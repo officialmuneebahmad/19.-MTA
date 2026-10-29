@@ -28,7 +28,7 @@ return [
     'supplier' => [
         'api_url' => 'https://api.computerzone.pk/products',
         'auth_header_format' => 'raw', // 'raw' (Authorization: <token>) or 'bearer' (Authorization: Bearer <token>)
-        'token' => 'd65090a5f72172720b1806a9d37aa9a4',
+        'token' => 'f1f3b0294c3f7c2328e41d42e59d2877',
         'timeout' => 120,
     ],
     'pricing' => [

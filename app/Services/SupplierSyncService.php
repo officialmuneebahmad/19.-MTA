@@ -51,7 +51,7 @@ class SupplierSyncService
             ? $cfgToken
             : (mta_setting('supplier_token') !== 'TODO-OWNER' && !empty(mta_setting('supplier_token'))
                 ? mta_setting('supplier_token')
-                : 'd65090a5f72172720b1806a9d37aa9a4');
+                : 'f1f3b0294c3f7c2328e41d42e59d2877');
 
         $timeout = (int)($this->config['timeout'] ?? 120);
 
@@ -199,6 +199,7 @@ class SupplierSyncService
                                 supplier_price = ?,
                                 sell_price = ?,
                                 status = ?,
+                                stock_status = ?,
                                 primary_image_url = ?,
                                 supplier_description_html = ?,
                                 supplier_link = ?,
@@ -216,6 +217,7 @@ class SupplierSyncService
                                 $supplierPrice,
                                 $sellPrice,
                                 $supplierStatus,
+                                ($supplierStatus === 1 ? 'in_stock' : 'out_of_stock'),
                                 $imageUrl,
                                 $cleanDetail,
                                 $supplierLink,
@@ -232,11 +234,11 @@ class SupplierSyncService
                     $this->db->execute(
                         "INSERT INTO products (
                             source, supplier_id, sku, slug, title, category_id, subcategory_title,
-                            brand_id, supplier_price, sell_price, status, primary_image_url,
+                            brand_id, supplier_price, sell_price, status, stock_status, primary_image_url,
                             supplier_description_html, supplier_link, content_hash, content_state,
                             is_active, is_published, last_seen_at
                         ) VALUES (
-                            'supplier', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'supplier_raw', 1, 1, CURRENT_TIMESTAMP
+                            'supplier', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'supplier_raw', 1, 1, CURRENT_TIMESTAMP
                         )",
                         [
                             $rawId,
@@ -249,6 +251,7 @@ class SupplierSyncService
                             $supplierPrice,
                             $sellPrice,
                             $supplierStatus,
+                            ($supplierStatus === 1 ? 'in_stock' : 'out_of_stock'),
                             $imageUrl,
                             $cleanDetail,
                             $supplierLink,
@@ -475,7 +478,7 @@ class SupplierSyncService
             ? $cfgToken
             : (mta_setting('supplier_token') !== 'TODO-OWNER' && !empty(mta_setting('supplier_token'))
                 ? mta_setting('supplier_token')
-                : 'd65090a5f72172720b1806a9d37aa9a4');
+                : 'f1f3b0294c3f7c2328e41d42e59d2877');
 
         // Check server outbound IP
         $outboundIp = 'Unknown';
@@ -499,7 +502,7 @@ class SupplierSyncService
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_HTTPHEADER => [
                 "Authorization: {$authHeader}",
-                "Accept: application/json",
+                "Accept: */*",
                 "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             ],
             CURLOPT_SSL_VERIFYPEER => false,
@@ -552,7 +555,7 @@ class SupplierSyncService
                 CURLOPT_CONNECTTIMEOUT => 15,
                 CURLOPT_HTTPHEADER => [
                     "Authorization: {$authHeader}",
-                    "Accept: application/json",
+                    "Accept: */*",
                     "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                 ],
                 CURLOPT_SSL_VERIFYPEER => false,

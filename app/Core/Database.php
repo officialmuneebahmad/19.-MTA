@@ -54,6 +54,7 @@ class Database
 
             $this->pdo = new PDO($dsn, $user, $pass, $options);
             $this->driver = 'mysql';
+            $this->ensureSchemaIntegrity();
         } catch (\Throwable $e) {
             // If MySQL is down, extension is missing, or in local development without MySQL server, fallback to SQLite
             $sqlitePath = $dbConfig['sqlite_path'] ?? (MTA_STORAGE . '/database.sqlite');
@@ -101,6 +102,34 @@ class Database
                     $this->pdo->exec($sql);
                 } catch (\Throwable) {}
             }
+        }
+
+        // Always ensure schema integrity for existing databases
+        $this->ensureSchemaIntegrity();
+    }
+
+    /**
+     * Auto-migrate missing columns for existing SQLite / MySQL installations
+     */
+    private function ensureSchemaIntegrity(): void
+    {
+        try {
+            if ($this->driver === 'sqlite') {
+                $cols = $this->pdo->query("PRAGMA table_info(products)")->fetchAll(PDO::FETCH_ASSOC);
+                if (!empty($cols)) {
+                    $names = array_column($cols, 'name');
+                    if (!in_array('stock_status', $names, true)) {
+                        $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status TEXT NOT NULL DEFAULT 'in_stock';");
+                    }
+                }
+            } elseif ($this->driver === 'mysql') {
+                $check = $this->pdo->query("SHOW COLUMNS FROM products LIKE 'stock_status'")->fetch();
+                if (!$check) {
+                    $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status VARCHAR(20) NOT NULL DEFAULT 'in_stock';");
+                }
+            }
+        } catch (\Throwable) {
+            // Table may not exist yet on fresh installations prior to schema creation
         }
     }
 

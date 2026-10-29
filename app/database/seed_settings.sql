@@ -16,7 +16,7 @@ INSERT INTO `settings` (`key`, `value`, `description`, `group_name`) VALUES
 ('markup_round_to', '10', 'Round selling price to nearest multiple', 'pricing'),
 ('supplier_api_url', 'https://api.computerzone.pk/products', 'Supplier Products API Endpoint', 'supplier'),
 ('supplier_auth_header_format', 'raw', 'Supplier Auth format: raw or bearer', 'supplier'),
-('supplier_token', 'd65090a5f72172720b1806a9d37aa9a4', 'Supplier API Secret Key / Token', 'supplier'),
+('supplier_token', 'f1f3b0294c3f7c2328e41d42e59d2877', 'Supplier API Secret Key / Token', 'supplier'),
 ('admin_path', 'mta-control-9872', 'Obfuscated Admin Dashboard Path', 'security'),
 ('adsense_enabled', '0', '1 to enable AdSense AdSlots', 'adsense'),
 ('adsense_publisher_id', '', 'AdSense Publisher ID (e.g. ca-pub-XXXX)', 'adsense'),

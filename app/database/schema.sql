@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `sell_price`                DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   `price_override`            DECIMAL(12,2) NULL DEFAULT NULL,
   `status`                    TINYINT NOT NULL DEFAULT 1 COMMENT '1=InStock, 2=OutOfStock, 3=ComingSoon',
+  `stock_status`              VARCHAR(20) NOT NULL DEFAULT 'in_stock',
   `primary_image_url`         VARCHAR(1000) NULL DEFAULT NULL,
   `image_400`                 VARCHAR(500) NULL DEFAULT NULL,
   `image_800`                 VARCHAR(500) NULL DEFAULT NULL,
