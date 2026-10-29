@@ -45,11 +45,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             }
             try { $db->execute("UPDATE categories SET product_count = 0"); } catch (Throwable) {}
 
+            // Flush cache immediately
+            \App\Core\Cache::flush();
+
             // 2. Fetch fresh live feed strictly from Computer Zone API
             $syncService = new SupplierSyncService();
             $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
-                $message = "SUCCESS! All old products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API!";
+                $db->execute("UPDATE products SET is_active = 1, is_published = 1 WHERE is_active = 1");
+                $db->execute("UPDATE products SET popularity_score = 100 WHERE id IN (SELECT id FROM products ORDER BY id DESC LIMIT 20)");
+                \App\Core\Cache::flush();
+
+                $message = "SUCCESS! All old products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API! Storefront cache cleared.";
                 $messageType = 'success';
             } else {
                 $message = "Database cleared, but live Computer Zone sync returned: " . ($result['error_message'] ?? 'Unknown error');
@@ -66,7 +73,8 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
                 try { $db->execute("DELETE FROM sqlite_sequence WHERE name='products'"); } catch (Throwable) {}
             }
             try { $db->execute("UPDATE categories SET product_count = 0"); } catch (Throwable) {}
-            $message = "SUCCESS: All products have been deleted. Database is now completely empty.";
+            \App\Core\Cache::flush();
+            $message = "SUCCESS: All products have been deleted. Database and storefront cache are now completely clean.";
             $messageType = 'success';
         } catch (Throwable $e) {
             $message = "Error cleaning database: " . $e->getMessage();
@@ -84,6 +92,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $syncService = new SupplierSyncService();
             $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
+                $db->execute("UPDATE products SET is_active = 1, is_published = 1 WHERE is_active = 1");
+                $db->execute("UPDATE products SET popularity_score = 100 WHERE id IN (SELECT id FROM products ORDER BY id DESC LIMIT 20)");
+                \App\Core\Cache::flush();
                 $message = "SUCCESS! Live sync completed with {$result['feed_count']} products imported/updated from Computer Zone.";
                 $messageType = 'success';
             } else {

@@ -26,14 +26,14 @@ class HomeController
              ORDER BY sort_order ASC, name ASC"
         );
 
-        // Best Sellers (Ranked by popularity_score)
+        // Best Sellers (Ranked by popularity_score, fallback to latest products)
         $bestSellers = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1 AND p.is_published = 1
+             WHERE p.is_active = 1
              ORDER BY p.popularity_score DESC, p.id DESC
-             LIMIT 8"
+             LIMIT 12"
         );
 
         // New Arrivals
@@ -41,9 +41,9 @@ class HomeController
             "SELECT p.*, b.name AS brand_name 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1 AND p.is_published = 1
-             ORDER BY p.created_at DESC, p.id DESC
-             LIMIT 8"
+             WHERE p.is_active = 1
+             ORDER BY p.id DESC
+             LIMIT 12"
         );
 
         // Featured Brands

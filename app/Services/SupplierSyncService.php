@@ -290,6 +290,11 @@ class SupplierSyncService
             $this->db->commit();
             $stats['status'] = 'success';
 
+            // Invalidate full-page cache so new products immediately render
+            try {
+                \App\Core\Cache::flush();
+            } catch (\Throwable) {}
+
         } catch (\Throwable $e) {
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();

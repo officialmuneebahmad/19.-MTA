@@ -83,7 +83,7 @@ class CategoryController
         $baseSql = "SELECT p.*, b.name AS brand_name 
                     FROM products p
                     LEFT JOIN brands b ON b.id = p.brand_id
-                    WHERE p.category_id IN ({$catPlaceholders}) AND p.is_active = 1 AND p.is_published = 1
+                    WHERE p.category_id IN ({$catPlaceholders}) AND p.is_active = 1
                     ORDER BY {$orderBy}";
 
         $pagination = $db->paginate($baseSql, $catIds, $page, 24);

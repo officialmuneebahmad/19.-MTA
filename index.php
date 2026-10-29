@@ -28,6 +28,8 @@ $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
 $pathOnly = parse_url($requestUri, PHP_URL_PATH) ?: '/';
 
 $isCacheable = ($requestMethod === 'GET')
+    && empty($_GET['nocache'])
+    && empty($_GET['refresh'])
     && empty($_COOKIE['mta_session'])
     && !str_starts_with($pathOnly, '/cart')
     && !str_starts_with($pathOnly, '/checkout')
@@ -36,6 +38,15 @@ $isCacheable = ($requestMethod === 'GET')
     && !str_starts_with($pathOnly, '/track-order')
     && !str_contains($pathOnly, 'control-')
     && !str_starts_with($pathOnly, '/api');
+
+if (isset($_GET['flush_cache']) || isset($_GET['refresh'])) {
+    $cachedFiles = @glob(MTA_STORAGE . '/cache/*.html');
+    if ($cachedFiles) {
+        foreach ($cachedFiles as $cf) {
+            @unlink($cf);
+        }
+    }
+}
 
 if ($isCacheable) {
     $cacheKey = md5(strtolower(trim($requestUri, '/')));
