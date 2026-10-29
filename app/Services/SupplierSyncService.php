@@ -37,6 +37,9 @@ class SupplierSyncService
      */
     public function sync(?string $overrideUrl = null): array
     {
+        @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
+
         $defaultUrl = 'https://api.computerzone.pk/products';
         $apiUrl = $overrideUrl 
             ?? (!empty($this->config['api_url']) && !str_contains($this->config['api_url'], '127.0.0.1') ? $this->config['api_url'] : null)

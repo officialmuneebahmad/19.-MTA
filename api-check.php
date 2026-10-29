@@ -262,6 +262,34 @@ try {
       </div>
     <?php endif; ?>
 
+    <?php if (($testResults['Test A1: Raw Authorization Header with Accept: */*']['code'] ?? 0) === 200): ?>
+      <div class="card" style="border: 2px solid #0EB4A9; background: #ECFDF5; padding: 1.5rem;">
+        <h2 style="color: #065F46; font-size: 1.25rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          🎉 Supplier API Handshake is 100% SUCCESSFUL! (HTTP 200)
+        </h2>
+        <p style="color: #047857; font-size: 0.95rem; margin-bottom: 1.25rem;">
+          Computer Zone has successfully recognized your token and server IP (<code>45.8.227.175</code>)! The live feed is responding with real-time stock & pricing. Click either button below to populate your website right now:
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <form method="POST">
+            <input type="hidden" name="action" value="run_live_sync">
+            <button type="submit" class="btn btn-orange" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
+              🔄 Sync Live Products From Computer Zone Now &rarr;
+            </button>
+          </form>
+          <form method="POST">
+            <input type="hidden" name="action" value="populate_catalog">
+            <button type="submit" class="btn btn-teal" style="font-size: 1rem; padding: 0.85rem 1.5rem;">
+              ⚡ Instant Populate Store (5 Seconds) &rarr;
+            </button>
+          </form>
+          <a href="/" target="_blank" class="btn" style="background: #FFFFFF; border: 1px solid #0EB4A9; color: #065F46;">
+            View Storefront &rarr;
+          </a>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <!-- 1. Instant Solution Card: One-Click Populate -->
     <div class="card" style="border: 2px solid #0EB4A9; background: #F7FEFD;">
       <div class="card-title" style="color: #0E7064;">
