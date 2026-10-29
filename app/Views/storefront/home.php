@@ -18,42 +18,33 @@
   <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured Accessories">
     <div class="carousel-track">
       
-      <!-- Slide 1 (LCP Eager Preload) -->
+      <!-- Slide 1 (Micro SD Cards) -->
       <div class="carousel-slide">
-        <picture>
-          <source media="(max-width: 600px)" srcset="/assets/images/banner1-mobile.webp">
-          <img src="/assets/images/banner1.webp" alt="Fast Chargers and Power Banks in Multan" class="carousel-img" width="1280" height="480" fetchpriority="high">
-        </picture>
+        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282104/Micro_SD_card_product_advertisement_9d33082f_2K_hujze7.jpg" alt="High-Speed Micro SD Cards" class="carousel-img" width="1280" height="480" fetchpriority="high">
         <div class="carousel-content">
-          <h2 class="carousel-title">Ultra-Fast GaN Chargers & Power Banks</h2>
-          <p class="carousel-subtitle">Authentic 20W to 100W PD adapters and high-capacity portable backup for smartphones and laptops.</p>
-          <a href="/categories/power-and-charging" class="btn btn-primary btn-lg">Explore Power Gear &rarr;</a>
+          <h2 class="carousel-title">Ultra-Fast Micro SD & Storage Cards</h2>
+          <p class="carousel-subtitle">High endurance, lightning-fast transfer speeds for smartphones, cameras, and portable devices.</p>
+          <a href="/categories/storage-and-memory" class="btn btn-primary btn-lg">Shop Now! &rarr;</a>
         </div>
       </div>
 
-      <!-- Slide 2 -->
+      <!-- Slide 2 (Keyboards) -->
       <div class="carousel-slide">
-        <picture>
-          <source media="(max-width: 600px)" srcset="/assets/images/banner2-mobile.webp">
-          <img src="/assets/images/banner2.webp" alt="RGB Gaming Accessories Pakistan" class="carousel-img" width="1280" height="480" loading="lazy">
-        </picture>
+        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282102/Keyboard_product_advertisement_l__d263c809_2K_ojl0mo.jpg" alt="RGB Gaming and Office Keyboards" class="carousel-img" width="1280" height="480" loading="lazy">
         <div class="carousel-content">
-          <h2 class="carousel-title">Level Up Your Gaming Battles</h2>
-          <p class="carousel-subtitle">RGB mechanical keyboards, high-DPI optical mice, and 7.1 surround sound gaming headsets.</p>
-          <a href="/categories/gaming" class="btn btn-primary btn-lg">Shop Gaming &rarr;</a>
+          <h2 class="carousel-title">RGB Mechanical & Gaming Keyboards</h2>
+          <p class="carousel-subtitle">Responsive tactile switches, customizable backlighting, and ergonomic build for work and gaming.</p>
+          <a href="/categories/gaming" class="btn btn-primary btn-lg">Shop Now! &rarr;</a>
         </div>
       </div>
 
-      <!-- Slide 3 -->
+      <!-- Slide 3 (WiFi Repeaters) -->
       <div class="carousel-slide">
-        <picture>
-          <source media="(max-width: 600px)" srcset="/assets/images/banner3-mobile.webp">
-          <img src="/assets/images/banner3.webp" alt="Wireless Bluetooth Speakers Pakistan" class="carousel-img" width="1280" height="480" loading="lazy">
-        </picture>
+        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282107/WiFi_repeater_product_advertisement_fb0e0390_2K_xbo6gs.jpg" alt="WiFi Signal Repeaters and Extenders" class="carousel-img" width="1280" height="480" loading="lazy">
         <div class="carousel-content">
-          <h2 class="carousel-title">Crystal Clear Audio & Rich Bass</h2>
-          <p class="carousel-subtitle">Portable wireless Bluetooth speakers, soundbars, and noise-cancelling wireless earbuds.</p>
-          <a href="/categories/audio-and-speakers" class="btn btn-primary btn-lg">Discover Audio &rarr;</a>
+          <h2 class="carousel-title">High-Power WiFi Signal Repeaters</h2>
+          <p class="carousel-subtitle">Eliminate internet dead zones across your house and office with high-gain wireless coverage.</p>
+          <a href="/categories/networking" class="btn btn-primary btn-lg">Shop Now! &rarr;</a>
         </div>
       </div>
 

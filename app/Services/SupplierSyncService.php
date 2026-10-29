@@ -335,16 +335,21 @@ class SupplierSyncService
     }
 
     /**
-     * Price formula: ceil((supplier_price * (1 + percent/100) + fixed) / round_to) * round_to
+     * Multan Tech Accessories Pricing Formula:
+     * - If supplier price < 3000:
+     *   100 + (rounded off to nearest hundred) + 99
+     * - If supplier price >= 3000:
+     *   300 + (rounded off to nearest hundred) + 99
      */
-    public function calculateSellingPrice(float $supplierPrice, float $percent, float $fixed, int $roundTo): float
+    public function calculateSellingPrice(float $supplierPrice, float $percent = 0, float $fixed = 0, int $roundTo = 100): float
     {
         if ($supplierPrice <= 0) {
             return 0.00;
         }
-        $raw = ($supplierPrice * (1 + $percent / 100)) + $fixed;
-        $rounded = ceil($raw / $roundTo) * $roundTo;
-        return (float)$rounded;
+
+        $markup = ($supplierPrice < 3000) ? 100.0 : 300.0;
+        $rounded = round(($supplierPrice + $markup) / 100) * 100;
+        return (float)($rounded + 99);
     }
 
     /**

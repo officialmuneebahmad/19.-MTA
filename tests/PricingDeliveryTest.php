@@ -90,11 +90,18 @@ class PricingDeliveryTest
 
     private function testMarkupCalculation(): void
     {
-        echo "Testing Pricing: 10% Default Markup calculation... ";
-        $supplierCost = 1000.0;
-        $markupPercent = 10.0;
-        $expectedSell = round($supplierCost * (1 + ($markupPercent / 100)));
-        assert($expectedSell === 1100.0, '10% markup on Rs. 1000 must equal Rs. 1100');
+        echo "Testing Pricing: Tiered Rounding + 99 Formula... ";
+        $syncService = new \App\Services\SupplierSyncService();
+        
+        // Under 3000 (+100, round to nearest hundred, +99)
+        assert($syncService->calculateSellingPrice(160.0) === 399.0, '160 must yield 399');
+        assert($syncService->calculateSellingPrice(250.0) === 499.0, '250 must yield 499');
+        assert($syncService->calculateSellingPrice(2420.0) === 2599.0, '2420 must yield 2599');
+        
+        // 3000 and above (+300, round to nearest hundred, +99)
+        assert($syncService->calculateSellingPrice(3690.0) === 4099.0, '3690 must yield 4099');
+        assert($syncService->calculateSellingPrice(5000.0) === 5399.0, '5000 must yield 5399');
+        
         echo "PASSED\n";
     }
 }
