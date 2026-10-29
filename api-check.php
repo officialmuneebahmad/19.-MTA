@@ -315,3 +315,4 @@ $sampleProducts = $db->fetchAll("SELECT id, title, sell_price, stock_status, is_
   </div>
 </body>
 </html>
+
