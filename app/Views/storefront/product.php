@@ -82,16 +82,22 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
         SKU: <strong><?= e($sku) ?></strong>
       </div>
 
-      <!-- Price Box -->
-      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1.25rem 1.5rem; margin-bottom:1.5rem; display:flex; align-items:baseline; gap:1rem;">
-        <?php if ($sellPrice > 0): ?>
-          <span style="font-size:2rem; font-weight:800; color:var(--accent-strong); font-family:var(--font-heading);">
-            <?= mta_money($sellPrice) ?>
+      <!-- Price Box (Neat & Professional, Never wraps Rs. from amount) -->
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem 1.25rem; margin-bottom:1.25rem;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+          <div style="display:flex; align-items:baseline; gap:0.5rem; white-space:nowrap;">
+            <?php if ($sellPrice > 0): ?>
+              <span style="font-size:2rem; font-weight:800; color:var(--accent-strong); font-family:var(--font-heading); white-space:nowrap; letter-spacing:-0.5px;">
+                <?= mta_money($sellPrice) ?>
+              </span>
+            <?php else: ?>
+              <span style="font-size:1.3rem; font-weight:700; color:var(--text);">Contact for Price</span>
+            <?php endif; ?>
+          </div>
+          <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted); background:var(--surface-2); padding:0.35rem 0.65rem; border-radius:var(--radius-sm); border:1px solid var(--border); white-space:nowrap;">
+            PKR &bull; Incl. all taxes
           </span>
-          <span style="font-size:0.85rem; color:var(--text-muted);">PKR inclusive of all local taxes</span>
-        <?php else: ?>
-          <span style="font-size:1.4rem; font-weight:700; color:var(--text);">Contact on WhatsApp for Price</span>
-        <?php endif; ?>
+        </div>
       </div>
 
       <!-- City-Based Delivery Charge Preview -->
@@ -121,9 +127,20 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
       <!-- Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:0.85rem; margin-bottom:2rem;">
         <?php if ($status === 1 && $sellPrice > 0): ?>
-          <form action="/cart/add" method="POST" style="margin:0;">
+          <form action="/cart/add" method="POST" style="margin:0; display:flex; flex-direction:column; gap:0.75rem;">
             <?= mta_csrf_field() ?>
             <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
+
+            <!-- Quantity Selector -->
+            <div style="display:flex; align-items:center; justify-content:space-between; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.55rem 0.85rem;">
+              <span style="font-size:0.9rem; font-weight:700; color:var(--text);">Quantity:</span>
+              <div style="display:flex; align-items:center; gap:0.4rem;">
+                <button type="button" onclick="const q=document.getElementById('product-qty'); if(parseInt(q.value)>1) q.value=parseInt(q.value)-1;" style="width:34px; height:34px; border-radius:6px; background:var(--surface-2); border:1px solid var(--border); color:var(--text); font-size:1.15rem; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer;" aria-label="Decrease quantity">&minus;</button>
+                <input type="number" id="product-qty" name="quantity" value="1" min="1" max="10" readonly style="width:44px; height:34px; text-align:center; font-weight:800; font-size:1rem; border:1px solid var(--border); border-radius:6px; background:var(--surface-2); color:var(--text);">
+                <button type="button" onclick="const q=document.getElementById('product-qty'); if(parseInt(q.value)<10) q.value=parseInt(q.value)+1;" style="width:34px; height:34px; border-radius:6px; background:var(--surface-2); border:1px solid var(--border); color:var(--text); font-size:1.15rem; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer;" aria-label="Increase quantity">&plus;</button>
+              </div>
+            </div>
+
             <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
               Add to Shopping Cart

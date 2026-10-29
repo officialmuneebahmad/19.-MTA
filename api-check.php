@@ -80,6 +80,28 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $message = "Error cleaning database: " . $e->getMessage();
             $messageType = 'error';
         }
+    } elseif ($_POST['action'] === 'recalculate_all_prices') {
+        @set_time_limit(300);
+        try {
+            $syncService = new SupplierSyncService();
+            $rows = $db->fetchAll("SELECT id, supplier_price, price_override FROM products");
+            $updated = 0;
+            foreach ($rows as $r) {
+                if (!empty($r['price_override']) && (float)$r['price_override'] > 0) {
+                    $newPrice = (float)$r['price_override'];
+                } else {
+                    $newPrice = $syncService->calculateSellingPrice((float)$r['supplier_price']);
+                }
+                $db->execute("UPDATE products SET sell_price = ? WHERE id = ?", [$newPrice, $r['id']]);
+                $updated++;
+            }
+            \App\Core\Cache::flush();
+            $message = "SUCCESS! Recalculated prices for all {$updated} products according to the exact tiered formula (<3000: +100 round+99, >=3000: +300 round+99). Cache flushed.";
+            $messageType = 'success';
+        } catch (Throwable $e) {
+            $message = "Error recalculating prices: " . $e->getMessage();
+            $messageType = 'error';
+        }
     } elseif ($_POST['action'] === 'run_live_sync') {
         @set_time_limit(300);
         @ini_set('memory_limit', '512M');
@@ -324,6 +346,13 @@ try {
           <input type="hidden" name="action" value="run_live_sync">
           <button type="submit" class="btn btn-teal">
             🔄 Update / Sync Products from Computer Zone &rarr;
+          </button>
+        </form>
+
+        <form method="POST">
+          <input type="hidden" name="action" value="recalculate_all_prices">
+          <button type="submit" class="btn" style="background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D;" title="Recalculate all prices using tiered formula">
+            💰 Recalculate All Prices (&lt;3000: +100+99, &gt;=3000: +300+99) &rarr;
           </button>
         </form>
 

@@ -41,21 +41,24 @@ foreach ($cartItems as $item) {
                 <?= mta_money($item['sell_price']) ?>
               </td>
               <td style="padding: 1.25rem; text-align: center;">
-                <form action="/cart/update" method="POST" style="display: inline-flex; align-items: center; gap: 0.35rem;">
+                <form action="/cart/update" method="POST" style="display: inline-flex; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;">
                   <?= mta_csrf_field() ?>
                   <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
-                  <input type="number" name="quantity" value="<?= (int)$item['quantity'] ?>" min="1" max="10" style="width: 50px; padding: 0.3rem 0.4rem; border: 1px solid var(--border); border-radius: 4px; text-align: center;">
-                  <button type="submit" class="btn btn-secondary btn-sm" title="Update Quantity">&#8635;</button>
+                  <button type="submit" name="quantity" value="<?= max(0, $item['quantity'] - 1) ?>" style="width: 32px; height: 32px; background: transparent; border: none; color: var(--text); font-weight: 700; font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; justify-content: center;" aria-label="Decrease">&minus;</button>
+                  <span style="width: 32px; text-align: center; font-weight: 700; font-size: 0.95rem; color: var(--text);"><?= (int)$item['quantity'] ?></span>
+                  <button type="submit" name="quantity" value="<?= min(10, $item['quantity'] + 1) ?>" style="width: 32px; height: 32px; background: transparent; border: none; color: var(--text); font-weight: 700; font-size: 1.15rem; cursor: pointer; display: flex; align-items: center; justify-content: center;" aria-label="Increase">&plus;</button>
                 </form>
               </td>
-              <td style="padding: 1.25rem; text-align: right; font-weight: 700; color: var(--accent-strong);">
+              <td style="padding: 1.25rem; text-align: right; font-weight: 700; color: var(--accent-strong); white-space: nowrap;">
                 <?= mta_money($itemTotal) ?>
               </td>
               <td style="padding: 1.25rem; text-align: center;">
-                <form action="/cart/remove" method="POST">
+                <form action="/cart/remove" method="POST" style="margin: 0; display: inline-block;">
                   <?= mta_csrf_field() ?>
                   <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
-                  <button type="submit" style="color: var(--danger); font-size: 0.85rem; text-decoration: underline; background:none; border:none; cursor:pointer;" title="Remove Item">Remove</button>
+                  <button type="submit" style="width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--danger); background: var(--danger-bg); color: var(--danger); display: flex; align-items: center; justify-content: center; cursor: pointer; margin: 0 auto;" title="Remove Item" aria-label="Remove item">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  </button>
                 </form>
               </td>
             </tr>
@@ -79,23 +82,27 @@ foreach ($cartItems as $item) {
             </div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
-            <form action="/cart/update" method="POST" style="display: flex; align-items: center; gap: 0.4rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.75rem; gap: 0.75rem;">
+            <!-- Stepper [-] Qty [+] -->
+            <form action="/cart/update" method="POST" style="display: inline-flex; align-items: center; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 0;">
               <?= mta_csrf_field() ?>
               <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
-              <label style="font-size: 0.825rem; font-weight: 600; color: var(--text-muted);">Qty:</label>
-              <input type="number" name="quantity" value="<?= (int)$item['quantity'] ?>" min="1" max="10" style="width: 50px; padding: 0.35rem; border: 1px solid var(--border); border-radius: 4px; text-align: center;">
-              <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.35rem 0.65rem;">Update</button>
+              <button type="submit" name="quantity" value="<?= max(0, $item['quantity'] - 1) ?>" style="width: 34px; height: 34px; background: transparent; border: none; color: var(--text); font-weight: 700; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;" aria-label="Decrease quantity">&minus;</button>
+              <span style="width: 32px; text-align: center; font-weight: 800; font-size: 0.95rem; color: var(--text);"><?= (int)$item['quantity'] ?></span>
+              <button type="submit" name="quantity" value="<?= min(10, $item['quantity'] + 1) ?>" style="width: 34px; height: 34px; background: transparent; border: none; color: var(--text); font-weight: 700; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center;" aria-label="Increase quantity">&plus;</button>
             </form>
 
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              <div style="font-weight: 800; font-size: 1.05rem; color: var(--accent-strong);">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <div style="font-weight: 800; font-size: 1.1rem; color: var(--accent-strong); white-space: nowrap;">
                 <?= mta_money($itemTotal) ?>
               </div>
-              <form action="/cart/remove" method="POST">
+              <!-- Dustbin Icon Button -->
+              <form action="/cart/remove" method="POST" style="margin: 0;">
                 <?= mta_csrf_field() ?>
                 <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
-                <button type="submit" style="color: var(--danger); font-size: 0.825rem; font-weight: 600; text-decoration: underline; background:none; border:none; cursor:pointer;">Delete</button>
+                <button type="submit" style="width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--danger); background: var(--danger-bg); color: var(--danger); display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Remove Item" aria-label="Remove item">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
               </form>
             </div>
           </div>

@@ -155,7 +155,7 @@ body {
   }
 }
 
-/* Hero Carousel Container: Reserved Aspect Ratio (No CLS) */
+/* Hero Carousel Container: Exact 2752 / 1536 (Full Cover, No Cut) */
 .hero-carousel-wrap {
   width: 100%;
   max-width: 1320px;
@@ -166,22 +166,23 @@ body {
 .hero-carousel {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 6;
+  aspect-ratio: 2752 / 1536;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background-color: var(--surface-2);
   box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 768px) {
-  .hero-carousel {
-    aspect-ratio: 16 / 9;
+@media (max-width: 900px) {
+  .desktop-theme-btn {
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-carousel {
-    aspect-ratio: 4 / 3;
+  .hero-carousel-wrap {
+    padding: 0 0.75rem;
+    margin-top: 0.75rem;
   }
 }
 

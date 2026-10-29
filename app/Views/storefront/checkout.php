@@ -77,7 +77,10 @@ foreach ($cartItems as $item) {
           <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">2. Payment Method</h2>
           <div style="border: 2px solid var(--accent-strong); border-radius: 8px; padding: 1rem 1.25rem; background: var(--surface-2); display: flex; align-items: center; justify-content: space-between;">
             <div>
-              <div style="font-weight: 700; font-size: 1rem;">&#128666; Cash on Delivery (COD)</div>
+              <div style="font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-strong)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <span>Cash on Delivery (COD)</span>
+              </div>
               <p style="font-size: 0.825rem; color: var(--text-muted); margin-top: 0.25rem;">
                 Pay with cash to courier rider upon receiving your package at your doorstep.
               </p>

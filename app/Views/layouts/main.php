@@ -358,11 +358,11 @@
   <footer class="site-footer" role="contentinfo">
     <div class="container">
       
-      <!-- Store Policy Highlights Strip -->
+      <!-- Store Policy Highlights Strip (Bordered Icons, Zero Emojis) -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem; padding:1.5rem; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-lg); margin-bottom:2.5rem;" class="footer-policies-strip">
         <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-          <div style="width:36px; height:36px; border-radius:8px; background:rgba(255, 98, 35, 0.12); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
-            &#128737;
+          <div class="policy-icon-box" style="width:38px; height:38px; border-radius:8px; border:1.5px solid var(--accent-strong); background:rgba(255, 98, 35, 0.1); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
           </div>
           <div>
             <strong style="display:block; font-size:0.9rem; color:var(--text);">3 Days Check Warranty Only</strong>
@@ -371,8 +371,8 @@
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-          <div style="width:36px; height:36px; border-radius:8px; background:rgba(14, 180, 169, 0.12); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
-            &#128260;
+          <div class="policy-icon-box" style="width:38px; height:38px; border-radius:8px; border:1.5px solid var(--teal); background:rgba(14, 180, 169, 0.1); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
           </div>
           <div>
             <strong style="display:block; font-size:0.9rem; color:var(--text);">No Refund — Exchange Only</strong>
@@ -381,8 +381,8 @@
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-          <div style="width:36px; height:36px; border-radius:8px; background:rgba(255, 98, 35, 0.12); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
-            &#128230;
+          <div class="policy-icon-box" style="width:38px; height:38px; border-radius:8px; border:1.5px solid var(--accent-strong); background:rgba(255, 98, 35, 0.1); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
           </div>
           <div>
             <strong style="display:block; font-size:0.9rem; color:var(--text);">Customer Return Courier</strong>
@@ -391,8 +391,8 @@
         </div>
 
         <div style="display:flex; align-items:flex-start; gap:0.75rem;">
-          <div style="width:36px; height:36px; border-radius:8px; background:rgba(37, 211, 102, 0.12); color:var(--whatsapp); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
-            &#128666;
+          <div class="policy-icon-box" style="width:38px; height:38px; border-radius:8px; border:1.5px solid var(--whatsapp); background:rgba(37, 211, 102, 0.1); color:var(--whatsapp); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
           </div>
           <div>
             <strong style="display:block; font-size:0.9rem; color:var(--text);">Cash on Delivery</strong>
@@ -462,8 +462,9 @@
           <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.5rem;">
             <strong>Phone / WhatsApp:</strong> <a href="tel:+923070655275" style="color:var(--text);font-weight:600;">0307-0655275</a>
           </p>
-          <div style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface-2); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600;">
-            <span>&#128666; Cash on Delivery Available</span>
+          <div style="margin-top: 1rem; display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface-2); padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--whatsapp)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            <span>Cash on Delivery Available</span>
           </div>
         </div>
 
