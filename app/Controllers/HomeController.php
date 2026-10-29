@@ -26,29 +26,70 @@ class HomeController
              ORDER BY sort_order ASC, name ASC"
         );
 
-        // Best Sellers (Ranked by popularity_score, fallback to latest products)
+        // Filter out boring spare parts and motherboard replacement components
+        $excludeSparePartsSql = " AND LOWER(p.title) NOT LIKE '%pcb%' 
+                                  AND LOWER(p.title) NOT LIKE '%board%' 
+                                  AND LOWER(p.title) NOT LIKE '%thermal printer%' 
+                                  AND LOWER(p.title) NOT LIKE '%printhead%' 
+                                  AND LOWER(p.title) NOT LIKE '%ribbon%' 
+                                  AND LOWER(p.title) NOT LIKE '%roller%' 
+                                  AND LOWER(p.title) NOT LIKE '%gear kit%' 
+                                  AND LOWER(p.title) NOT LIKE '%spare part%' ";
+
+        // Best Sellers (Keyboards, Mice, Speakers, Headsets, Gadgets, Chargers)
         $bestSellers = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1
-             ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
+             WHERE p.is_active = 1 {$excludeSparePartsSql}
+             ORDER BY 
+               (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
+               p.popularity_score DESC,
+               (CASE 
+                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 10
+                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 9
+                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 8
+                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 7
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 6
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 5
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 4
+                  ELSE 1
+                END) DESC,
+               p.id DESC
              LIMIT 12"
         );
 
-        // New Arrivals
+        // New Arrivals (Power banks, gaming accessories, cameras, cables, audio)
         $newArrivals = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1
-             ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.id DESC
+             WHERE p.is_active = 1 {$excludeSparePartsSql}
+             ORDER BY 
+               (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
+               (CASE 
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 10
+                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 9
+                  WHEN LOWER(p.title) LIKE '%camera%' OR LOWER(p.title) LIKE '%cctv%' THEN 8
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 7
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 6
+                  WHEN LOWER(p.title) LIKE '%audio%' OR LOWER(p.title) LIKE '%speaker%' THEN 5
+                  ELSE 1
+                END) DESC,
+               p.id DESC
              LIMIT 12"
         );
 
-        // Featured Brands
+        // Featured Brands (Strictly only brands that currently have active products in catalog)
         $featuredBrands = $db->fetchAll(
-            "SELECT id, slug, name FROM brands WHERE is_active = 1 ORDER BY name ASC LIMIT 16"
+            "SELECT b.id, b.slug, b.name, COUNT(p.id) AS product_count 
+             FROM brands b
+             INNER JOIN products p ON p.brand_id = b.id AND p.is_active = 1
+             WHERE b.is_active = 1
+             GROUP BY b.id, b.slug, b.name
+             HAVING COUNT(p.id) > 0
+             ORDER BY product_count DESC, b.name ASC
+             LIMIT 16"
         );
 
         // Latest Guides
@@ -112,8 +153,17 @@ class HomeController
         $perPage = 24;
         $offset = ($page - 1) * $perPage;
 
+        $excludeSparePartsSql = " AND LOWER(p.title) NOT LIKE '%pcb%' 
+                                  AND LOWER(p.title) NOT LIKE '%board%' 
+                                  AND LOWER(p.title) NOT LIKE '%thermal printer%' 
+                                  AND LOWER(p.title) NOT LIKE '%printhead%' 
+                                  AND LOWER(p.title) NOT LIKE '%ribbon%' 
+                                  AND LOWER(p.title) NOT LIKE '%roller%' 
+                                  AND LOWER(p.title) NOT LIKE '%gear kit%' 
+                                  AND LOWER(p.title) NOT LIKE '%spare part%' ";
+
         $countRow = $db->fetch(
-            "SELECT COUNT(*) as total FROM products WHERE is_active = 1 AND is_published = 1"
+            "SELECT COUNT(*) as total FROM products p WHERE p.is_active = 1 AND p.is_published = 1 {$excludeSparePartsSql}"
         );
         $total = (int)($countRow['total'] ?? 0);
         $totalPages = max(1, (int)ceil($total / $perPage));
@@ -122,8 +172,21 @@ class HomeController
             "SELECT p.*, b.name AS brand_name 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1 AND p.is_published = 1
-             ORDER BY p.popularity_score DESC, p.id DESC
+             WHERE p.is_active = 1 AND p.is_published = 1 {$excludeSparePartsSql}
+             ORDER BY 
+               (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
+               p.popularity_score DESC,
+               (CASE 
+                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 10
+                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 9
+                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 8
+                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 7
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 6
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 5
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 4
+                  ELSE 1
+                END) DESC,
+               p.id DESC
              LIMIT ? OFFSET ?",
             [$perPage, $offset]
         );

@@ -18,7 +18,15 @@ class BrandController
     public function index(): Response
     {
         $db = Database::getInstance();
-        $brands = $db->fetchAll("SELECT * FROM brands WHERE is_active = 1 ORDER BY name ASC");
+        $brands = $db->fetchAll(
+            "SELECT b.*, COUNT(p.id) AS product_count 
+             FROM brands b
+             INNER JOIN products p ON p.brand_id = b.id AND p.is_active = 1
+             WHERE b.is_active = 1
+             GROUP BY b.id
+             HAVING COUNT(p.id) > 0
+             ORDER BY product_count DESC, b.name ASC"
+        );
 
         $breadcrumbs = [
             ['label' => 'Home', 'url' => '/'],

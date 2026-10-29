@@ -53,7 +53,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
                 $db->execute("UPDATE products SET is_active = 1, is_published = 1 WHERE is_active = 1");
-                $db->execute("UPDATE products SET popularity_score = 100 WHERE id IN (SELECT id FROM products ORDER BY id DESC LIMIT 20)");
+                $syncService->boostConsumerPopularity();
                 \App\Core\Cache::flush();
 
                 $message = "SUCCESS! All old products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API! Storefront cache cleared.";
@@ -95,8 +95,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
                 $db->execute("UPDATE products SET sell_price = ? WHERE id = ?", [$newPrice, $r['id']]);
                 $updated++;
             }
+            $syncService->boostConsumerPopularity();
             \App\Core\Cache::flush();
-            $message = "SUCCESS! Recalculated prices for all {$updated} products according to the exact tiered formula (<3000: +100 round+99, >=3000: +300 round+99). Cache flushed.";
+            $message = "SUCCESS! Recalculated prices for all {$updated} products according to the exact tiered formula (<3000: +100 round+99, >=3000: +300 round+99) and updated Best Sellers popularity rankings. Cache flushed.";
             $messageType = 'success';
         } catch (Throwable $e) {
             $message = "Error recalculating prices: " . $e->getMessage();
@@ -115,7 +116,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
                 $db->execute("UPDATE products SET is_active = 1, is_published = 1 WHERE is_active = 1");
-                $db->execute("UPDATE products SET popularity_score = 100 WHERE id IN (SELECT id FROM products ORDER BY id DESC LIMIT 20)");
+                $syncService->boostConsumerPopularity();
                 \App\Core\Cache::flush();
                 $message = "SUCCESS! Live sync completed with {$result['feed_count']} products imported/updated from Computer Zone.";
                 $messageType = 'success';

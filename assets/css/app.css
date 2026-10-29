@@ -560,7 +560,11 @@ button {
   justify-content: space-between;
   gap: 1.25rem;
   margin-bottom: 1.75rem;
-  flex-wrap: wrap;
+}
+
+.section-header > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .section-title {
@@ -575,7 +579,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  white-space: nowrap;
+  white-space: nowrap !important;
   flex-shrink: 0;
   padding: 0.25rem 0;
 }
@@ -684,6 +688,7 @@ button {
   font-weight: 800;
   color: var(--accent-strong);
   margin-bottom: 0.85rem;
+  white-space: nowrap !important;
 }
 
 .product-card-actions {
@@ -693,26 +698,15 @@ button {
   gap: 0.5rem;
 }
 
-/* Category Grid Tiles */
+/* Category Grid Tiles — 12 Column Desktop Grid for Symmetrical V-Shape */
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   gap: 1rem;
 }
 
-@media (max-width: 1024px) {
-  .category-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .category-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .category-tile {
+  grid-column: span 2;
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -723,6 +717,40 @@ button {
   align-items: center;
   gap: 0.75rem;
   transition: all 0.2s ease;
+}
+
+/* Symmetrical V-Shape: Center the last 3 items in the middle of Row 2 */
+.category-tile:nth-child(7) {
+  grid-column-start: 4;
+}
+
+@media (max-width: 1024px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .category-tile {
+    grid-column: auto;
+  }
+  .category-tile:nth-child(7) {
+    grid-column-start: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .category-tile {
+    grid-column: auto;
+  }
+  .category-tile:nth-child(7) {
+    grid-column-start: auto;
+  }
+  .category-tile:nth-child(9) {
+    grid-column: span 2;
+    max-width: calc(50% - 0.5rem);
+    justify-self: center;
+  }
 }
 
 .category-tile:hover {
@@ -1156,6 +1184,9 @@ button {
     align-items: flex-start;
     gap: 0.45rem;
     margin-bottom: 1.25rem;
+  }
+  .section-link {
+    align-self: flex-start;
   }
 }
 

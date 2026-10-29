@@ -286,6 +286,9 @@ class SupplierSyncService
             // Update category product counts
             $this->updateCategoryCounts();
 
+            // Boost popular consumer tech and suppress industrial spare parts
+            $this->boostConsumerPopularity();
+
             // Commit Transaction
             $this->db->commit();
             $stats['status'] = 'success';
@@ -350,6 +353,61 @@ class SupplierSyncService
         $markup = ($supplierPrice < 3000) ? 100.0 : 300.0;
         $rounded = round(($supplierPrice + $markup) / 100) * 100;
         return (float)($rounded + 99);
+    }
+
+    /**
+     * Intelligently boosts popularity scores for consumer gear (keyboards, mice, audio, chargers)
+     * and sets score = 0 for spare parts (PCB boards, printheads, ribbons).
+     */
+    public function boostConsumerPopularity(): void
+    {
+        $consumerKeywords = [
+            'keyboard' => 950,
+            'mouse' => 900,
+            'speaker' => 850,
+            'headset' => 820,
+            'headphone' => 800,
+            'power bank' => 780,
+            'charger' => 750,
+            'cable' => 700,
+            'controller' => 680,
+            'gaming' => 650,
+            'repeater' => 600,
+            'wifi' => 580,
+            'microsd' => 550,
+            'memory card' => 520,
+            'camera' => 500,
+            'cctv' => 480,
+        ];
+
+        foreach ($consumerKeywords as $kw => $score) {
+            $this->db->execute(
+                "UPDATE products 
+                 SET popularity_score = ? 
+                 WHERE is_active = 1 
+                   AND LOWER(title) LIKE ? 
+                   AND LOWER(title) NOT LIKE '%board%' 
+                   AND LOWER(title) NOT LIKE '%pcb%' 
+                   AND LOWER(title) NOT LIKE '%thermal printer%'
+                   AND LOWER(title) NOT LIKE '%printhead%'
+                   AND LOWER(title) NOT LIKE '%roller%'
+                   AND LOWER(title) NOT LIKE '%gear kit%'",
+                [$score, '%' . $kw . '%']
+            );
+        }
+
+        $this->db->execute(
+            "UPDATE products 
+             SET popularity_score = 0 
+             WHERE LOWER(title) LIKE '%pcb%' 
+                OR LOWER(title) LIKE '%board%' 
+                OR LOWER(title) LIKE '%thermal printer%' 
+                OR LOWER(title) LIKE '%printhead%' 
+                OR LOWER(title) LIKE '%ribbon%' 
+                OR LOWER(title) LIKE '%roller%' 
+                OR LOWER(title) LIKE '%gear kit%' 
+                OR LOWER(title) LIKE '%spare part%'"
+        );
     }
 
     /**

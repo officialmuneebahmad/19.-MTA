@@ -35,16 +35,7 @@
 
     </div>
 
-    <!-- Carousel Controls -->
-    <div class="carousel-arrows">
-      <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous Slide">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      <button class="carousel-arrow carousel-arrow-next" aria-label="Next Slide">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
-    </div>
-
+    <!-- Carousel Indicator Dots -->
     <div class="carousel-dots">
       <button class="carousel-dot active" aria-label="Slide 1"></button>
       <button class="carousel-dot" aria-label="Slide 2"></button>
