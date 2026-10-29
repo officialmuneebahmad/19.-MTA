@@ -4,12 +4,12 @@
  */
 
 :root {
-  /* Brand Identity: Vivid Tech Orange + Bright Teal Accent */
-  --brand-orange: #FF6B2C;
-  --brand-orange-hover: #E85515;
-  --brand-teal: #14B8A6;
-  --brand-teal-hover: #0D9488;
-  --brand-teal-light: rgba(20, 184, 166, 0.12);
+  /* Brand Identity: Exact Sampled Logo Orange (#FF6223) + Logo Teal (#0EB4A9) */
+  --brand-orange: #FF6223;
+  --brand-orange-hover: #E54F12;
+  --brand-teal: #0EB4A9;
+  --brand-teal-hover: #099A90;
+  --brand-teal-light: rgba(14, 180, 169, 0.12);
 
   /* Light Theme */
   --bg: #FAF9F5;
@@ -20,13 +20,13 @@
   --text-muted: #5E5D59;
   --border: #E8E6DC;
   --border-strong: #D1CFBF;
-  --accent: #FF6B2C;
-  --accent-strong: #E85515;
-  --accent-hover: #D0450B;
+  --accent: #FF6223;
+  --accent-strong: #E54F12;
+  --accent-hover: #CC4108;
   --accent-contrast: #FFFFFF;
-  --teal-accent: #14B8A6;
-  --teal-accent-hover: #0D9488;
-  --success: #14B8A6;
+  --teal-accent: #0EB4A9;
+  --teal-accent-hover: #099A90;
+  --success: #0EB4A9;
   --success-bg: #E6F8F6;
   --danger: #B3261E;
   --danger-bg: #FDE8E8;
@@ -54,12 +54,12 @@
 }
 
 [data-theme="dark"] {
-  /* Brand Identity: Vivid Tech Orange + Bright Teal Accent */
-  --brand-orange: #FF6B2C;
-  --brand-orange-hover: #FF7F47;
-  --brand-teal: #14B8A6;
-  --brand-teal-hover: #2DD4BF;
-  --brand-teal-light: rgba(20, 184, 166, 0.2);
+  /* Brand Identity: Exact Sampled Logo Orange (#FF6223) + Logo Teal (#0EB4A9) */
+  --brand-orange: #FF6223;
+  --brand-orange-hover: #FF7B45;
+  --brand-teal: #0EB4A9;
+  --brand-teal-hover: #1DD3C7;
+  --brand-teal-light: rgba(14, 180, 169, 0.2);
 
   /* Dark Theme */
   --bg: #141413;
@@ -70,13 +70,13 @@
   --text-muted: #B7B5A9;
   --border: #33322D;
   --border-strong: #4A4944;
-  --accent: #FF6B2C;
-  --accent-strong: #FF7F47;
-  --accent-hover: #FFA070;
+  --accent: #FF6223;
+  --accent-strong: #FF7B45;
+  --accent-hover: #FFA27A;
   --accent-contrast: #FFFFFF;
-  --teal-accent: #14B8A6;
-  --teal-accent-hover: #2DD4BF;
-  --success: #14B8A6;
+  --teal-accent: #0EB4A9;
+  --teal-accent-hover: #1DD3C7;
+  --success: #0EB4A9;
   --success-bg: #0F3D38;
   --danger: #F2766B;
   --danger-bg: #401C1A;
