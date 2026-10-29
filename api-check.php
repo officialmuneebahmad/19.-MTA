@@ -33,6 +33,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         @set_time_limit(300);
         @ini_set('memory_limit', '512M');
         try {
+            // Force update database settings to active registered token
+            $db->execute("UPDATE settings SET value = ? WHERE key = 'supplier_token'", [$token]);
+            $db->execute("UPDATE settings SET value = ? WHERE key = 'supplier_api_url'", [$apiUrl]);
+            $db->execute("UPDATE settings SET value = 'raw' WHERE key = 'supplier_auth_header_format'");
+
             // 1. Wipe all existing products
             $db->execute("DELETE FROM products");
             if ($db->getDriver() === 'sqlite') {
@@ -42,7 +47,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
 
             // 2. Fetch fresh live feed strictly from Computer Zone API
             $syncService = new SupplierSyncService();
-            $result = $syncService->run();
+            $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
                 $message = "SUCCESS! All old products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API!";
                 $messageType = 'success';
@@ -71,8 +76,13 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         @set_time_limit(300);
         @ini_set('memory_limit', '512M');
         try {
+            // Force update database settings to active registered token
+            $db->execute("UPDATE settings SET value = ? WHERE key = 'supplier_token'", [$token]);
+            $db->execute("UPDATE settings SET value = ? WHERE key = 'supplier_api_url'", [$apiUrl]);
+            $db->execute("UPDATE settings SET value = 'raw' WHERE key = 'supplier_auth_header_format'");
+
             $syncService = new SupplierSyncService();
-            $result = $syncService->run();
+            $result = $syncService->run($apiUrl, $token);
             if ($result['status'] === 'success') {
                 $message = "SUCCESS! Live sync completed with {$result['feed_count']} products imported/updated from Computer Zone.";
                 $messageType = 'success';

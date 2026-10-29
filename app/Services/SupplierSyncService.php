@@ -24,18 +24,19 @@ class SupplierSyncService
         $this->config = mta_config('supplier', []);
     }
 
-    public function run(?string $overrideUrl = null): array
+    public function run(?string $overrideUrl = null, ?string $overrideToken = null): array
     {
-        return $this->sync($overrideUrl);
+        return $this->sync($overrideUrl, $overrideToken);
     }
 
     /**
      * Run synchronization from API or local mock
      *
      * @param string|null $overrideUrl Optional override for testing
+     * @param string|null $overrideToken Optional token override
      * @return array Sync run statistics
      */
-    public function sync(?string $overrideUrl = null): array
+    public function sync(?string $overrideUrl = null, ?string $overrideToken = null): array
     {
         @set_time_limit(300);
         @ini_set('memory_limit', '512M');
@@ -49,12 +50,18 @@ class SupplierSyncService
         $authFormat = $this->config['auth_header_format'] 
             ?? mta_setting('supplier_auth_header_format', 'raw');
 
+        // Discard any legacy placeholder token d65090a5...
+        $dbToken = mta_setting('supplier_token');
+        if ($dbToken === 'd65090a5f72172720b1806a9d37aa9a4' || str_starts_with((string)$dbToken, 'TODO')) {
+            $dbToken = null;
+        }
+
         $cfgToken = $this->config['token'] ?? '';
-        $token = (!empty($cfgToken) && $cfgToken !== 'TODO-OWNER' && !str_starts_with($cfgToken, 'YOUR_'))
-            ? $cfgToken
-            : (mta_setting('supplier_token') !== 'TODO-OWNER' && !empty(mta_setting('supplier_token'))
-                ? mta_setting('supplier_token')
-                : 'f1f3b0294c3f7c2328e41d42e59d2877');
+        if ($cfgToken === 'd65090a5f72172720b1806a9d37aa9a4' || str_starts_with((string)$cfgToken, 'TODO') || str_starts_with((string)$cfgToken, 'YOUR_')) {
+            $cfgToken = null;
+        }
+
+        $token = $overrideToken ?? $cfgToken ?? $dbToken ?? 'f1f3b0294c3f7c2328e41d42e59d2877';
 
         $timeout = (int)($this->config['timeout'] ?? 120);
 

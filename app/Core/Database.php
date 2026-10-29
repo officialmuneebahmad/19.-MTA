@@ -128,6 +128,11 @@ class Database
                     $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status VARCHAR(20) NOT NULL DEFAULT 'in_stock';");
                 }
             }
+
+            // Ensure obsolete placeholder tokens in settings table are replaced with registered token
+            $this->pdo->exec("UPDATE settings SET value = 'f1f3b0294c3f7c2328e41d42e59d2877' WHERE key = 'supplier_token' AND (value = 'd65090a5f72172720b1806a9d37aa9a4' OR value LIKE 'TODO%' OR value = '');");
+            $this->pdo->exec("UPDATE settings SET value = 'https://api.computerzone.pk/products' WHERE key = 'supplier_api_url' AND value LIKE '%127.0.0.1%';");
+            $this->pdo->exec("UPDATE settings SET value = 'raw' WHERE key = 'supplier_auth_header_format' AND value != 'raw';");
         } catch (\Throwable) {
             // Table may not exist yet on fresh installations prior to schema creation
         }
