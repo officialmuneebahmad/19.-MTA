@@ -105,9 +105,9 @@
   <!-- Top Announcement Strip (Exact default text, Marquee) -->
   <div class="announcement-bar" role="region" aria-label="Store Announcement">
     <div class="announcement-track">
-      <span><?= e(mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY CHARGES ONLY FOR MULTANIS')) ?></span>
+      <span><?= e(mta_setting('announcement_strip', 'CASH ON DELIVERY ALL PAKISTAN • 3 DAYS CHECK WARRANTY • MINIMUM DELIVERY CHARGES FOR MULTANIS • FREE DELIVERY OVER 5,000')) ?></span>
       &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-      <span><?= e(mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY CHARGES ONLY FOR MULTANIS')) ?></span>
+      <span><?= e(mta_setting('announcement_strip', 'CASH ON DELIVERY ALL PAKISTAN • 3 DAYS CHECK WARRANTY • MINIMUM DELIVERY CHARGES FOR MULTANIS • FREE DELIVERY OVER 5,000')) ?></span>
     </div>
   </div>
 
@@ -139,6 +139,14 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
+        <!-- Day / Night Mode Toggle (Desktop only) -->
+        <button class="action-btn theme-toggle desktop-theme-btn" id="theme-toggle-btn-desktop" aria-label="Toggle Day and Night mode" aria-pressed="false" title="Toggle Day / Night Mode">
+          <!-- Sun Icon -->
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- Moon Icon -->
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+
         <!-- Cart Link (Larger 24px icon) -->
         <?php $cartCount = count(\App\Core\Session::get('cart', [])); ?>
         <a href="/cart" class="action-btn" aria-label="Shopping Cart">
@@ -209,11 +217,6 @@
           </ul>
         </li>
       </ul>
-
-      <!-- Store Info Tag -->
-      <div style="font-size: 0.825rem; font-weight: 600; color: var(--accent-strong); display: flex; align-items: center; gap: 0.5rem;">
-        <span>&#9889; Fast Delivery Across Pakistan</span>
-      </div>
     </div>
   </nav>
 
@@ -251,8 +254,8 @@
 
     <!-- WhatsApp Quick Contact (Official Handset + Bubble Icon) -->
     <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories, I have an inquiry.')) ?>" target="_blank" rel="noopener noreferrer" class="btn-float-wa" aria-label="Chat on WhatsApp" title="WhatsApp 0307-0655275">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12.01 2.002c-5.518 0-9.998 4.48-9.998 9.998 0 1.76.459 3.475 1.332 4.992L2.054 22l5.133-1.346a9.948 9.948 0 004.823 1.248h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.67-1.04-5.18-2.93-7.07A9.928 9.928 0 0012.01 2.002zm5.82 14.156c-.24.674-1.398 1.288-1.928 1.348-.5.056-1.15.08-3.71-.978-2.56-1.058-4.2-3.666-4.33-3.838-.13-.172-1.03-1.37-1.03-2.613 0-1.242.648-1.854.88-2.106.23-.25.5-.314.67-.314.17 0 .34.002.49.01.16.008.37-.06.58.444.22.528.74 1.808.81 1.944.07.136.11.296.02.476-.09.18-.14.29-.27.444-.14.156-.29.35-.41.47-.14.138-.28.288-.12.564.16.276.71 1.17 1.52 1.894 1.05.934 1.93 1.224 2.21 1.36.27.136.43.116.59-.068.16-.184.69-.804.87-1.08.18-.276.36-.23.6-.138.24.092 1.52.716 1.78.846.26.13.43.196.49.304.07.108.07.624-.17 1.298z"/>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M18.403 5.638A8.955 8.955 0 0 0 12.053 3c-4.968 0-9.01 4.042-9.01 9.013 0 1.587.413 3.134 1.198 4.492L3 21l4.634-1.216a8.972 8.972 0 0 0 4.417 1.156h.004c4.968 0 9.007-4.042 9.007-9.014 0-2.408-.937-4.672-2.659-6.288zm-6.35 13.785h-.004a7.466 7.466 0 0 1-3.805-1.042l-.273-.162-2.827.741.755-2.756-.177-.282a7.448 7.448 0 0 1-1.144-3.909c0-4.135 3.364-7.499 7.502-7.499 2.004 0 3.887.782 5.301 2.2 1.415 1.417 2.193 3.303 2.193 5.308 0 4.136-3.365 7.499-7.498 7.499zm4.113-5.618c-.225-.113-1.334-.659-1.541-.734-.206-.075-.356-.113-.506.113-.15.225-.581.734-.712.884-.131.15-.262.169-.487.056-.225-.113-.951-.351-1.811-1.118-.67-.598-1.122-1.337-1.253-1.562-.131-.225-.014-.347.098-.459.102-.101.225-.263.338-.395.112-.131.15-.225.225-.375.075-.15.037-.281-.019-.394-.056-.113-.506-1.219-.694-1.67-.182-.439-.368-.379-.506-.386l-.431-.007c-.15 0-.394.056-.6.281-.206.225-.788.77-.788 1.876 0 1.107.806 2.176.919 2.326.112.15 1.586 2.423 3.843 3.398.537.232.956.371 1.283.475.54.172 1.031.148 1.419.09.432-.065 1.334-.545 1.522-1.07.188-.526.188-.977.131-1.07-.056-.094-.206-.15-.431-.263z" fill="#FFFFFF"/>
       </svg>
     </a>
   </div>
@@ -283,27 +286,71 @@
         </button>
       </div>
 
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem;">
-        <li><a href="/" style="font-weight: 700; font-size: 1rem; color: var(--text);">Home</a></li>
-        <li><a href="/best-sellers" style="font-weight: 700; font-size: 1rem; color: var(--text);">Best Sellers</a></li>
-        
-        <li style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-top:0.5rem;">Categories</li>
-        <li><a href="/categories/mobile-accessories" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('mobile-accessories') ?> Mobile Accessories</a></li>
-        <li><a href="/categories/computer-accessories" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('computer-accessories') ?> Computer Accessories</a></li>
-        <li><a href="/categories/audio-and-speakers" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('audio-and-speakers') ?> Audio & Speakers</a></li>
-        <li><a href="/categories/power-and-charging" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('power-and-charging') ?> Power & Charging</a></li>
-        <li><a href="/categories/gaming" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('gaming') ?> Gaming Accessories</a></li>
-        <li><a href="/categories/storage-and-memory" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('storage-and-memory') ?> Storage & Memory</a></li>
-        <li><a href="/categories/networking" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('networking') ?> Networking Devices</a></li>
-        <li><a href="/categories/cables-and-adapters" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('cables-and-adapters') ?> Cables & Adapters</a></li>
-        <li><a href="/categories/smart-and-cctv" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('smart-and-cctv') ?> Smart & CCTV</a></li>
+      <!-- Main Navigation Links -->
+      <div style="display:flex; flex-direction:column; gap:0.4rem; margin-bottom:1.25rem;">
+        <a href="/" style="font-weight:700; font-size:1rem; color:var(--text); padding:0.6rem 0.75rem; border-radius:var(--radius-sm); background:var(--surface-2); display:flex; align-items:center; justify-content:space-between;">
+          <span>Home</span>
+          <span style="font-size:0.8rem; color:var(--accent-strong);">&rarr;</span>
+        </a>
+        <a href="/best-sellers" style="font-weight:700; font-size:1rem; color:var(--text); padding:0.6rem 0.75rem; border-radius:var(--radius-sm); background:var(--surface-2); display:flex; align-items:center; justify-content:space-between;">
+          <span>Best Sellers</span>
+          <span style="font-size:0.8rem; color:var(--accent-strong);">&rarr;</span>
+        </a>
+      </div>
+      
+      <!-- Category Tiles with Generous Touch Target & Spacing -->
+      <div style="margin-bottom:1.5rem;">
+        <div style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.75px; margin-bottom:0.75rem; padding-left:0.25rem;">
+          Shop by Category
+        </div>
+        <div class="drawer-category-grid" style="display:flex; flex-direction:column; gap:0.65rem;">
+          <a href="/categories/mobile-accessories" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('mobile-accessories') ?></span>
+            <span class="drawer-cat-name">Mobile Accessories</span>
+          </a>
+          <a href="/categories/computer-accessories" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('computer-accessories') ?></span>
+            <span class="drawer-cat-name">Computer Accessories</span>
+          </a>
+          <a href="/categories/audio-and-speakers" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('audio-and-speakers') ?></span>
+            <span class="drawer-cat-name">Audio &amp; Speakers</span>
+          </a>
+          <a href="/categories/power-and-charging" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('power-and-charging') ?></span>
+            <span class="drawer-cat-name">Power &amp; Charging</span>
+          </a>
+          <a href="/categories/gaming" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('gaming') ?></span>
+            <span class="drawer-cat-name">Gaming Accessories</span>
+          </a>
+          <a href="/categories/storage-and-memory" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('storage-and-memory') ?></span>
+            <span class="drawer-cat-name">Storage &amp; Memory</span>
+          </a>
+          <a href="/categories/networking" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('networking') ?></span>
+            <span class="drawer-cat-name">Networking Devices</span>
+          </a>
+          <a href="/categories/cables-and-adapters" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('cables-and-adapters') ?></span>
+            <span class="drawer-cat-name">Cables &amp; Adapters</span>
+          </a>
+          <a href="/categories/smart-and-cctv" class="drawer-category-item">
+            <span class="drawer-cat-icon"><?= mta_category_icon('smart-and-cctv') ?></span>
+            <span class="drawer-cat-name">Smart &amp; CCTV</span>
+          </a>
+        </div>
+      </div>
 
-        <li style="border-top: 1px solid var(--border); padding-top: 0.75rem; margin-top: 0.5rem;"><a href="/brands" style="color:var(--text); font-weight:600;">Brands Directory</a></li>
-        <li><a href="/guides" style="color:var(--text); font-weight:600;">Tech Buying Guides</a></li>
-        <li><a href="/track-order" style="color:var(--text); font-weight:600;">Track Your Order</a></li>
-        <li><a href="/contact" style="color:var(--text); font-weight:600;">Contact & Store Location</a></li>
-        <li><a href="/about" style="color:var(--text); font-weight:600;">About Store</a></li>
-      </ul>
+      <!-- Secondary Info Links -->
+      <div style="border-top:1px solid var(--border); padding-top:1rem; display:flex; flex-direction:column; gap:0.55rem;">
+        <a href="/brands" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Brands Directory</a>
+        <a href="/guides" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Tech Buying Guides</a>
+        <a href="/track-order" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Track Your Order</a>
+        <a href="/contact" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Contact &amp; Store Location</a>
+        <a href="/about" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">About Store</a>
+      </div>
     </div>
   </div>
 
