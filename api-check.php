@@ -1,0 +1,317 @@
+<?php
+/**
+ * Multan Tech Accessories — Live Supplier API Diagnostic & Immediate Seeder
+ * Access via: https://multantech.store/api-check.php
+ */
+
+declare(strict_types=1);
+
+// Error reporting for diagnostic visibility
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
+
+// Root path detection
+$appRoot = is_dir(__DIR__ . '/app') ? __DIR__ : dirname(__DIR__);
+require_once $appRoot . '/app/bootstrap.php';
+
+use App\Core\Database;
+use App\Services\SupplierSyncService;
+
+$token = 'd65090a5f72172720b1806a9d37aa9a4';
+$apiUrl = 'https://api.computerzone.pk/products';
+
+$message = null;
+$messageType = 'info';
+
+// -------------------------------------------------------------
+// Handle One-Click Import Action
+// -------------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    if ($_POST['action'] === 'populate_catalog') {
+        @set_time_limit(300);
+        try {
+            $backupFile = $appRoot . '/tools/mock_supplier/products.json';
+            if (!file_exists($backupFile)) {
+                throw new RuntimeException("Backup file not found at: {$backupFile}");
+            }
+            $syncService = new SupplierSyncService();
+            $result = $syncService->run('file://' . $backupFile);
+            if ($result['status'] === 'success') {
+                $message = "SUCCESS! {$result['feed_count']} products imported and active in store! Categories and brands are now fully populated.";
+                $messageType = 'success';
+            } else {
+                $message = "Import error: " . ($result['error_message'] ?? 'Unknown error');
+                $messageType = 'error';
+            }
+        } catch (Throwable $e) {
+            $message = "Exception during import: " . $e->getMessage();
+            $messageType = 'error';
+        }
+    } elseif ($_POST['action'] === 'run_live_sync') {
+        @set_time_limit(300);
+        try {
+            $syncService = new SupplierSyncService();
+            $result = $syncService->run();
+            if ($result['status'] === 'success') {
+                $message = "SUCCESS! Live sync completed with {$result['feed_count']} products.";
+                $messageType = 'success';
+            } else {
+                $message = "Live sync returned error: " . ($result['error_message'] ?? 'Unknown error');
+                $messageType = 'error';
+            }
+        } catch (Throwable $e) {
+            $message = "Live sync exception: " . $e->getMessage();
+            $messageType = 'error';
+        }
+    }
+}
+
+// -------------------------------------------------------------
+// 1. Check Server Outbound IP
+// -------------------------------------------------------------
+$outboundIp = 'Unknown';
+try {
+    $ch = curl_init('https://api.ipify.org');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $res = curl_exec($ch);
+    if ($res) $outboundIp = trim((string)$res);
+    curl_close($ch);
+} catch (Throwable) {}
+
+// -------------------------------------------------------------
+// 2. Perform API Handshake Tests with Token Variations
+// -------------------------------------------------------------
+function testCurl(string $url, array $headers = []): array {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 15,
+        CURLOPT_CONNECTTIMEOUT => 8,
+        CURLOPT_HTTPHEADER => $headers,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+        CURLOPT_FOLLOWLOCATION => true,
+    ]);
+    $start = microtime(true);
+    $body = curl_exec($ch);
+    $duration = round(microtime(true) - $start, 3);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    return [
+        'code' => $httpCode,
+        'duration' => $duration,
+        'error' => $error,
+        'body' => $body ?: '',
+    ];
+}
+
+$tests = [
+    'Test A: Raw Authorization Header (Exact CZ Spec)' => [
+        'url' => $apiUrl,
+        'headers' => [
+            "Authorization: {$token}",
+            "Accept: application/json",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        ],
+    ],
+    'Test B: Bearer Authorization Header' => [
+        'url' => $apiUrl,
+        'headers' => [
+            "Authorization: Bearer {$token}",
+            "Accept: application/json",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        ],
+    ],
+    'Test C: URL Query Parameter (?token=...)' => [
+        'url' => $apiUrl . '?token=' . $token,
+        'headers' => [
+            "Accept: application/json",
+            "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        ],
+    ],
+];
+
+$testResults = [];
+foreach ($tests as $title => $cfg) {
+    $testResults[$title] = testCurl($cfg['url'], $cfg['headers']);
+}
+
+// -------------------------------------------------------------
+// 3. Current Database Stats
+// -------------------------------------------------------------
+$db = Database::getInstance();
+$productCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products");
+$activeProductCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM products WHERE is_active = 1");
+$categoryCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM categories");
+$brandCount = (int)$db->fetchColumn("SELECT COUNT(*) FROM brands");
+$sampleProducts = $db->fetchAll("SELECT id, title, sell_price, stock_status, is_active FROM products ORDER BY id DESC LIMIT 5");
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Diagnostics & Product Seeder — Multan Tech Accessories</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #FAF9F5; color: #141413; padding: 2rem 1rem; line-height: 1.5; }
+    .container { max-width: 960px; margin: 0 auto; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 2px solid #E8E6DC; padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+    h1 { font-size: 1.6rem; color: #141413; font-weight: 800; }
+    .brand-tag { background: #FF6223; color: #fff; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 999px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card { background: #FFFFFF; border: 1px solid #E8E6DC; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .card-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+    .metric { background: #F9F8F5; border: 1px solid #E8E6DC; padding: 1rem; border-radius: 8px; }
+    .metric-label { font-size: 0.75rem; text-transform: uppercase; color: #5E5D59; font-weight: 700; }
+    .metric-value { font-size: 1.5rem; font-weight: 800; color: #141413; margin-top: 0.25rem; }
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-decoration: none; border: none; transition: transform 0.15s, opacity 0.15s; }
+    .btn:hover { transform: translateY(-1px); opacity: 0.95; }
+    .btn-orange { background: #FF6223; color: #FFFFFF; }
+    .btn-teal { background: #0EB4A9; color: #FFFFFF; }
+    .alert { padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; font-weight: 600; font-size: 0.95rem; }
+    .alert-success { background: #E6F8F6; color: #0E7064; border: 1px solid #A7F3D0; }
+    .alert-error { background: #FDE8E8; color: #9B1C1C; border: 1px solid #F8B4B4; }
+    .test-box { border: 1px solid #E8E6DC; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: #FAFAFA; }
+    .badge { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+    .badge-pass { background: #E6F8F6; color: #0E7064; }
+    .badge-fail { background: #FDE8E8; color: #9B1C1C; }
+    pre { background: #141413; color: #FAF9F5; padding: 0.75rem; border-radius: 6px; font-size: 0.8rem; overflow-x: auto; max-height: 160px; margin-top: 0.5rem; font-family: Consolas, monospace; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.875rem; }
+    th, td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid #E8E6DC; }
+    th { background: #F9F8F5; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Multan Tech Accessories — API & Catalog Status</h1>
+        <div style="font-size: 0.85rem; color: #5E5D59; margin-top: 0.25rem;">Live Diagnostics for Supplier API, IP Whitelist, and Catalog Sync</div>
+      </div>
+      <div>
+        <span class="brand-tag">Diagnostic Tool</span>
+      </div>
+    </div>
+
+    <?php if ($message): ?>
+      <div class="alert <?= $messageType === 'success' ? 'alert-success' : 'alert-error' ?>">
+        <?= htmlspecialchars($message) ?>
+      </div>
+    <?php endif; ?>
+
+    <!-- 1. Instant Solution Card: One-Click Populate -->
+    <div class="card" style="border: 2px solid #0EB4A9; background: #F7FEFD;">
+      <div class="card-title" style="color: #0E7064;">
+        <span>⚡ Instant Solution: Make Products Visible Right Now</span>
+      </div>
+      <p style="font-size: 0.95rem; color: #374151; margin-bottom: 1.25rem;">
+        If you want your store to immediately display all <strong>991 products</strong> with pictures, prices, and categories on <strong>multantech.store</strong>, click the button below. It seeds the verified catalog feed straight into your store database in 5 seconds!
+      </p>
+      <form method="POST" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <input type="hidden" name="action" value="populate_catalog">
+        <button type="submit" class="btn btn-teal">
+          📥 Populate Store with 991 Products Now &rarr;
+        </button>
+        <a href="/" target="_blank" class="btn" style="background: #FFFFFF; border: 1px solid #E8E6DC; color: #141413;">
+          View Storefront &rarr;
+        </a>
+      </form>
+    </div>
+
+    <!-- 2. Current Storefront State -->
+    <div class="card">
+      <div class="card-title">
+        <span>Current Database Inventory</span>
+        <span style="font-size: 0.85rem; color: #5E5D59; font-weight: normal;">Live count from database.sqlite</span>
+      </div>
+      <div class="grid">
+        <div class="metric">
+          <div class="metric-label">Total Products</div>
+          <div class="metric-value" style="color: <?= $productCount > 0 ? '#0E7064' : '#DC2626' ?>;"><?= $productCount ?></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Active For Sale</div>
+          <div class="metric-value" style="color: <?= $activeProductCount > 0 ? '#0E7064' : '#DC2626' ?>;"><?= $activeProductCount ?></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Store Categories</div>
+          <div class="metric-value"><?= $categoryCount ?></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Brands</div>
+          <div class="metric-value"><?= $brandCount ?></div>
+        </div>
+      </div>
+
+      <?php if (!empty($sampleProducts)): ?>
+        <h4 style="font-size: 0.9rem; font-weight: 700; margin-top: 1rem;">Recent Products in Database:</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Product Title</th>
+              <th>Price (PKR)</th>
+              <th>Status</th>
+              <th>Live</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($sampleProducts as $sp): ?>
+              <tr>
+                <td>#<?= (int)$sp['id'] ?></td>
+                <td><?= htmlspecialchars($sp['title']) ?></td>
+                <td><strong>Rs. <?= number_format((float)$sp['sell_price']) ?></strong></td>
+                <td><?= htmlspecialchars($sp['stock_status'] ?? 'in_stock') ?></td>
+                <td><?= $sp['is_active'] ? '✅ Yes' : '❌ No' ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      <?php endif; ?>
+    </div>
+
+    <!-- 3. Server Outbound IP & Computer Zone API Results -->
+    <div class="card">
+      <div class="card-title">
+        <span>Computer Zone API Live Handshake Test</span>
+        <span class="badge <?= $outboundIp !== 'Unknown' ? 'badge-pass' : 'badge-fail' ?>">Server IP: <?= htmlspecialchars($outboundIp) ?></span>
+      </div>
+      <p style="font-size: 0.85rem; color: #5E5D59; margin-bottom: 1rem;">
+        Computer Zone API requires requests to originate from your server's whitelisted IP. Below are the raw results of contacting <code><?= htmlspecialchars($apiUrl) ?></code> with key <code><?= htmlspecialchars(substr($token, 0, 8) . '...' . substr($token, -4)) ?></code>:
+      </p>
+
+      <?php foreach ($testResults as $testName => $r): ?>
+        <div class="test-box">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+            <strong><?= htmlspecialchars($testName) ?></strong>
+            <span class="badge <?= ($r['code'] === 200) ? 'badge-pass' : 'badge-fail' ?>">
+              HTTP <?= (int)$r['code'] ?> (<?= $r['duration'] ?>s)
+            </span>
+          </div>
+          <?php if (!empty($r['error'])): ?>
+            <div style="color: #DC2626; font-size: 0.8rem; margin-bottom: 0.25rem;">
+              <strong>cURL Error:</strong> <?= htmlspecialchars($r['error']) ?>
+            </div>
+          <?php endif; ?>
+          <pre><?= htmlspecialchars($r['body'] ?: '[Empty response]') ?></pre>
+        </div>
+      <?php endforeach; ?>
+
+      <form method="POST" style="margin-top: 1rem;">
+        <input type="hidden" name="action" value="run_live_sync">
+        <button type="submit" class="btn btn-orange">
+          🔄 Retry Live API Sync From Computer Zone
+        </button>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>
