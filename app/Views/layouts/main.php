@@ -449,7 +449,7 @@
             <li><a href="/faq" class="footer-link">Frequently Asked Questions</a></li>
             <li><a href="/privacy-policy" class="footer-link">Privacy Policy</a></li>
             <li><a href="/terms-and-conditions" class="footer-link">Terms & Conditions</a></li>
-            <li><a href="<?= e(mta_admin_path()) ?>" class="footer-link" rel="nofollow" style="color:var(--accent-strong); font-weight:700;">Admin Portal &rarr;</a></li>
+            <li><a href="<?= e(mta_admin_path()) ?>" target="_blank" rel="noopener noreferrer nofollow" class="footer-link" style="color:var(--accent-strong); font-weight:700;">Admin Portal &rarr;</a></li>
           </ul>
         </div>
 
@@ -475,7 +475,7 @@
         <div>
           &copy; <?= date('Y') ?> Multan Tech Accessories. All rights reserved.
           <span class="footer-credit">&bull; <?= e(mta_setting('founder_credit', 'Founded & Developed by Muneeb Ahmad')) ?></span>
-          <span>&bull; <a href="<?= e(mta_admin_path()) ?>" style="color:var(--text-muted); text-decoration:underline;" rel="nofollow">Admin Portal</a></span>
+          <span>&bull; <a href="<?= e(mta_admin_path()) ?>" target="_blank" rel="noopener noreferrer nofollow" style="color:var(--text-muted); text-decoration:underline;">Admin Portal</a></span>
         </div>
         <div>
           Currency: <strong>PKR (Rs.)</strong> &bull; Serving Multan & All Pakistan

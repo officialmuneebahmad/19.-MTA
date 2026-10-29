@@ -26,17 +26,36 @@ class HomeController
              ORDER BY sort_order ASC, name ASC"
         );
 
-        // Filter out boring spare parts and motherboard replacement components
+        // Self-healing: Zero out popularity for industrial spare parts
+        try {
+            $db->execute(
+                "UPDATE products 
+                 SET popularity_score = 0 
+                 WHERE LOWER(title) LIKE '%pcb%' 
+                    OR LOWER(title) LIKE '%board%' 
+                    OR LOWER(title) LIKE '%thermal%' 
+                    OR LOWER(title) LIKE '%printer%' 
+                    OR LOWER(title) LIKE '%printhead%' 
+                    OR LOWER(title) LIKE '%ribbon%' 
+                    OR LOWER(title) LIKE '%roller%' 
+                    OR LOWER(title) LIKE '%gear%'"
+            );
+        } catch (\Throwable) {}
+
+        // Filter out boring spare parts and industrial replacement components
         $excludeSparePartsSql = " AND LOWER(p.title) NOT LIKE '%pcb%' 
                                   AND LOWER(p.title) NOT LIKE '%board%' 
-                                  AND LOWER(p.title) NOT LIKE '%thermal printer%' 
+                                  AND LOWER(p.title) NOT LIKE '%thermal%' 
+                                  AND LOWER(p.title) NOT LIKE '%printer%' 
                                   AND LOWER(p.title) NOT LIKE '%printhead%' 
                                   AND LOWER(p.title) NOT LIKE '%ribbon%' 
                                   AND LOWER(p.title) NOT LIKE '%roller%' 
-                                  AND LOWER(p.title) NOT LIKE '%gear kit%' 
-                                  AND LOWER(p.title) NOT LIKE '%spare part%' ";
+                                  AND LOWER(p.title) NOT LIKE '%gear%' 
+                                  AND LOWER(p.title) NOT LIKE '%spare%' 
+                                  AND LOWER(p.title) NOT LIKE '%motherboard%' 
+                                  AND LOWER(p.title) NOT LIKE '%mechanism%' ";
 
-        // Best Sellers (Keyboards, Mice, Speakers, Headsets, Gadgets, Chargers)
+        // Best Sellers (Keyboards, Mice, Speakers, Headsets, Gadgets, Chargers, Power Banks)
         $bestSellers = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
@@ -44,22 +63,25 @@ class HomeController
              WHERE p.is_active = 1 {$excludeSparePartsSql}
              ORDER BY 
                (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
-               p.popularity_score DESC,
                (CASE 
-                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 10
-                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 9
-                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 8
-                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 7
-                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 6
-                  WHEN LOWER(p.title) LIKE '%charger%' THEN 5
-                  WHEN LOWER(p.title) LIKE '%cable%' THEN 4
-                  ELSE 1
+                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 100
+                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 95
+                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 90
+                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 85
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 80
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 75
+                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 70
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 65
+                  WHEN LOWER(p.title) LIKE '%wifi%' OR LOWER(p.title) LIKE '%router%' OR LOWER(p.title) LIKE '%repeater%' THEN 60
+                  WHEN LOWER(p.title) LIKE '%microsd%' OR LOWER(p.title) LIKE '%flash drive%' OR LOWER(p.title) LIKE '%card%' THEN 55
+                  ELSE 0
                 END) DESC,
+               p.popularity_score DESC,
                p.id DESC
              LIMIT 12"
         );
 
-        // New Arrivals (Power banks, gaming accessories, cameras, cables, audio)
+        // New Arrivals (Power banks, gaming accessories, cameras, cables, audio, gadgets)
         $newArrivals = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
@@ -68,13 +90,16 @@ class HomeController
              ORDER BY 
                (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
                (CASE 
-                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 10
-                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 9
-                  WHEN LOWER(p.title) LIKE '%camera%' OR LOWER(p.title) LIKE '%cctv%' THEN 8
-                  WHEN LOWER(p.title) LIKE '%cable%' THEN 7
-                  WHEN LOWER(p.title) LIKE '%charger%' THEN 6
-                  WHEN LOWER(p.title) LIKE '%audio%' OR LOWER(p.title) LIKE '%speaker%' THEN 5
-                  ELSE 1
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 100
+                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 95
+                  WHEN LOWER(p.title) LIKE '%camera%' OR LOWER(p.title) LIKE '%cctv%' THEN 90
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 85
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 80
+                  WHEN LOWER(p.title) LIKE '%audio%' OR LOWER(p.title) LIKE '%speaker%' THEN 75
+                  WHEN LOWER(p.title) LIKE '%keyboard%' OR LOWER(p.title) LIKE '%mouse%' THEN 70
+                  WHEN LOWER(p.title) LIKE '%wifi%' OR LOWER(p.title) LIKE '%router%' THEN 65
+                  WHEN LOWER(p.title) LIKE '%microsd%' OR LOWER(p.title) LIKE '%flash drive%' THEN 60
+                  ELSE 0
                 END) DESC,
                p.id DESC
              LIMIT 12"
@@ -155,12 +180,15 @@ class HomeController
 
         $excludeSparePartsSql = " AND LOWER(p.title) NOT LIKE '%pcb%' 
                                   AND LOWER(p.title) NOT LIKE '%board%' 
-                                  AND LOWER(p.title) NOT LIKE '%thermal printer%' 
+                                  AND LOWER(p.title) NOT LIKE '%thermal%' 
+                                  AND LOWER(p.title) NOT LIKE '%printer%' 
                                   AND LOWER(p.title) NOT LIKE '%printhead%' 
                                   AND LOWER(p.title) NOT LIKE '%ribbon%' 
                                   AND LOWER(p.title) NOT LIKE '%roller%' 
-                                  AND LOWER(p.title) NOT LIKE '%gear kit%' 
-                                  AND LOWER(p.title) NOT LIKE '%spare part%' ";
+                                  AND LOWER(p.title) NOT LIKE '%gear%' 
+                                  AND LOWER(p.title) NOT LIKE '%spare%' 
+                                  AND LOWER(p.title) NOT LIKE '%motherboard%' 
+                                  AND LOWER(p.title) NOT LIKE '%mechanism%' ";
 
         $countRow = $db->fetch(
             "SELECT COUNT(*) as total FROM products p WHERE p.is_active = 1 AND p.is_published = 1 {$excludeSparePartsSql}"
@@ -175,17 +203,20 @@ class HomeController
              WHERE p.is_active = 1 AND p.is_published = 1 {$excludeSparePartsSql}
              ORDER BY 
                (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
-               p.popularity_score DESC,
                (CASE 
-                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 10
-                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 9
-                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 8
-                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 7
-                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 6
-                  WHEN LOWER(p.title) LIKE '%charger%' THEN 5
-                  WHEN LOWER(p.title) LIKE '%cable%' THEN 4
-                  ELSE 1
+                  WHEN LOWER(p.title) LIKE '%keyboard%' THEN 100
+                  WHEN LOWER(p.title) LIKE '%mouse%' THEN 95
+                  WHEN LOWER(p.title) LIKE '%speaker%' THEN 90
+                  WHEN LOWER(p.title) LIKE '%headset%' OR LOWER(p.title) LIKE '%headphone%' THEN 85
+                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 80
+                  WHEN LOWER(p.title) LIKE '%charger%' THEN 75
+                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 70
+                  WHEN LOWER(p.title) LIKE '%cable%' THEN 65
+                  WHEN LOWER(p.title) LIKE '%wifi%' OR LOWER(p.title) LIKE '%router%' OR LOWER(p.title) LIKE '%repeater%' THEN 60
+                  WHEN LOWER(p.title) LIKE '%microsd%' OR LOWER(p.title) LIKE '%flash drive%' THEN 55
+                  ELSE 0
                 END) DESC,
+               p.popularity_score DESC,
                p.id DESC
              LIMIT ? OFFSET ?",
             [$perPage, $offset]

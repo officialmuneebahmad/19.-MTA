@@ -73,6 +73,41 @@ button {
   transform: translateY(-1px);
 }
 
+/* WhatsApp Outlined Button (Transparent background, crisp 1.5px green border, green icon) */
+.btn-whatsapp-outline {
+  background-color: transparent !important;
+  color: var(--text) !important;
+  border: 1.5px solid #25D366 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.35rem !important;
+  text-decoration: none !important;
+}
+
+.btn-whatsapp-outline:hover {
+  background-color: rgba(37, 211, 102, 0.1) !important;
+  border-color: #25D366 !important;
+  transform: translateY(-1px);
+}
+
+/* Card Action Button Consistency: Exact same 38px height and typography */
+.btn-card-action {
+  width: 100% !important;
+  height: 38px !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.825rem !important;
+  font-weight: 700 !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 0 0.5rem !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+  line-height: 1 !important;
+}
+
 .btn-outline-call {
   background-color: transparent;
   color: var(--accent-strong);
@@ -496,27 +531,15 @@ button {
 }
 
 .carousel-arrows {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .carousel-arrow {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-pill);
-  background-color: rgba(255, 255, 255, 0.85);
-  color: #141413;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-  box-shadow: var(--shadow-md);
-  transition: all 0.2s ease;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .carousel-arrow:hover {
@@ -721,7 +744,7 @@ button {
 
 /* Symmetrical V-Shape: Center the last 3 items in the middle of Row 2 */
 .category-tile:nth-child(7) {
-  grid-column-start: 4;
+  grid-column: 4 / span 2;
 }
 
 @media (max-width: 1024px) {
