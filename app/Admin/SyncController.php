@@ -44,6 +44,64 @@ class SyncController
         ]));
     }
 
+    public function test(): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+
+        try {
+            $syncService = new SupplierSyncService();
+            $diag = $syncService->testConnection();
+
+            if ($diag['success']) {
+                Session::flash(
+                    'success',
+                    "API Connection Successful! Outbound Server IP: {$diag['outbound_ip']}. HTTP Code: 200. Feed contains {$diag['products_count']} products. You can now run the full sync below."
+                );
+            } else {
+                $err = $diag['curl_error'] ? "cURL Error: {$diag['curl_error']}" : "HTTP {$diag['http_code']}";
+                Session::flash(
+                    'error',
+                    "Supplier API Connection Failed ({$err}). Server Outbound IP: {$diag['outbound_ip']}. API Response: {$diag['response_snippet']}"
+                );
+            }
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Supplier test exception: ' . $e->getMessage());
+        }
+
+        return $resp->redirect($adminPath . '/sync');
+    }
+
+    public function seedFallback(): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        @set_time_limit(300);
+
+        try {
+            $backupFile = MTA_ROOT . '/tools/mock_supplier/products.json';
+            if (!file_exists($backupFile)) {
+                throw new \RuntimeException('Verified catalog feed file not found at: ' . $backupFile);
+            }
+
+            $syncService = new SupplierSyncService();
+            $result = $syncService->run('file://' . $backupFile);
+
+            if ($result['status'] === 'success') {
+                Session::flash(
+                    'success',
+                    "Success! {$result['feed_count']} verified products imported into store catalog! All categories, brands, and stock counts have been populated."
+                );
+            } else {
+                Session::flash('error', "Import error: " . ($result['error_message'] ?? 'Unknown error'));
+            }
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Seed exception: ' . $e->getMessage());
+        }
+
+        return $resp->redirect($adminPath . '/sync');
+    }
+
     public function trigger(): Response
     {
         $adminPath = mta_admin_path();

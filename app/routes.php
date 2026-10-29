@@ -179,7 +179,9 @@ $router->post("/{$adminBase}/seo-audit/log-404/clear", [AdminSeoAuditController:
 
 // Supplier Sync
 $router->get("/{$adminBase}/sync", [AdminSyncController::class, 'index'], $adminMw);
+$router->post("/{$adminBase}/sync/test", [AdminSyncController::class, 'test'], $adminCsrfMw);
 $router->post("/{$adminBase}/sync/trigger", [AdminSyncController::class, 'trigger'], $adminCsrfMw);
+$router->post("/{$adminBase}/sync/seed-backup", [AdminSyncController::class, 'seedFallback'], $adminCsrfMw);
 
 // Settings
 $router->get("/{$adminBase}/settings", [AdminSettingsController::class, 'index'], $adminMw);

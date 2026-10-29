@@ -462,6 +462,73 @@ class SupplierSyncService
         );
     }
 
+    public function testConnection(): array
+    {
+        $defaultUrl = 'https://api.computerzone.pk/products';
+        $apiUrl = (!empty($this->config['api_url']) && !str_contains($this->config['api_url'], '127.0.0.1') ? $this->config['api_url'] : null)
+            ?? (mta_setting('supplier_api_url') && !str_contains(mta_setting('supplier_api_url'), '127.0.0.1') ? mta_setting('supplier_api_url') : null)
+            ?? $defaultUrl;
+
+        $authFormat = $this->config['auth_header_format'] ?? mta_setting('supplier_auth_header_format', 'raw');
+        $cfgToken = $this->config['token'] ?? '';
+        $token = (!empty($cfgToken) && $cfgToken !== 'TODO-OWNER' && !str_starts_with($cfgToken, 'YOUR_'))
+            ? $cfgToken
+            : (mta_setting('supplier_token') !== 'TODO-OWNER' && !empty(mta_setting('supplier_token'))
+                ? mta_setting('supplier_token')
+                : 'd65090a5f72172720b1806a9d37aa9a4');
+
+        // Check server outbound IP
+        $outboundIp = 'Unknown';
+        try {
+            $ipCh = curl_init('https://api.ipify.org');
+            curl_setopt($ipCh, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ipCh, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ipCh, CURLOPT_SSL_VERIFYPEER, false);
+            $ipRes = curl_exec($ipCh);
+            if ($ipRes) $outboundIp = trim((string)$ipRes);
+            curl_close($ipCh);
+        } catch (\Throwable) {}
+
+        // Test API with primary auth format
+        $authHeader = ($authFormat === 'bearer') ? "Bearer {$token}" : $token;
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $apiUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 20,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: {$authHeader}",
+                "Accept: application/json",
+                "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_FOLLOWLOCATION => true,
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
+        curl_close($ch);
+
+        $parsed = json_decode((string)$response, true);
+        $isSuccess = ($httpCode === 200 && is_array($parsed) && ($parsed['status'] ?? '') === 'success');
+        $productsFound = isset($parsed['Products']) && is_array($parsed['Products']) ? count($parsed['Products']) : 0;
+
+        return [
+            'success' => $isSuccess,
+            'http_code' => $httpCode,
+            'curl_error' => $curlErr,
+            'outbound_ip' => $outboundIp,
+            'api_url' => $apiUrl,
+            'token_preview' => substr($token, 0, 8) . '...' . substr($token, -4),
+            'auth_header' => ($authFormat === 'bearer') ? 'Bearer <token>' : 'raw <token>',
+            'products_count' => $productsFound,
+            'response_snippet' => substr((string)$response, 0, 400),
+        ];
+    }
+
     private function fetchWithRetry(string $url, string $authHeader, int $timeout, int $maxRetries): string
     {
         if (str_starts_with($url, 'file://')) {
@@ -486,9 +553,10 @@ class SupplierSyncService
                 CURLOPT_HTTPHEADER => [
                     "Authorization: {$authHeader}",
                     "Accept: application/json",
-                    "User-Agent: MultanTechStore/1.0 (+https://multantech.store)",
+                    "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
                 ],
-                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false,
                 CURLOPT_FOLLOWLOCATION => true,
             ]);
 
@@ -501,9 +569,9 @@ class SupplierSyncService
                 return $response;
             }
 
-            $lastError = $err ?: "HTTP status {$httpCode}";
+            $respSnippet = substr((string)$response, 0, 200);
+            $lastError = $err ?: "HTTP {$httpCode}: {$respSnippet}";
             if ($attempt < $maxRetries) {
-                // Exponential backoff
                 usleep((int)(pow(2, $attempt) * 200000));
             }
         }

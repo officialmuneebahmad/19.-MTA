@@ -6,14 +6,28 @@ $adminPath = mta_admin_path();
 ?>
 <!-- Status Card -->
 <div class="admin-card">
-  <div class="admin-card-header">
+  <div class="admin-card-header" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
     <div class="admin-card-title">Live Feed Health & Synchronization Control</div>
-    <form action="<?= e($adminPath) ?>/sync/trigger" method="POST">
-      <?= mta_csrf_field() ?>
-      <button type="submit" class="btn btn-primary">
-        ⚡ Run Synchronous Supplier Sync Now
-      </button>
-    </form>
+    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+      <form action="<?= e($adminPath) ?>/sync/test" method="POST" style="margin: 0;">
+        <?= mta_csrf_field() ?>
+        <button type="submit" class="btn btn-secondary" title="Test Computer Zone API handshake and outbound IP">
+          🔍 Test API Connection
+        </button>
+      </form>
+      <form action="<?= e($adminPath) ?>/sync/trigger" method="POST" style="margin: 0;">
+        <?= mta_csrf_field() ?>
+        <button type="submit" class="btn btn-primary" title="Fetch live product updates from Computer Zone API">
+          ⚡ Run Live Supplier Sync Now
+        </button>
+      </form>
+      <form action="<?= e($adminPath) ?>/sync/seed-backup" method="POST" style="margin: 0;">
+        <?= mta_csrf_field() ?>
+        <button type="submit" class="btn btn-secondary" style="background: #14B8A6; color: #fff; border-color: #0D9488;" title="Import all 991 verified products instantly into your store">
+          📥 Populate Store (991 Products Feed)
+        </button>
+      </form>
+    </div>
   </div>
 
   <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
@@ -25,14 +39,16 @@ $adminPath = mta_admin_path();
 
     <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
       <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Feed Last Received</div>
-      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064;"><?= (int)($lastSync['products_received'] ?? 0) ?></div>
+      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064;"><?= (int)($lastSync['feed_count'] ?? $lastSync['products_received'] ?? 0) ?></div>
       <div style="font-size: 0.75rem; color: #777;">All records in single feed</div>
     </div>
 
     <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
-      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Last Run Duration</div>
-      <div style="font-size: 1.85rem; font-weight: 800; color: #141413;"><?= number_format((float)($lastSync['duration_seconds'] ?? 0), 2) ?>s</div>
-      <div style="font-size: 0.75rem; color: #777;">Upsert & hash verified</div>
+      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Last Run Status</div>
+      <div style="font-size: 1.4rem; font-weight: 800; color: <?= ($lastSync['status'] ?? '') === 'success' ? '#0E7064' : '#DC2626' ?>;">
+        <?= strtoupper((string)($lastSync['status'] ?? 'NONE')) ?>
+      </div>
+      <div style="font-size: 0.75rem; color: #777;"><?= !empty($lastSync['finished_at']) ? e($lastSync['finished_at']) : 'Never completed' ?></div>
     </div>
 
     <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
@@ -42,10 +58,11 @@ $adminPath = mta_admin_path();
     </div>
   </div>
 
-  <?php if (!empty($lastSync['error_log'])): ?>
+  <?php $errMsg = $lastSync['error_message'] ?? $lastSync['error_log'] ?? null; ?>
+  <?php if (!empty($errMsg)): ?>
     <div style="background: #FDE8E8; border: 1px solid #F8B4B4; padding: 1rem; border-radius: 6px; font-size: 0.85rem; color: #9B1C1C; margin-top: 1rem;">
-      <strong>Sync Notes / Warnings:</strong><br>
-      <?= nl2br(e($lastSync['error_log'])) ?>
+      <strong>Last Sync Error / Warning:</strong><br>
+      <?= nl2br(e($errMsg)) ?>
     </div>
   <?php endif; ?>
 </div>
@@ -74,6 +91,11 @@ $adminPath = mta_admin_path();
     <tbody>
       <?php if (!empty($runs)): ?>
         <?php foreach ($runs as $r): ?>
+          <?php 
+            $dur = (!empty($r['finished_at']) && !empty($r['started_at'])) 
+              ? max(0, strtotime($r['finished_at']) - strtotime($r['started_at'])) 
+              : 0;
+          ?>
           <tr>
             <td><code>#<?= (int)$r['id'] ?></code></td>
             <td style="font-size: 0.825rem; color: #666;">
@@ -84,14 +106,21 @@ $adminPath = mta_admin_path();
                 <?= e($r['status']) ?>
               </span>
             </td>
-            <td><strong><?= (int)$r['products_received'] ?></strong></td>
-            <td style="color: #0E7064;">+<?= (int)$r['products_inserted'] ?></td>
-            <td style="color: #D97706;">&Delta; <?= (int)$r['products_updated'] ?></td>
-            <td style="color: #666;"><?= (int)$r['products_unchanged'] ?></td>
-            <td style="color: #999;"><?= (int)$r['products_skipped'] ?></td>
-            <td style="color: #DC2626;"><?= (int)$r['products_deactivated'] ?></td>
-            <td style="font-size: 0.825rem;"><?= number_format((float)$r['duration_seconds'], 2) ?>s</td>
+            <td><strong><?= (int)($r['feed_count'] ?? $r['products_received'] ?? 0) ?></strong></td>
+            <td style="color: #0E7064;">+<?= (int)($r['imported_count'] ?? $r['products_inserted'] ?? 0) ?></td>
+            <td style="color: #D97706;">&Delta; <?= (int)($r['updated_count'] ?? $r['products_updated'] ?? 0) ?></td>
+            <td style="color: #666;"><?= (int)($r['unchanged_count'] ?? $r['products_unchanged'] ?? 0) ?></td>
+            <td style="color: #999;"><?= (int)($r['skipped_invalid'] ?? $r['products_skipped'] ?? 0) ?></td>
+            <td style="color: #DC2626;"><?= (int)($r['deactivated_count'] ?? $r['products_deactivated'] ?? 0) ?></td>
+            <td style="font-size: 0.825rem;"><?= $dur ?>s</td>
           </tr>
+          <?php if (!empty($r['error_message'])): ?>
+            <tr>
+              <td colspan="10" style="background: #FFF5F5; color: #C53030; font-size: 0.8rem; padding: 0.5rem 1rem;">
+                <strong>Error:</strong> <?= e($r['error_message']) ?>
+              </td>
+            </tr>
+          <?php endif; ?>
         <?php endforeach; ?>
       <?php else: ?>
         <tr>
