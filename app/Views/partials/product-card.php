@@ -55,8 +55,8 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
 
     <div class="product-card-actions">
       <?php if ($status === 1 && $sellPrice > 0): ?>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.4rem;">
-          <form action="/cart/add" method="POST">
+        <div class="product-card-actions-grid">
+          <form action="/cart/add" method="POST" style="margin:0;">
             <?= mta_csrf_field() ?>
             <input type="hidden" name="product_id" value="<?= (int)($product['id'] ?? 0) ?>">
             <button type="submit" class="btn btn-secondary btn-sm" style="width:100%;">
@@ -64,7 +64,7 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
             </button>
           </form>
           <a href="<?= e($waUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:0.35rem;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.01 2.002c-5.518 0-9.998 4.48-9.998 9.998 0 1.76.459 3.475 1.332 4.992L2.054 22l5.133-1.346a9.948 9.948 0 004.823 1.248h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.67-1.04-5.18-2.93-7.07A9.928 9.928 0 0012.01 2.002zm5.82 14.156c-.24.674-1.398 1.288-1.928 1.348-.5.056-1.15.08-3.71-.978-2.56-1.058-4.2-3.666-4.33-3.838-.13-.172-1.03-1.37-1.03-2.613 0-1.242.648-1.854.88-2.106.23-.25.5-.314.67-.314.17 0 .34.002.49.01.16.008.37-.06.58.444.22.528.74 1.808.81 1.944.07.136.11.296.02.476-.09.18-.14.29-.27.444-.14.156-.29.35-.41.47-.14.138-.28.288-.12.564.16.276.71 1.17 1.52 1.894 1.05.934 1.93 1.224 2.21 1.36.27.136.43.116.59-.068.16-.184.69-.804.87-1.08.18-.276.36-.23.6-.138.24.092 1.52.716 1.78.846.26.13.43.196.49.304.07.108.07.624-.17 1.298z"/></svg>
             WhatsApp
           </a>
         </div>

@@ -115,9 +115,9 @@
   <header class="site-header" role="banner">
     <div class="header-container">
       
-      <!-- Mobile Hamburger -->
+      <!-- Mobile Hamburger (Larger touch target and icon) -->
       <button class="action-btn mobile-hamburger" id="mobile-drawer-open" aria-label="Open Navigation Menu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
 
       <!-- Brand Logo (Day & Night Adaptive) -->
@@ -139,25 +139,12 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
-        <!-- WhatsApp Direct -->
-        <a href="<?= e(mta_whatsapp_url('923070655275', 'Hello Multan Tech Accessories, I would like to inquire about products.')) ?>" target="_blank" rel="noopener noreferrer" class="action-btn action-btn-whatsapp" aria-label="Chat on WhatsApp" title="WhatsApp 0307-0655275">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
-        </a>
-
-        <!-- Cart Link -->
+        <!-- Cart Link (Larger 24px icon) -->
         <?php $cartCount = count(\App\Core\Session::get('cart', [])); ?>
         <a href="/cart" class="action-btn" aria-label="Shopping Cart">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
           <span class="cart-count" id="header-cart-count"><?= $cartCount ?></span>
         </a>
-
-        <!-- Day / Night Theme Button -->
-        <button class="action-btn theme-toggle" id="theme-toggle-btn" aria-label="Toggle Day and Night mode" aria-pressed="false">
-          <!-- Sun Icon -->
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-          <!-- Moon Icon -->
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-        </button>
       </div>
 
     </div>
@@ -223,9 +210,9 @@
         </li>
       </ul>
 
-      <!-- Store Contact & City Tag -->
-      <div style="font-size: 0.825rem; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
-        <span>Multan Store: <strong>0307-0655275</strong></span>
+      <!-- Store Info Tag -->
+      <div style="font-size: 0.825rem; font-weight: 600; color: var(--accent-strong); display: flex; align-items: center; gap: 0.5rem;">
+        <span>&#9889; Fast Delivery Across Pakistan</span>
       </div>
     </div>
   </nav>
@@ -262,13 +249,15 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
     </button>
 
-    <!-- WhatsApp Quick Contact (56px) -->
+    <!-- WhatsApp Quick Contact (Official Handset + Bubble Icon) -->
     <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories, I have an inquiry.')) ?>" target="_blank" rel="noopener noreferrer" class="btn-float-wa" aria-label="Chat on WhatsApp" title="WhatsApp 0307-0655275">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.01 2.002c-5.518 0-9.998 4.48-9.998 9.998 0 1.76.459 3.475 1.332 4.992L2.054 22l5.133-1.346a9.948 9.948 0 004.823 1.248h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.67-1.04-5.18-2.93-7.07A9.928 9.928 0 0012.01 2.002zm5.82 14.156c-.24.674-1.398 1.288-1.928 1.348-.5.056-1.15.08-3.71-.978-2.56-1.058-4.2-3.666-4.33-3.838-.13-.172-1.03-1.37-1.03-2.613 0-1.242.648-1.854.88-2.106.23-.25.5-.314.67-.314.17 0 .34.002.49.01.16.008.37-.06.58.444.22.528.74 1.808.81 1.944.07.136.11.296.02.476-.09.18-.14.29-.27.444-.14.156-.29.35-.41.47-.14.138-.28.288-.12.564.16.276.71 1.17 1.52 1.894 1.05.934 1.93 1.224 2.21 1.36.27.136.43.116.59-.068.16-.184.69-.804.87-1.08.18-.276.36-.23.6-.138.24.092 1.52.716 1.78.846.26.13.43.196.49.304.07.108.07.624-.17 1.298z"/>
+      </svg>
     </a>
   </div>
 
-  <!-- Mobile Off-Canvas Drawer -->
+  <!-- Mobile Off-Canvas Drawer (Side Menu) -->
   <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
   <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">
     <div class="drawer-header">
@@ -276,28 +265,44 @@
         <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="130" height="34">
         <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="130" height="34">
       </div>
-      <button id="mobile-drawer-close" aria-label="Close Menu" style="padding: 0.5rem;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <button id="mobile-drawer-close" aria-label="Close Menu" style="padding: 0.5rem; color: var(--text);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
     <div class="drawer-body">
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.85rem;">
-        <li><a href="/" style="font-weight: 600;">Home</a></li>
-        <li><a href="/best-sellers" style="font-weight: 600;">Best Sellers</a></li>
-        <li><a href="/categories/mobile-accessories">Mobile Accessories</a></li>
-        <li><a href="/categories/computer-accessories">Computer Accessories</a></li>
-        <li><a href="/categories/audio-and-speakers">Audio & Speakers</a></li>
-        <li><a href="/categories/power-and-charging">Power & Charging</a></li>
-        <li><a href="/categories/gaming">Gaming Accessories</a></li>
-        <li><a href="/categories/storage-and-memory">Storage & Memory</a></li>
-        <li><a href="/categories/networking">Networking Devices</a></li>
-        <li><a href="/categories/cables-and-adapters">Cables & Adapters</a></li>
-        <li><a href="/categories/smart-and-cctv">Smart & CCTV</a></li>
-        <li style="border-top: 1px solid var(--border); padding-top: 0.75rem;"><a href="/brands">Brands Directory</a></li>
-        <li><a href="/guides">Tech Buying Guides</a></li>
-        <li><a href="/track-order">Track Your Order</a></li>
-        <li><a href="/contact">Contact & Store Location</a></li>
-        <li><a href="/about">About Store</a></li>
+      <!-- Day / Night Theme Switch in Side Menu -->
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem; background:var(--surface-2); border-radius:var(--radius-md); border:1px solid var(--border); margin-bottom:1.25rem;">
+        <span style="font-size:0.9rem; font-weight:700; color:var(--text); display:flex; align-items:center; gap:0.5rem;">
+          Theme Mode
+        </span>
+        <button class="action-btn theme-toggle" id="theme-toggle-btn" aria-label="Toggle Day and Night mode" style="width:40px; height:40px;">
+          <!-- Sun Icon -->
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <!-- Moon Icon -->
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        </button>
+      </div>
+
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.65rem;">
+        <li><a href="/" style="font-weight: 700; font-size: 1rem; color: var(--text);">Home</a></li>
+        <li><a href="/best-sellers" style="font-weight: 700; font-size: 1rem; color: var(--text);">Best Sellers</a></li>
+        
+        <li style="font-size:0.75rem; font-weight:800; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.5px; margin-top:0.5rem;">Categories</li>
+        <li><a href="/categories/mobile-accessories" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('mobile-accessories') ?> Mobile Accessories</a></li>
+        <li><a href="/categories/computer-accessories" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('computer-accessories') ?> Computer Accessories</a></li>
+        <li><a href="/categories/audio-and-speakers" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('audio-and-speakers') ?> Audio & Speakers</a></li>
+        <li><a href="/categories/power-and-charging" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('power-and-charging') ?> Power & Charging</a></li>
+        <li><a href="/categories/gaming" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('gaming') ?> Gaming Accessories</a></li>
+        <li><a href="/categories/storage-and-memory" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('storage-and-memory') ?> Storage & Memory</a></li>
+        <li><a href="/categories/networking" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('networking') ?> Networking Devices</a></li>
+        <li><a href="/categories/cables-and-adapters" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('cables-and-adapters') ?> Cables & Adapters</a></li>
+        <li><a href="/categories/smart-and-cctv" style="display:flex; align-items:center; gap:0.6rem; color:var(--text);"><?= mta_category_icon('smart-and-cctv') ?> Smart & CCTV</a></li>
+
+        <li style="border-top: 1px solid var(--border); padding-top: 0.75rem; margin-top: 0.5rem;"><a href="/brands" style="color:var(--text); font-weight:600;">Brands Directory</a></li>
+        <li><a href="/guides" style="color:var(--text); font-weight:600;">Tech Buying Guides</a></li>
+        <li><a href="/track-order" style="color:var(--text); font-weight:600;">Track Your Order</a></li>
+        <li><a href="/contact" style="color:var(--text); font-weight:600;">Contact & Store Location</a></li>
+        <li><a href="/about" style="color:var(--text); font-weight:600;">About Store</a></li>
       </ul>
     </div>
   </div>
@@ -305,6 +310,50 @@
   <!-- Site Footer -->
   <footer class="site-footer" role="contentinfo">
     <div class="container">
+      
+      <!-- Store Policy Highlights Strip -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem; padding:1.5rem; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-lg); margin-bottom:2.5rem;" class="footer-policies-strip">
+        <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+          <div style="width:36px; height:36px; border-radius:8px; background:rgba(255, 98, 35, 0.12); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
+            &#128737;
+          </div>
+          <div>
+            <strong style="display:block; font-size:0.9rem; color:var(--text);">3 Days Check Warranty Only</strong>
+            <span style="font-size:0.785rem; color:var(--text-muted);">Thoroughly inspect your accessories within 72 hours of receiving.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+          <div style="width:36px; height:36px; border-radius:8px; background:rgba(14, 180, 169, 0.12); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
+            &#128260;
+          </div>
+          <div>
+            <strong style="display:block; font-size:0.9rem; color:var(--text);">No Refund — Exchange Only</strong>
+            <span style="font-size:0.785rem; color:var(--text-muted);">Exchanges granted exclusively under eligible technical defect conditions.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+          <div style="width:36px; height:36px; border-radius:8px; background:rgba(255, 98, 35, 0.12); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
+            &#128230;
+          </div>
+          <div>
+            <strong style="display:block; font-size:0.9rem; color:var(--text);">Customer Return Courier</strong>
+            <span style="font-size:0.785rem; color:var(--text-muted);">Customer has to return parcel with their own money & courier service.</span>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:flex-start; gap:0.75rem;">
+          <div style="width:36px; height:36px; border-radius:8px; background:rgba(37, 211, 102, 0.12); color:var(--whatsapp); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.1rem;">
+            &#128666;
+          </div>
+          <div>
+            <strong style="display:block; font-size:0.9rem; color:var(--text);">Cash on Delivery</strong>
+            <span style="font-size:0.785rem; color:var(--text-muted);">Fast, secure doorstep delivery across Multan and all Pakistan.</span>
+          </div>
+        </div>
+      </div>
+
       <div class="footer-grid">
         
         <!-- About Blurb -->
@@ -347,12 +396,13 @@
           <h4 class="footer-col-title">Customer Care</h4>
           <ul class="footer-links">
             <li><a href="/shipping-and-delivery" class="footer-link">Shipping & Delivery</a></li>
-            <li><a href="/returns-and-refunds" class="footer-link">Returns & Refunds</a></li>
+            <li><a href="/returns-and-refunds" class="footer-link">Returns & Refunds Policy</a></li>
             <li><a href="/editorial-and-pricing-policy" class="footer-link">Pricing & Stock Policy</a></li>
             <li><a href="/track-order" class="footer-link">Track Your Order</a></li>
             <li><a href="/faq" class="footer-link">Frequently Asked Questions</a></li>
             <li><a href="/privacy-policy" class="footer-link">Privacy Policy</a></li>
             <li><a href="/terms-and-conditions" class="footer-link">Terms & Conditions</a></li>
+            <li><a href="<?= e(mta_admin_path()) ?>" class="footer-link" rel="nofollow" style="color:var(--accent-strong); font-weight:700;">Admin Portal &rarr;</a></li>
           </ul>
         </div>
 
@@ -377,6 +427,7 @@
         <div>
           &copy; <?= date('Y') ?> Multan Tech Accessories. All rights reserved.
           <span class="footer-credit">&bull; <?= e(mta_setting('founder_credit', 'Founded & Developed by Muneeb Ahmad')) ?></span>
+          <span>&bull; <a href="<?= e(mta_admin_path()) ?>" style="color:var(--text-muted); text-decoration:underline;" rel="nofollow">Admin Portal</a></span>
         </div>
         <div>
           Currency: <strong>PKR (Rs.)</strong> &bull; Serving Multan & All Pakistan

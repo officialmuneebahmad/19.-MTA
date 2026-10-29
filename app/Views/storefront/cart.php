@@ -12,7 +12,8 @@ foreach ($cartItems as $item) {
   <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">Your Shopping Cart</h1>
 
   <?php if (!empty($cartItems)): ?>
-    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem;">
+    <!-- Desktop Table View -->
+    <div class="cart-desktop-wrap" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem;">
       <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
         <thead style="background: var(--surface-2); border-bottom: 1px solid var(--border);">
           <tr>
@@ -54,7 +55,7 @@ foreach ($cartItems as $item) {
                 <form action="/cart/remove" method="POST">
                   <?= mta_csrf_field() ?>
                   <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
-                  <button type="submit" style="color: var(--danger); font-size: 0.85rem; text-decoration: underline;" title="Remove Item">Remove</button>
+                  <button type="submit" style="color: var(--danger); font-size: 0.85rem; text-decoration: underline; background:none; border:none; cursor:pointer;" title="Remove Item">Remove</button>
                 </form>
               </td>
             </tr>
@@ -63,11 +64,50 @@ foreach ($cartItems as $item) {
       </table>
     </div>
 
+    <!-- Mobile Card View (Shows on <768px screens) -->
+    <div class="cart-mobile-list" style="display: none; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+      <?php foreach ($cartItems as $item): ?>
+        <?php $itemTotal = $item['sell_price'] * $item['quantity']; ?>
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
+          <div style="display: flex; gap: 0.85rem;">
+            <img src="<?= e($item['primary_image_url'] ?? '/assets/images/placeholder.webp') ?>" alt="<?= e($item['title']) ?>" width="64" height="64" style="object-fit: contain; border-radius: 6px; background: var(--surface-2); flex-shrink: 0;">
+            <div style="flex: 1; min-width: 0;">
+              <a href="/products/<?= e($item['slug']) ?>" style="font-weight: 700; font-size: 0.95rem; color: var(--text); line-height: 1.35; display: block; margin-bottom: 0.25rem;">
+                <?= e($item['title']) ?>
+              </a>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">Unit Price: <?= mta_money($item['sell_price']) ?></div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+            <form action="/cart/update" method="POST" style="display: flex; align-items: center; gap: 0.4rem;">
+              <?= mta_csrf_field() ?>
+              <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
+              <label style="font-size: 0.825rem; font-weight: 600; color: var(--text-muted);">Qty:</label>
+              <input type="number" name="quantity" value="<?= (int)$item['quantity'] ?>" min="1" max="10" style="width: 50px; padding: 0.35rem; border: 1px solid var(--border); border-radius: 4px; text-align: center;">
+              <button type="submit" class="btn btn-secondary btn-sm" style="padding: 0.35rem 0.65rem;">Update</button>
+            </form>
+
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="font-weight: 800; font-size: 1.05rem; color: var(--accent-strong);">
+                <?= mta_money($itemTotal) ?>
+              </div>
+              <form action="/cart/remove" method="POST">
+                <?= mta_csrf_field() ?>
+                <input type="hidden" name="product_id" value="<?= (int)$item['id'] ?>">
+                <button type="submit" style="color: var(--danger); font-size: 0.825rem; font-weight: 600; text-decoration: underline; background:none; border:none; cursor:pointer;">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+
     <!-- Subtotal & Checkout Call to Action -->
-    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;" class="cart-summary-box">
       <div>
         <div style="font-size: 0.9rem; color: var(--text-muted);">Cart Subtotal:</div>
-        <div style="font-size: 1.75rem; font-weight: 800; color: var(--accent-strong); font-family: var(--font-heading);">
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--accent-strong); font-family: var(--font-heading);">
           <?= mta_money($subtotal) ?>
         </div>
         <div style="font-size: 0.85rem; color: var(--success); font-weight: 600; margin-top: 0.35rem;">
@@ -79,10 +119,17 @@ foreach ($cartItems as $item) {
         </div>
       </div>
 
-      <div style="display: flex; gap: 1rem;">
-        <a href="/" class="btn btn-secondary">Continue Shopping</a>
-        <a href="/checkout" class="btn btn-primary btn-lg">Proceed to Checkout &rarr;</a>
+      <div class="cart-actions-group" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/" class="btn btn-secondary" style="flex: 1; text-align: center;">Continue Shopping</a>
+        <a href="/checkout" class="btn btn-primary btn-lg" style="flex: 1.5; text-align: center;">Proceed to Checkout &rarr;</a>
       </div>
+    </div>
+
+    <!-- Policy Reminder -->
+    <div style="margin-top: 1.5rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+      <div>&#10003; <strong>3 Days Check Warranty Only:</strong> Please test your items within 3 days of receiving.</div>
+      <div>&#10003; <strong>Exchange Policy:</strong> No Refund, Exchange can be made only for certain technical defect circumstances.</div>
+      <div>&#10003; <strong>Courier Fee:</strong> The Customer has to Return parcel with their own money & courier.</div>
     </div>
 
   <?php else: ?>

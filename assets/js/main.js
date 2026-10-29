@@ -18,24 +18,26 @@ document.addEventListener('DOMContentLoaded', () => {
 // 1. Day / Night Theme Toggle
 // -------------------------------------------------------------
 function initThemeToggle() {
-  const btn = document.getElementById('theme-toggle-btn');
-  if (!btn) return;
+  const buttons = document.querySelectorAll('.theme-toggle');
+  if (!buttons.length) return;
 
   const metaTheme = document.querySelector('meta[name="theme-color"]');
 
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('mta_theme', theme);
-    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    buttons.forEach(b => b.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false'));
     if (metaTheme) {
       metaTheme.setAttribute('content', theme === 'dark' ? '#262624' : '#FAF9F5');
     }
   }
 
-  btn.addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme') || 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+    });
   });
 }
 

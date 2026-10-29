@@ -63,13 +63,14 @@ class CategoryController
             [$category['id']]
         );
 
-        // Sorting
+        // Sorting (Available items first, then coming soon, then out of stock)
         $sort = (string)$request->query('sort', 'popular');
+        $availSort = '(CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC';
         $orderBy = match ($sort) {
-            'newest' => 'p.created_at DESC, p.id DESC',
-            'price_asc' => 'p.sell_price ASC, p.id DESC',
-            'price_desc' => 'p.sell_price DESC, p.id DESC',
-            default => 'p.popularity_score DESC, p.id DESC',
+            'newest' => "{$availSort}, p.created_at DESC, p.id DESC",
+            'price_asc' => "{$availSort}, p.sell_price ASC, p.id DESC",
+            'price_desc' => "{$availSort}, p.sell_price DESC, p.id DESC",
+            default => "{$availSort}, p.popularity_score DESC, p.id DESC",
         };
 
         // Paginated Products

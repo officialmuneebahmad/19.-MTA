@@ -13,12 +13,17 @@
     </p>
   </div>
 
-  <div class="category-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+  <div class="category-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
     <?php foreach ($categories as $cat): ?>
       <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; display: flex; flex-direction: column;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem;">
-          <a href="/categories/<?= e($cat['slug']) ?>" style="color: var(--accent-strong);"><?= e($cat['name']) ?></a>
-        </h2>
+        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(255, 98, 35, 0.1); color: var(--accent-strong); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <?= mta_category_icon($cat['slug']) ?>
+          </div>
+          <h2 style="font-size: 1.25rem; font-weight: 700; margin: 0;">
+            <a href="/categories/<?= e($cat['slug']) ?>" style="color: var(--accent-strong);"><?= e($cat['name']) ?></a>
+          </h2>
+        </div>
         <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; flex: 1;">
           <?= e(strip_tags($cat['intro_html'] ?? '')) ?>
         </p>

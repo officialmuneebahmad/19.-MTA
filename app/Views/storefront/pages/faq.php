@@ -42,9 +42,30 @@
     </details>
 
     <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
-      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">What if a charger or cable does not work with my phone?</summary>
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">What warranty do you offer on accessories?</summary>
       <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-        All accessories are covered by our <strong>7-Day Checking Warranty</strong>. If an item is incompatible or defective, contact us on WhatsApp with your order number and we will provide an immediate replacement or full refund.
+        <strong>We Offer 3 Days Check Warranty Only.</strong> Customers must inspect and test their accessory within 72 hours of receiving it. If there is any genuine technical issue, report it to our WhatsApp support line (0307-0655275).
+      </p>
+    </details>
+
+    <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Can I get a refund if I don't like the product?</summary>
+      <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+        <strong>No Refund, Exchange can be made only for certain circumstances.</strong> We do not issue cash refunds or support change of mind returns. If an item has an intrinsic hardware defect covered under the 3-day warranty, an exchange for a replacement unit will be arranged.
+      </p>
+    </details>
+
+    <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Who pays for the courier fee when returning an item for exchange?</summary>
+      <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+        <strong>The Customer has to Return parcel with their own money & courier.</strong> You are required to dispatch the item securely using any registered courier to our Multan warehouse at your own expense.
+      </p>
+    </details>
+
+    <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Are your items original or replicas/copies?</summary>
+      <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
+        Our accessories represent the <strong>Best Copy of the Original Product</strong>. We ensure our product <strong>Quality is Best and Generic</strong>, providing you with high functionality and aesthetics at an unbeatable, budget-friendly price.
       </p>
     </details>
 

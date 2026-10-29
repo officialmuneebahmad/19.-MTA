@@ -143,15 +143,15 @@ body {
 
 @media (max-width: 380px) {
   .site-header {
-    height: 56px;
+    height: 58px;
   }
   .header-container {
-    padding: 0 0.45rem;
-    gap: 0.35rem;
+    padding: 0 0.75rem;
+    gap: 0.45rem;
   }
   .mta-logo {
-    height: 30px;
-    max-width: 120px;
+    height: 32px;
+    max-width: 125px;
   }
 }
 

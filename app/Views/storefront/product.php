@@ -44,11 +44,11 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
   <!-- Main Product Detail Layout -->
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 1.5rem;" class="product-layout-grid">
+  <div class="product-layout-grid">
     
     <!-- Left: Image Gallery -->
-    <div>
-      <div style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:2rem; text-align:center; position:sticky; top:90px;">
+    <div class="product-gallery-wrap">
+      <div class="product-gallery-card">
         <img id="main-product-img" src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" width="600" height="600" style="max-height:480px; width:auto; margin:0 auto; object-fit:contain;" fetchpriority="high">
         
         <?php if (!empty($images) && count($images) > 1): ?>
@@ -121,17 +121,17 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
       <!-- Action Buttons -->
       <div style="display:flex; flex-direction:column; gap:0.85rem; margin-bottom:2rem;">
         <?php if ($status === 1 && $sellPrice > 0): ?>
-          <form action="/cart/add" method="POST">
+          <form action="/cart/add" method="POST" style="margin:0;">
             <?= mta_csrf_field() ?>
             <input type="hidden" name="product_id" value="<?= (int)$product['id'] ?>">
             <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
               Add to Shopping Cart
             </button>
           </form>
 
           <a href="<?= e($waUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg" style="width:100%;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.01 2.002c-5.518 0-9.998 4.48-9.998 9.998 0 1.76.459 3.475 1.332 4.992L2.054 22l5.133-1.346a9.948 9.948 0 004.823 1.248h.004c5.517 0 9.997-4.48 9.997-9.998 0-2.67-1.04-5.18-2.93-7.07A9.928 9.928 0 0012.01 2.002zm5.82 14.156c-.24.674-1.398 1.288-1.928 1.348-.5.056-1.15.08-3.71-.978-2.56-1.058-4.2-3.666-4.33-3.838-.13-.172-1.03-1.37-1.03-2.613 0-1.242.648-1.854.88-2.106.23-.25.5-.314.67-.314.17 0 .34.002.49.01.16.008.37-.06.58.444.22.528.74 1.808.81 1.944.07.136.11.296.02.476-.09.18-.14.29-.27.444-.14.156-.29.35-.41.47-.14.138-.28.288-.12.564.16.276.71 1.17 1.52 1.894 1.05.934 1.93 1.224 2.21 1.36.27.136.43.116.59-.068.16-.184.69-.804.87-1.08.18-.276.36-.23.6-.138.24.092 1.52.716 1.78.846.26.13.43.196.49.304.07.108.07.624-.17 1.298z"/></svg>
             Order Instantly on WhatsApp &rarr;
           </a>
 
@@ -157,11 +157,12 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
       </div>
 
       <!-- Trust Badges & Policies -->
-      <div style="border-top:1px solid var(--border); padding-top:1.25rem; font-size:0.875rem; color:var(--text-muted); line-height:1.7;">
+      <div style="border-top:1px solid var(--border); padding-top:1.25rem; font-size:0.875rem; color:var(--text-muted); line-height:1.8;">
+        <div>&#10003; <strong>Warranty:</strong> <span style="color:var(--text); font-weight:700;">We Offer 3 Days Check Warranty Only</span> (Test upon arrival).</div>
+        <div>&#10003; <strong>Returns & Refunds:</strong> <span style="color:var(--text); font-weight:700;">No Refund, Exchange can be made only for certain circumstances</span>.</div>
+        <div>&#10003; <strong>Courier Charges:</strong> <span style="color:var(--text); font-weight:700;">The Customer has to Return parcel with their own money & courier</span>.</div>
         <div>&#10003; <strong>Payment:</strong> Cash on Delivery (COD) across Pakistan.</div>
         <div>&#10003; <strong>Store Pickup:</strong> Al-Quresh Phase 3, Sher Shah Road, Multan.</div>
-        <div>&#10003; <strong>Warranty Status:</strong> Checked and verified authentic before dispatch.</div>
-        <div>&#10003; <strong>Returns:</strong> 7-day checking warranty for defective accessories.</div>
       </div>
 
     </div>
@@ -173,39 +174,62 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
       
       <h2 style="font-size:1.5rem; margin-bottom:1.25rem;">Product Description & Details</h2>
       
-      <div style="font-size:0.95rem; line-height:1.8; color:var(--text); margin-bottom:2.5rem;">
+      <div style="font-size:0.95rem; line-height:1.8; color:var(--text); margin-bottom:2.5rem;" class="product-description-content">
         <?php if (!empty($product['description_html'])): ?>
           <?= $product['description_html'] ?>
         <?php elseif (!empty($product['supplier_description_html'])): ?>
           <?= $product['supplier_description_html'] ?>
         <?php else: ?>
-          <p>Authentic tech accessory engineered for daily performance, durability, and high compatibility across Pakistani user devices.</p>
+          <p>High-demand tech accessory engineered for reliable daily performance, maximum device compatibility, and long-lasting durability.</p>
         <?php endif; ?>
       </div>
 
       <!-- FAQ Accordion (<details> tags stay in DOM for technical SEO & Accessibility) -->
-      <h3 style="font-size:1.25rem; margin-bottom:1rem;">Frequently Asked Questions</h3>
+      <h3 style="font-size:1.25rem; margin-bottom:1rem;">Frequently Asked Questions (FAQs)</h3>
       <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:3rem;">
-        <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem;">Is this product original and brand new?</summary>
+        
+        <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;" open>
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Is this product original or a copy?</summary>
           <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            Yes, all products sold by Multan Tech Accessories are 100% brand new, authentic, and inspected for quality before delivery.
+            This product is the <strong>Best Copy of the Original Product</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance at a fraction of high brand markups.
           </p>
         </details>
 
         <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem;">How many days does delivery take in Pakistan?</summary>
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">What warranty is provided with this item?</summary>
           <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            Orders in Multan are typically delivered within 24 to 48 hours. Orders to Lahore, Karachi, Islamabad, Faisalabad, and other Pakistani cities take 2 to 4 business days via reliable couriers (Trax, Leopards, TCS).
+            <strong>We Offer 3 Days Check Warranty Only.</strong> Customers must thoroughly inspect and test the accessory within 3 days (72 hours) of parcel delivery. Any genuine technical or functional defect must be reported to our WhatsApp support team within this 3-day window.
           </p>
         </details>
 
         <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem;">What are the payment options?</summary>
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Can I get a refund or exchange?</summary>
           <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            We offer Cash on Delivery (COD). You can also make advance payment via JazzCash, Easypaisa, or online bank transfer confirmed on WhatsApp.
+            <strong>No Refund, Exchange can be made only for certain circumstances.</strong> We do not issue cash refunds. If an item arrives with an unresolvable technical or hardware defect verified by our support team within 3 days, we will replace it with a fresh unit of the same model. Change of mind or physical/liquid damages are not eligible for exchange.
           </p>
         </details>
+
+        <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Who pays for the courier fee if I need to return an item?</summary>
+          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+            <strong>The Customer has to Return parcel with their own money & courier.</strong> If an exchange is approved under the 3-day check warranty, you are required to dispatch the item securely back to our Multan warehouse at your own expense.
+          </p>
+        </details>
+
+        <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">How many days does delivery take across Pakistan?</summary>
+          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+            Orders inside Multan are delivered within 24 to 48 hours for Rs. 100 (Free delivery on your 2nd order!). Deliveries to Lahore, Karachi, Islamabad, Rawalpindi, Faisalabad, Peshawar, and all other cities take 2 to 4 business days via reliable couriers with full Cash on Delivery.
+          </p>
+        </details>
+
+        <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;">
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">What payment methods are supported?</summary>
+          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+            We primarily support <strong>Cash on Delivery (COD)</strong> so you pay only when the rider delivers your package. Advance payments via JazzCash, Easypaisa, or online bank transfer can also be arranged via WhatsApp.
+          </p>
+        </details>
+
       </div>
 
     </div>

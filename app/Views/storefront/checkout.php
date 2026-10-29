@@ -20,27 +20,27 @@ foreach ($cartItems as $item) {
       <input type="text" name="_website_url_hp" tabindex="-1" autocomplete="off">
     </div>
 
-    <div style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 2.5rem;" class="checkout-grid">
+    <div class="checkout-grid">
       
       <!-- Left: Customer Details -->
       <div>
-        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 1.5rem;" class="checkout-form-card">
           <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem;">1. Delivery Address</h2>
           
           <div class="form-group" style="margin-bottom: 1.25rem;">
             <label for="customer_name" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">Full Name *</label>
-            <input type="text" id="customer_name" name="customer_name" required placeholder="e.g. Muhammad Ali" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;">
+            <input type="text" id="customer_name" name="customer_name" required placeholder="e.g. Muhammad Ali" style="width:100%; min-height:44px; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
           </div>
 
           <div class="form-group" style="margin-bottom: 1.25rem;">
             <label for="customer_phone" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">Mobile Number (Calling & WhatsApp) *</label>
-            <input type="tel" id="customer_phone" name="customer_phone" required placeholder="03001234567" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;">
+            <input type="tel" id="customer_phone" name="customer_phone" required placeholder="03001234567" style="width:100%; min-height:44px; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
             <span style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem; display:block;">Our team confirms all orders via phone call or WhatsApp message before dispatch.</span>
           </div>
 
           <div class="form-group" style="margin-bottom: 1.25rem;">
             <label for="city" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">City *</label>
-            <select id="city" name="city" required onchange="calculateDelivery(this.value)" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem; background:#fff;">
+            <select id="city" name="city" required onchange="calculateDelivery(this.value)" style="width:100%; min-height:44px; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem; background:var(--surface);">
               <option value="Multan" selected>Multan (Minimum Local Delivery: Rs. 100)</option>
               <option value="Lahore">Lahore</option>
               <option value="Karachi">Karachi</option>
@@ -58,22 +58,22 @@ foreach ($cartItems as $item) {
 
           <div class="form-group" style="margin-bottom: 1.25rem;">
             <label for="shipping_address" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">Complete Shipping Address (House/Shop #, Street, Area) *</label>
-            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="House #, Street #, Sector / Area, Landmark" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;"></textarea>
+            <textarea id="shipping_address" name="shipping_address" rows="3" required placeholder="House #, Street #, Sector / Area, Landmark" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;"></textarea>
           </div>
 
           <div class="form-group" style="margin-bottom: 1.25rem;">
             <label for="customer_email" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">Email Address (Optional)</label>
-            <input type="email" id="customer_email" name="customer_email" placeholder="ali@example.com" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;">
+            <input type="email" id="customer_email" name="customer_email" placeholder="ali@example.com" style="width:100%; min-height:44px; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
           </div>
 
           <div class="form-group">
             <label for="customer_notes" style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:0.35rem;">Order Notes (Optional)</label>
-            <input type="text" id="customer_notes" name="customer_notes" placeholder="Special delivery instructions or preferred calling time" style="width:100%; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:0.95rem;">
+            <input type="text" id="customer_notes" name="customer_notes" placeholder="Special delivery instructions or preferred calling time" style="width:100%; min-height:44px; padding:0.65rem 0.85rem; border:1px solid var(--border); border-radius:6px; font-size:1rem;">
           </div>
         </div>
 
         <!-- Payment Method -->
-        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem 2rem;">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;" class="checkout-form-card">
           <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">2. Payment Method</h2>
           <div style="border: 2px solid var(--accent-strong); border-radius: 8px; padding: 1rem 1.25rem; background: var(--surface-2); display: flex; align-items: center; justify-content: space-between;">
             <div>
@@ -92,17 +92,17 @@ foreach ($cartItems as $item) {
 
       <!-- Right: Order Summary -->
       <div>
-        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; position: sticky; top: 90px;">
+        <div class="checkout-summary-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.75rem;">
           <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem;">Order Summary</h2>
 
           <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; max-height: 280px; overflow-y: auto;">
             <?php foreach ($cartItems as $item): ?>
               <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
-                <div>
+                <div style="padding-right: 0.75rem;">
                   <div style="font-weight: 600; line-height: 1.3;"><?= e($item['title']) ?></div>
                   <div style="font-size: 0.8rem; color: var(--text-muted);">Qty: <?= (int)$item['quantity'] ?> &times; <?= mta_money($item['sell_price']) ?></div>
                 </div>
-                <div style="font-weight: 700;">
+                <div style="font-weight: 700; white-space: nowrap;">
                   <?= mta_money($item['sell_price'] * $item['quantity']) ?>
                 </div>
               </div>
@@ -130,12 +130,20 @@ foreach ($cartItems as $item) {
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1.75rem;">
+          <!-- Mandatory Policy Agreement Checklist -->
+          <div style="margin-top: 1.25rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem; font-size: 0.8rem; color: var(--text); line-height: 1.5;">
+            <div style="font-weight: 700; margin-bottom: 0.35rem; color: var(--accent-strong);">Store Policy Notice:</div>
+            <div>&#10003; <strong>We Offer 3 Days Check Warranty Only</strong></div>
+            <div>&#10003; <strong>No Refund, Exchange can be made only for certain circumstances</strong></div>
+            <div>&#10003; <strong>The Customer has to Return parcel with their own money & courier</strong></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1.25rem; min-height: 48px; font-size: 1.05rem;">
             Confirm Order &rarr;
           </button>
 
           <p style="font-size: 0.75rem; text-align: center; color: var(--text-muted); margin-top: 0.75rem;">
-            By placing your order, you agree to our <a href="/terms-and-conditions" style="text-decoration: underline;">Terms</a> and <a href="/returns-and-refunds" style="text-decoration: underline;">Return Policy</a>.
+            By placing your order, you agree to our <a href="/terms-and-conditions" style="text-decoration: underline;">Terms</a> and <a href="/returns-and-refunds" style="text-decoration: underline;">Returns Policy</a>.
           </p>
         </div>
       </div>

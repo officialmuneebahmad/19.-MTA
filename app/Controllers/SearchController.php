@@ -47,7 +47,7 @@ class SearchController
                  LEFT JOIN brands b ON b.id = p.brand_id
                  WHERE p.is_active = 1 AND p.is_published = 1
                    AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ? OR p.description_html LIKE ?)
-                 ORDER BY p.popularity_score DESC, p.id DESC
+                 ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
                  LIMIT ? OFFSET ?",
                 [$searchTerm, $searchTerm, $searchTerm, $searchTerm, $perPage, $offset]
             );
