@@ -71,6 +71,11 @@ class Request
         return $this->get[$key] ?? $default;
     }
 
+    public function get(?string $key = null, mixed $default = null): mixed
+    {
+        return $this->input($key, $default);
+    }
+
     public function input(?string $key = null, mixed $default = null): mixed
     {
         if ($key === null) {

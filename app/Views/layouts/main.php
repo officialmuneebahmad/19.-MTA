@@ -20,11 +20,11 @@
   <meta name="theme-color" content="#FAF9F5">
   <link rel="canonical" href="<?= e($canonical_url ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
 
-  <!-- Favicon (Rounded) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
-  <link rel="shortcut icon" href="/favicon.ico">
+  <!-- Favicon (Circular) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png?v=3">
+  <link rel="shortcut icon" href="/favicon.ico?v=3">
 
   <!-- Google Fonts: Space Grotesk & Sora Bold (Geometric Tech Sans-Serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +71,7 @@
   </style>
 
   <!-- Main App Stylesheet -->
-  <link rel="stylesheet" href="/assets/css/app.css">
+  <link rel="stylesheet" href="/assets/css/app.css?v=<?= @filemtime(MTA_ROOT . '/assets/css/app.css') ?: time() ?>">
 
   <!-- JSON-LD Structured Data -->
   <?php if (!empty($structured_data)): ?>
@@ -484,6 +484,6 @@
     </div>
   </footer>
 
-  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/main.js?v=<?= @filemtime(MTA_ROOT . '/assets/js/main.js') ?: time() ?>" defer></script>
 </body>
 </html>
