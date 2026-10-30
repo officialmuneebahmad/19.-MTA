@@ -371,3 +371,23 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+// -------------------------------------------------------------
+// 9. WhatsApp & Native Product Sharing
+// -------------------------------------------------------------
+window.shareProductWhatsApp = function(title, price, url) {
+  var fullUrl = url || window.location.href;
+  var text = "Check out this product on Multan Tech Accessories:\n*" + title + "*\nPrice: " + price + "\n" + fullUrl;
+  
+  if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
+    navigator.share({
+      title: title,
+      text: text,
+      url: fullUrl
+    }).catch(function() {
+      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+    });
+  } else {
+    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+  }
+};

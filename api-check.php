@@ -19,6 +19,7 @@ use App\Services\SupplierSyncService;
 
 $token = 'f1f3b0294c3f7c2328e41d42e59d2877';
 $apiUrl = 'https://api.computerzone.pk/products';
+$adminPath = trim(mta_admin_path(), '/');
 
 $message = null;
 $messageType = 'info';
@@ -142,6 +143,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $messageType = 'success';
         } catch (Throwable $e) {
             $message = "Error configuring admin user: " . $e->getMessage();
+            $messageType = 'error';
+        }
+    } elseif ($_POST['action'] === 'git_pull_update') {
+        try {
+            $output = [];
+            $code = 0;
+            exec('git pull origin master 2>&1', $output, $code);
+            \App\Core\Cache::flush();
+            $log = implode("\n", $output);
+            if ($code === 0) {
+                $message = "SUCCESS! Website updated from GitHub:\n" . $log;
+                $messageType = 'success';
+            } else {
+                $message = "Git Pull Output (Return Code: {$code}):\n" . $log . "\n(If exec() is disabled in PHP or Git needs cPanel credentials, update via cPanel Git Version Control).";
+                $messageType = 'warning';
+            }
+        } catch (Throwable $e) {
+            $message = "Error running git pull: " . $e->getMessage();
             $messageType = 'error';
         }
     }
@@ -423,6 +442,12 @@ try {
         <a href="/<?= e($adminPath) ?>/login" target="_blank" class="btn btn-teal">
           Open Admin Portal (New Tab) &rarr;
         </a>
+        <form method="POST">
+          <input type="hidden" name="action" value="git_pull_update">
+          <button type="submit" class="btn" style="background: #0B0E14; color: #FFFFFF; border: 1px solid #1E2536;" onclick="return confirm('Pull latest updates from GitHub origin/master and flush cache?');">
+            🚀 Pull Latest Code from GitHub (git pull)
+          </button>
+        </form>
         <form method="POST">
           <input type="hidden" name="action" value="reset_admin_password">
           <button type="submit" class="btn" style="background: #FFFFFF; border: 1px solid #0EB4A9; color: #0E7064;">

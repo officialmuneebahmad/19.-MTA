@@ -114,6 +114,8 @@ $adminBase = trim((string)mta_config('app.admin_path', mta_setting('admin_path',
 // Admin Shortcuts / Convenience Redirects
 $router->get('/admin', [AdminAuthController::class, 'redirectToDashboard']);
 $router->get('/admin/login', [AdminAuthController::class, 'redirectToLogin']);
+$router->get('/login', [AdminAuthController::class, 'redirectToLogin']);
+$router->get('/admin-login', [AdminAuthController::class, 'redirectToLogin']);
 
 // Admin Auth Routes (No auth middleware)
 $router->get("/{$adminBase}/login", [AdminAuthController::class, 'showLogin']);

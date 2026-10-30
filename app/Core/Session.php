@@ -33,17 +33,21 @@ class Session
             return;
         }
 
-        $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-            || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (isset($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443)
+            || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (isset($_SERVER['HTTP_CF_VISITOR']) && str_contains((string)$_SERVER['HTTP_CF_VISITOR'], 'https'));
 
-        session_set_cookie_params([
-            'lifetime' => 86400 * 14, // 14 days
-            'path' => '/',
-            'domain' => '',
-            'secure' => $isHttps,
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]);
+        if (!headers_sent()) {
+            session_set_cookie_params([
+                'lifetime' => 86400 * 14, // 14 days
+                'path' => '/',
+                'domain' => '',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]);
+        }
 
         session_start();
         self::$started = true;

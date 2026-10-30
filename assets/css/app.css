@@ -698,6 +698,54 @@ select option {
   z-index: 2;
 }
 
+.btn-card-share {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 5;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-card-share:hover {
+  background-color: #25D366;
+  color: #FFFFFF;
+  border-color: #25D366;
+  transform: scale(1.1);
+}
+
+.btn-share-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-share-pill:hover {
+  background-color: rgba(37, 211, 102, 0.1);
+  border-color: #25D366;
+  color: #25D366;
+  transform: translateY(-1px);
+}
+
 .product-card-body {
   padding: 1rem;
   display: flex;
@@ -1433,4 +1481,109 @@ select option {
   .announcement-bar {
     font-size: 0.7rem;
   }
+
+  /* Mobile Button Consistency: Exact 48px large and 38px card buttons */
+  .btn-lg,
+  .product-actions-group .btn,
+  .cart-actions-group .btn {
+    min-height: 48px !important;
+    height: 48px !important;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    border-radius: var(--radius-sm) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .btn-card-action {
+    min-height: 38px !important;
+    height: 38px !important;
+    font-size: 0.825rem !important;
+    font-weight: 700 !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .product-card-actions-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+    width: 100% !important;
+  }
+
+  .product-description-card {
+    padding: 1.25rem 1rem !important;
+  }
+}
+
+/* -------------------------------------------------------------
+ * Product Description & Specifications Spacing
+ * ------------------------------------------------------------- */
+.product-description-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-description-content {
+  font-size: 0.965rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.product-description-content p {
+  margin-bottom: 1.25rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.product-description-content p:last-child {
+  margin-bottom: 0;
+}
+
+.product-description-content h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 1.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.product-description-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.product-description-content li {
+  padding: 0.75rem 1.15rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.product-description-content li strong {
+  color: var(--accent-strong);
 }

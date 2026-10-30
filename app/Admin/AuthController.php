@@ -104,6 +104,9 @@ class AuthController
             [date('Y-m-d H:i:s'), $clientIp, $user['id']]
         );
 
+        // Clear IP rate limiter upon verified credentials
+        RateLimiter::clear("admin_login_{$clientIp}");
+
         // Regenerate session to prevent session fixation
         Session::regenerate();
         Session::set('admin_user', [
