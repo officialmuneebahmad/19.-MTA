@@ -90,16 +90,18 @@ class PricingDeliveryTest
 
     private function testMarkupCalculation(): void
     {
-        echo "Testing Pricing: Tiered Rounding + 99 Formula... ";
+        echo "Testing Pricing: Tiered Ceiling Rounding (Round UP) + 99 Formula... ";
         $syncService = new \App\Services\SupplierSyncService();
         
-        // Under 3000 (+100, round to nearest hundred, +99)
+        // Under 3000 (+100, round UP to next hundred, +99)
         assert($syncService->calculateSellingPrice(160.0) === 399.0, '160 must yield 399');
         assert($syncService->calculateSellingPrice(250.0) === 499.0, '250 must yield 499');
-        assert($syncService->calculateSellingPrice(2420.0) === 2599.0, '2420 must yield 2599');
+        assert($syncService->calculateSellingPrice(2400.0) === 2599.0, '2400 must yield 2599');
+        assert($syncService->calculateSellingPrice(2420.0) === 2699.0, '2420 must yield 2699');
         
-        // 3000 and above (+300, round to nearest hundred, +99)
+        // 3000 and above (+300, round UP to next hundred, +99)
         assert($syncService->calculateSellingPrice(3690.0) === 4099.0, '3690 must yield 4099');
+        assert($syncService->calculateSellingPrice(4130.0) === 4599.0, '4130 must yield 4599');
         assert($syncService->calculateSellingPrice(5000.0) === 5399.0, '5000 must yield 5399');
         
         echo "PASSED\n";

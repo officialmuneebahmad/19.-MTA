@@ -340,9 +340,9 @@ class SupplierSyncService
     /**
      * Multan Tech Accessories Pricing Formula:
      * - If supplier price < 3000:
-     *   100 + (rounded off to nearest hundred) + 99
+     *   100 + (round UP / ceiling to next hundred) + 99
      * - If supplier price >= 3000:
-     *   300 + (rounded off to nearest hundred) + 99
+     *   300 + (round UP / ceiling to next hundred) + 99
      */
     public function calculateSellingPrice(float $supplierPrice, float $percent = 0, float $fixed = 0, int $roundTo = 100): float
     {
@@ -351,7 +351,7 @@ class SupplierSyncService
         }
 
         $markup = ($supplierPrice < 3000) ? 100.0 : 300.0;
-        $rounded = round(($supplierPrice + $markup) / 100) * 100;
+        $rounded = ceil(($supplierPrice + $markup) / 100) * 100;
         return (float)($rounded + 99);
     }
 
