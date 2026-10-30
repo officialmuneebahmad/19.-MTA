@@ -106,7 +106,7 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
           Estimate Delivery Charges for Your City:
         </label>
         <div style="display:flex; gap:0.75rem; align-items:center;">
-          <select id="city-calc" onchange="updateDeliveryEstimate(this.value)" style="padding:0.5rem 0.75rem; border-radius:6px; border:1px solid var(--border); background:#fff; font-size:0.9rem; flex:1;">
+          <select id="city-calc" onchange="updateDeliveryEstimate(this.value)" style="padding:0.6rem 0.85rem; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:0.9rem; font-weight:600; flex:1; -webkit-appearance:menulist; appearance:menulist;">
             <option value="multan" selected>Multan (Local Delivery - Rs. 100)</option>
             <option value="lahore">Lahore (Rs. 250)</option>
             <option value="karachi">Karachi (Rs. 250)</option>
@@ -206,9 +206,9 @@ $waUrl = mta_whatsapp_url('923070655275', $waMsg);
       <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:3rem;">
         
         <details style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.85rem 1.25rem;" open>
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Is this product original or a copy?</summary>
+          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Is this product original or copy?</summary>
           <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            This product is the <strong>Best Copy of the Original Product</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance at a fraction of high brand markups.
+            The product is <strong>Original</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance, making your everyday life easier and convenient.
           </p>
         </details>
 

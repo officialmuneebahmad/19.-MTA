@@ -27,6 +27,27 @@ button {
   background: transparent;
 }
 
+input, select, textarea {
+  font-family: inherit;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+}
+
+select option {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+[data-theme="dark"] select,
+[data-theme="dark"] select option,
+[data-theme="dark"] input,
+[data-theme="dark"] textarea {
+  background-color: #1E1E1C !important;
+  color: #FAF9F5 !important;
+  border-color: #33322D !important;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -729,7 +750,6 @@ button {
 }
 
 .category-tile {
-  grid-column: span 2;
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -742,37 +762,56 @@ button {
   transition: all 0.2s ease;
 }
 
-/* Symmetrical V-Shape: Center the last 3 items in the middle of Row 2 */
-.category-tile:nth-child(7) {
-  grid-column: 4 / span 2;
+/* Symmetrical V-Shape on Desktop only (min-width: 1025px) */
+@media (min-width: 1025px) {
+  .category-tile {
+    grid-column: span 2;
+  }
+  .category-tile:nth-child(7) {
+    grid-column: 4 / span 2;
+  }
 }
 
-@media (max-width: 1024px) {
+/* Tablet: Symmetrical 3x3 Grid */
+@media (min-width: 601px) and (max-width: 1024px) {
   .category-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
   }
-  .category-tile {
-    grid-column: auto;
-  }
-  .category-tile:nth-child(7) {
-    grid-column-start: auto;
+  .category-tile,
+  .category-tile:nth-child(7),
+  .category-tile:nth-child(8),
+  .category-tile:nth-child(9) {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
+/* Mobile: Clean 2-column grid. Pairs 1-8 side-by-side, 9th item centered with standard card size */
 @media (max-width: 600px) {
   .category-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
   .category-tile {
-    grid-column: auto;
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 1rem 0.75rem;
   }
-  .category-tile:nth-child(7) {
-    grid-column-start: auto;
+  .category-tile:nth-child(7),
+  .category-tile:nth-child(8) {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
   }
   .category-tile:nth-child(9) {
-    grid-column: span 2;
-    max-width: calc(50% - 0.5rem);
-    justify-self: center;
+    grid-column: 1 / -1 !important;
+    width: calc(50% - 0.375rem) !important;
+    max-width: calc(50% - 0.375rem) !important;
+    justify-self: center !important;
   }
 }
 

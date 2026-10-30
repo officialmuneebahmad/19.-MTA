@@ -63,9 +63,9 @@
     </details>
 
     <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
-      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Are your items original or replicas/copies?</summary>
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Is this product original or copy?</summary>
       <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-        Our accessories represent the <strong>Best Copy of the Original Product</strong>. We ensure our product <strong>Quality is Best and Generic</strong>, providing you with high functionality and aesthetics at an unbeatable, budget-friendly price.
+        The product is <strong>Original</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance, making your everyday life easier and convenient.
       </p>
     </details>
 
