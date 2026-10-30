@@ -218,9 +218,10 @@ class ProductController
         $isActive = (int)$request->post('is_active', 1);
 
         $priceOverride = ($overrideRaw !== '') ? (float)$overrideRaw : null;
+        $syncService = new \App\Services\SupplierSyncService();
         $sellPrice = ($priceOverride !== null && $priceOverride > 0) 
             ? $priceOverride 
-            : (float)$product['supplier_price'] * 1.10; // default 10% markup fallback
+            : $syncService->calculateSellingPrice((float)$product['supplier_price']);
 
         $db->execute(
             "UPDATE products SET price_override = ?, sell_price = ?, pinned = ?, is_active = ?, updated_at = ? WHERE id = ?",

@@ -200,12 +200,44 @@ function initHeroCarousel() {
     });
   });
 
+  // Track manual / touch swipes on mobile and sync dots in real time
+  let isScrolling = false;
+  let scrollTimeout = null;
+
+  track.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        const slideWidth = track.clientWidth || (slides[0] ? slides[0].offsetWidth : 0);
+        if (slideWidth > 0) {
+          const newIndex = Math.round(track.scrollLeft / slideWidth);
+          if (newIndex >= 0 && newIndex < slides.length && newIndex !== currentIndex) {
+            currentIndex = newIndex;
+            dots.forEach((dot, i) => {
+              dot.classList.toggle('active', i === currentIndex);
+            });
+          }
+        }
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
+
+    // Refresh autoplay countdown once user finishes swiping
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      startAutoplay();
+    }, 4000);
+  }, { passive: true });
+
   carousel.addEventListener('mouseenter', stopAutoplay);
   carousel.addEventListener('mouseleave', startAutoplay);
   carousel.addEventListener('focusin', stopAutoplay);
   carousel.addEventListener('focusout', startAutoplay);
   carousel.addEventListener('touchstart', stopAutoplay, { passive: true });
-  carousel.addEventListener('touchend', startAutoplay, { passive: true });
+  carousel.addEventListener('touchend', () => {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(startAutoplay, 4000);
+  }, { passive: true });
 
   startAutoplay();
 }
