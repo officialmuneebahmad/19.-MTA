@@ -105,16 +105,16 @@ class HomeController
              LIMIT 12"
         );
 
-        // Featured Brands (Strictly only brands that currently have active products in catalog)
+        // Featured Brands (Strictly only brands that currently have active products in catalog, ordered by is_featured DESC, featured_sort ASC, product_count DESC)
         $featuredBrands = $db->fetchAll(
-            "SELECT b.id, b.slug, b.name, COUNT(p.id) AS product_count 
+            "SELECT b.id, b.slug, b.name, b.logo_path, b.logo_dark_path, b.logo_alt, b.is_featured, b.featured_sort, COUNT(p.id) AS product_count 
              FROM brands b
              INNER JOIN products p ON p.brand_id = b.id AND p.is_active = 1
              WHERE b.is_active = 1
-             GROUP BY b.id, b.slug, b.name
+             GROUP BY b.id, b.slug, b.name, b.logo_path, b.logo_dark_path, b.logo_alt, b.is_featured, b.featured_sort
              HAVING COUNT(p.id) > 0
-             ORDER BY product_count DESC, b.name ASC
-             LIMIT 16"
+             ORDER BY b.is_featured DESC, b.featured_sort ASC, product_count DESC, b.name ASC
+             LIMIT 18"
         );
 
         // Latest Guides

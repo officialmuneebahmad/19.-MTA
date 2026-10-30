@@ -113,9 +113,9 @@ function mta_admin_path(string $path = ''): string {
 // ----------------------------------------------------------------------
 // Settings Helper (Database Key-Value Store)
 // ----------------------------------------------------------------------
-function mta_setting(string $key, mixed $default = null): mixed {
+function mta_setting(string $key, mixed $default = null, bool $refresh = false): mixed {
     static $cache = null;
-    if ($cache === null) {
+    if ($cache === null || $refresh) {
         $cache = [];
         try {
             $db = \App\Core\Database::getInstance();

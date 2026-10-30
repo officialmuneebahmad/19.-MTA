@@ -50,6 +50,7 @@ class SettingsController
         $allowedKeys = [
             'site_name', 'store_address', 'store_phone', 'store_whatsapp',
             'social_facebook', 'social_instagram', 'announcement_marquee',
+            'show_wa_on_product_cards',
             'delivery_free_threshold', 'delivery_multan_charge', 'delivery_standard_charge',
             'pricing_threshold', 'pricing_tier1_add', 'pricing_tier1_mode', 'pricing_tier1_ending',
             'pricing_tier2_add', 'pricing_tier2_mode', 'pricing_tier2_ending',
@@ -62,7 +63,7 @@ class SettingsController
         foreach ($allowedKeys as $key) {
             $val = trim((string)$request->post($key, ''));
             // Check if key exists in settings
-            $existing = $db->fetch("SELECT id FROM settings WHERE `key` = ? LIMIT 1", [$key]);
+            $existing = $db->fetch("SELECT `key` FROM settings WHERE `key` = ? LIMIT 1", [$key]);
             if ($existing) {
                 $db->execute(
                     "UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?",

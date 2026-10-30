@@ -13,11 +13,14 @@
     </p>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;">
+  <div class="brands-grid" role="list">
     <?php foreach ($brands as $brand): ?>
-      <a href="/brands/<?= e($brand['slug']) ?>" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
-        <span style="font-size: 1.1rem; font-weight: 700; color: var(--text);"><?= e($brand['name']) ?></span>
-        <span style="color: var(--accent-strong); font-weight: 600;">&rarr;</span>
+      <a href="/brands/<?= e($brand['slug']) ?>" class="brand-tile" aria-label="<?= e($brand['name']) ?> products" role="listitem">
+        <?php if (!empty($brand['logo_path'])): ?>
+          <img src="<?= e($brand['logo_path']) ?>" alt="<?= e($brand['logo_alt'] ?: ($brand['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
+        <?php else: ?>
+          <span class="brand-tile-text"><?= e($brand['name']) ?> (<?= (int)($brand['product_count'] ?? 0) ?>)</span>
+        <?php endif; ?>
       </a>
     <?php endforeach; ?>
   </div>

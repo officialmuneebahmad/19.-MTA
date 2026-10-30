@@ -30,6 +30,7 @@ $title = $product['title'] ?? 'Tech Accessory';
 $waOrderMsg = "Hi Multan Tech Accessories! I want to order: " . $title . " (" . ($sellPrice > 0 ? mta_money($sellPrice) : 'Price on WhatsApp') . "). Is it available for delivery?";
 $waOrderUrl = mta_whatsapp_url('923070655275', $waOrderMsg);
 $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
+$showWaOnCards = (mta_setting('show_wa_on_product_cards', '0') === '1');
 ?>
 <div class="product-card" data-product-id="<?= (int)($product['id'] ?? 0) ?>">
   <div class="product-img-wrap">
@@ -51,44 +52,47 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
       <?php if ($sellPrice > 0): ?>
         <?= mta_money($sellPrice) ?>
       <?php else: ?>
-        <span class="price-on-whatsapp">Ask Price on WhatsApp</span>
+        <span class="price-on-whatsapp">Ask Price</span>
       <?php endif; ?>
     </div>
 
     <div class="product-card-actions">
       <?php if ($status === 1 && $sellPrice > 0): ?>
         <div class="product-card-actions-row">
-          <form action="/cart/add" method="POST" class="card-action-form">
+          <form action="/cart/add" method="POST" class="card-action-form" style="flex:1; margin:0; min-width:0;">
             <?= mta_csrf_field() ?>
             <input type="hidden" name="product_id" value="<?= (int)($product['id'] ?? 0) ?>">
             <button type="submit" class="btn btn-primary btn-card-btn" aria-label="Add <?= e($title) ?> to Cart">
               Add to Cart
             </button>
           </form>
-          <a href="<?= e($waOrderUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" aria-label="Order <?= e($title) ?> on WhatsApp">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="#25D366"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.403 5.638A8.955 8.955 0 0 0 12.053 3c-4.968 0-9.01 4.042-9.01 9.013 0 1.587.413 3.134 1.198 4.492L3 21l4.634-1.216a8.972 8.972 0 0 0 4.417 1.156h.004c4.968 0 9.007-4.042 9.007-9.014 0-2.408-.937-4.672-2.659-6.288zm-6.35 13.785h-.004a7.466 7.466 0 0 1-3.805-1.042l-.273-.162-2.827.741.755-2.756-.177-.282a7.448 7.448 0 0 1-1.144-3.909c0-4.135 3.364-7.499 7.502-7.499 2.004 0 3.887.782 5.301 2.2 1.415 1.417 2.193 3.303 2.193 5.308 0 4.136-3.365 7.499-7.498 7.499zm4.113-5.618c-.225-.113-1.334-.659-1.541-.734-.206-.075-.356-.113-.506.113-.15.225-.581.734-.712.884-.131.15-.262.169-.487.056-.225-.113-.951-.351-1.811-1.118-.67-.598-1.122-1.337-1.253-1.562-.131-.225-.014-.347.098-.459.102-.101.225-.263.338-.395.112-.131.15-.225.225-.375.075-.15.037-.281-.019-.394-.056-.113-.506-1.219-.694-1.67-.182-.439-.368-.379-.506-.386l-.431-.007c-.15 0-.394.056-.6.281-.206.225-.788.77-.788 1.876 0 1.107.806 2.176.919 2.326.112.15 1.586 2.423 3.843 3.398.537.232.956.371 1.283.475.54.172 1.031.148 1.419.09.432-.065 1.334-.545 1.522-1.07.188-.526.188-.977.131-1.07-.056-.094-.206-.15-.431-.263z"/></svg>
-            <span>WhatsApp</span>
-          </a>
-          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-icon btn-card-share" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share on WhatsApp" aria-label="Share on WhatsApp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.403 5.638A8.955 8.955 0 0 0 12.053 3c-4.968 0-9.01 4.042-9.01 9.013 0 1.587.413 3.134 1.198 4.492L3 21l4.634-1.216a8.972 8.972 0 0 0 4.417 1.156h.004c4.968 0 9.007-4.042 9.007-9.014 0-2.408-.937-4.672-2.659-6.288zm-6.35 13.785h-.004a7.466 7.466 0 0 1-3.805-1.042l-.273-.162-2.827.741.755-2.756-.177-.282a7.448 7.448 0 0 1-1.144-3.909c0-4.135 3.364-7.499 7.502-7.499 2.004 0 3.887.782 5.301 2.2 1.415 1.417 2.193 3.303 2.193 5.308 0 4.136-3.365 7.499-7.498 7.499zm4.113-5.618c-.225-.113-1.334-.659-1.541-.734-.206-.075-.356-.113-.506.113-.15.225-.581.734-.712.884-.131.15-.262.169-.487.056-.225-.113-.951-.351-1.811-1.118-.67-.598-1.122-1.337-1.253-1.562-.131-.225-.014-.347.098-.459.102-.101.225-.263.338-.395.112-.131.15-.225.225-.375.075-.15.037-.281-.019-.394-.056-.113-.506-1.219-.694-1.67-.182-.439-.368-.379-.506-.386l-.431-.007c-.15 0-.394.056-.6.281-.206.225-.788.77-.788 1.876 0 1.107.806 2.176.919 2.326.112.15 1.586 2.423 3.843 3.398.537.232.956.371 1.283.475.54.172 1.031.148 1.419.09.432-.065 1.334-.545 1.522-1.07.188-.526.188-.977.131-1.07-.056-.094-.206-.15-.431-.263z"/></svg>
+          <?php if ($showWaOnCards): ?>
+            <a href="<?= e($waOrderUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" style="flex:1;" aria-label="Order <?= e($title) ?> on WhatsApp">
+              <span>WhatsApp</span>
+            </a>
+          <?php endif; ?>
+          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-icon" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share" aria-label="Share <?= e($title) ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
           </a>
         </div>
-      <?php elseif ($status === 3): ?>
+      <?php elseif ($status === 3 || $sellPrice <= 0): ?>
         <div class="product-card-actions-row">
-          <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi, please inform me when this item arrives: ' . $title)) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" style="flex:1;">
-            Inquire Coming Soon
+          <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories! Please tell me price / availability for: ' . $title)) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" style="flex:1; gap:6px;" aria-label="Ask Price for <?= e($title) ?>">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Ask Price</span>
           </a>
-          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-icon btn-card-share" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share on WhatsApp" aria-label="Share on WhatsApp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.403 5.638A8.955 8.955 0 0 0 12.053 3c-4.968 0-9.01 4.042-9.01 9.013 0 1.587.413 3.134 1.198 4.492L3 21l4.634-1.216a8.972 8.972 0 0 0 4.417 1.156h.004c4.968 0 9.007-4.042 9.007-9.014 0-2.408-.937-4.672-2.659-6.288zm-6.35 13.785h-.004a7.466 7.466 0 0 1-3.805-1.042l-.273-.162-2.827.741.755-2.756-.177-.282a7.448 7.448 0 0 1-1.144-3.909c0-4.135 3.364-7.499 7.502-7.499 2.004 0 3.887.782 5.301 2.2 1.415 1.417 2.193 3.303 2.193 5.308 0 4.136-3.365 7.499-7.498 7.499zm4.113-5.618c-.225-.113-1.334-.659-1.541-.734-.206-.075-.356-.113-.506.113-.15.225-.581.734-.712.884-.131.15-.262.169-.487.056-.225-.113-.951-.351-1.811-1.118-.67-.598-1.122-1.337-1.253-1.562-.131-.225-.014-.347.098-.459.102-.101.225-.263.338-.395.112-.131.15-.225.225-.375.075-.15.037-.281-.019-.394-.056-.113-.506-1.219-.694-1.67-.182-.439-.368-.379-.506-.386l-.431-.007c-.15 0-.394.056-.6.281-.206.225-.788.77-.788 1.876 0 1.107.806 2.176.919 2.326.112.15 1.586 2.423 3.843 3.398.537.232.956.371 1.283.475.54.172 1.031.148 1.419.09.432-.065 1.334-.545 1.522-1.07.188-.526.188-.977.131-1.07-.056-.094-.206-.15-.431-.263z"/></svg>
+          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-icon" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share" aria-label="Share <?= e($title) ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
           </a>
         </div>
       <?php else: ?>
         <div class="product-card-actions-row">
-          <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi, is this item returning soon: ' . $title)) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" style="flex:1;">
-            Check Availability
+          <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories! Is this item returning in stock soon: ' . $title)) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-card-btn" style="flex:1; gap:6px;" aria-label="Ask Availability for <?= e($title) ?>">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Ask Availability</span>
           </a>
-          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-icon btn-card-share" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share on WhatsApp" aria-label="Share on WhatsApp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path fill-rule="evenodd" clip-rule="evenodd" d="M18.403 5.638A8.955 8.955 0 0 0 12.053 3c-4.968 0-9.01 4.042-9.01 9.013 0 1.587.413 3.134 1.198 4.492L3 21l4.634-1.216a8.972 8.972 0 0 0 4.417 1.156h.004c4.968 0 9.007-4.042 9.007-9.014 0-2.408-.937-4.672-2.659-6.288zm-6.35 13.785h-.004a7.466 7.466 0 0 1-3.805-1.042l-.273-.162-2.827.741.755-2.756-.177-.282a7.448 7.448 0 0 1-1.144-3.909c0-4.135 3.364-7.499 7.502-7.499 2.004 0 3.887.782 5.301 2.2 1.415 1.417 2.193 3.303 2.193 5.308 0 4.136-3.365 7.499-7.498 7.499zm4.113-5.618c-.225-.113-1.334-.659-1.541-.734-.206-.075-.356-.113-.506.113-.15.225-.581.734-.712.884-.131.15-.262.169-.487.056-.225-.113-.951-.351-1.811-1.118-.67-.598-1.122-1.337-1.253-1.562-.131-.225-.014-.347.098-.459.102-.101.225-.263.338-.395.112-.131.15-.225.225-.375.075-.15.037-.281-.019-.394-.056-.113-.506-1.219-.694-1.67-.182-.439-.368-.379-.506-.386l-.431-.007c-.15 0-.394.056-.6.281-.206.225-.788.77-.788 1.876 0 1.107.806 2.176.919 2.326.112.15 1.586 2.423 3.843 3.398.537.232.956.371 1.283.475.54.172 1.031.148 1.419.09.432-.065 1.334-.545 1.522-1.07.188-.526.188-.977.131-1.07-.056-.094-.206-.15-.431-.263z"/></svg>
+          <a href="<?= e($shareWaUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-icon" onclick="event.stopPropagation(); if (window.shareOnWhatsApp) window.shareOnWhatsApp('<?= e(addslashes($cleanProductUrl)) ?>', '<?= e(addslashes($title)) ?>');" title="Share" aria-label="Share <?= e($title) ?>">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
           </a>
         </div>
       <?php endif; ?>

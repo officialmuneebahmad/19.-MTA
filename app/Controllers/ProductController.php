@@ -21,7 +21,7 @@ class ProductController
 
         // Load Product
         $product = $db->fetch(
-            "SELECT p.*, b.name AS brand_name, b.slug AS brand_slug, c.name AS category_name, c.slug AS category_slug 
+            "SELECT p.*, b.name AS brand_name, b.slug AS brand_slug, b.logo_path AS brand_logo_path, b.logo_alt AS brand_logo_alt, c.name AS category_name, c.slug AS category_slug 
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
              LEFT JOIN categories c ON c.id = p.category_id

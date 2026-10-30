@@ -113,10 +113,14 @@
       <a href="/brands" class="section-link">All Brands &rarr;</a>
     </div>
 
-    <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
+    <div class="brands-grid" role="list">
       <?php foreach ($featuredBrands as $b): ?>
-        <a href="/brands/<?= e($b['slug']) ?>" class="btn btn-secondary" style="font-weight:700;">
-          <?= e($b['name']) ?>
+        <a href="/brands/<?= e($b['slug']) ?>" class="brand-tile" aria-label="<?= e($b['name']) ?> products" role="listitem">
+          <?php if (!empty($b['logo_path'])): ?>
+            <img src="<?= e($b['logo_path']) ?>" alt="<?= e($b['logo_alt'] ?: ($b['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
+          <?php else: ?>
+            <span class="brand-tile-text"><?= e($b['name']) ?></span>
+          <?php endif; ?>
         </a>
       <?php endforeach; ?>
     </div>

@@ -10,6 +10,14 @@ declare(strict_types=1);
 define('MTA_START', microtime(true));
 define('MTA_PUBLIC', __DIR__);
 
+// Support PHP built-in CLI web server static asset serving
+if (php_sapi_name() === 'cli-server') {
+    $staticPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+    if ($staticPath && $staticPath !== '/' && file_exists(__DIR__ . $staticPath) && is_file(__DIR__ . $staticPath)) {
+        return false;
+    }
+}
+
 if (is_dir(__DIR__ . '/app')) {
     define('MTA_ROOT', __DIR__);
     define('MTA_APP', __DIR__ . '/app');

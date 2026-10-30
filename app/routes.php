@@ -31,6 +31,7 @@ use App\Admin\DashboardController as AdminDashboardController;
 use App\Admin\ProductController as AdminProductController;
 use App\Admin\ImportController as AdminImportController;
 use App\Admin\CategoryController as AdminCategoryController;
+use App\Admin\BrandController as AdminBrandController;
 use App\Admin\OrderController as AdminOrderController;
 use App\Admin\WhatsAppOrderController as AdminWhatsAppOrderController;
 use App\Admin\ExportController as AdminExportController;
@@ -151,6 +152,11 @@ $router->get("/{$adminBase}/categories", [AdminCategoryController::class, 'index
 $router->post("/{$adminBase}/categories", [AdminCategoryController::class, 'store'], $adminCsrfMw);
 $router->get("/{$adminBase}/categories/mappings", [AdminCategoryController::class, 'mappings'], $adminMw);
 $router->post("/{$adminBase}/categories/mappings", [AdminCategoryController::class, 'updateMapping'], $adminCsrfMw);
+
+// Brands & Logos Management (Task 3)
+$router->get("/{$adminBase}/brands", [AdminBrandController::class, 'index'], $adminMw);
+$router->post("/{$adminBase}/brands/bulk-upload", [AdminBrandController::class, 'bulkUpload'], $adminCsrfMw);
+$router->post("/{$adminBase}/brands/{id}", [AdminBrandController::class, 'update'], $adminCsrfMw);
 
 // Orders
 $router->get("/{$adminBase}/orders", [AdminOrderController::class, 'index'], $adminMw);

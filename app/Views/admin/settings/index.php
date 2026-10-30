@@ -183,9 +183,18 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" style="margin-bottom: 1rem;">
         <label class="form-label">Top Header Marquee Announcement</label>
         <input type="text" name="announcement_marquee" value="<?= e($settings['announcement_marquee'] ?? 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY CHARGES ONLY FOR MULTANIS') ?>" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Show WhatsApp Order Button on Product Cards</label>
+        <select name="show_wa_on_product_cards" class="form-control">
+          <option value="0" <?= ($settings['show_wa_on_product_cards'] ?? '0') === '0' ? 'selected' : '' ?>>Disabled (Default: [Add to Cart] + [Share] buttons only)</option>
+          <option value="1" <?= ($settings['show_wa_on_product_cards'] ?? '') === '1' ? 'selected' : '' ?>>Enabled (Show [Add to Cart] + [WhatsApp] + [Share])</option>
+        </select>
+        <div class="form-help">When disabled, product cards show [Add to Cart] and neutral [Share] button. Unavailable products show neutral [Ask Price] or [Ask Availability].</div>
       </div>
     </div>
   </div>

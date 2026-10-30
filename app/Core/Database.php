@@ -172,6 +172,26 @@ class Database
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );");
 
+                // Brands columns for logos and featured status (Task 3)
+                $bCols = array_column($this->pdo->query("PRAGMA table_info(brands)")->fetchAll(PDO::FETCH_ASSOC), 'name');
+                if (!empty($bCols)) {
+                    if (!in_array('logo_path', $bCols, true)) {
+                        $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_path TEXT NULL;");
+                    }
+                    if (!in_array('logo_dark_path', $bCols, true)) {
+                        $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_dark_path TEXT NULL;");
+                    }
+                    if (!in_array('logo_alt', $bCols, true)) {
+                        $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_alt TEXT NULL;");
+                    }
+                    if (!in_array('is_featured', $bCols, true)) {
+                        $this->pdo->exec("ALTER TABLE brands ADD COLUMN is_featured INTEGER NOT NULL DEFAULT 0;");
+                    }
+                    if (!in_array('featured_sort', $bCols, true)) {
+                        $this->pdo->exec("ALTER TABLE brands ADD COLUMN featured_sort INTEGER NOT NULL DEFAULT 0;");
+                    }
+                }
+
                 // Audit Log Table
                 $this->pdo->exec("CREATE TABLE IF NOT EXISTS audit_log (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -236,7 +256,25 @@ class Database
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     KEY idx_audit_created (created_at)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+                // Brands columns for MySQL (Task 3)
+                $chkBrandLogo = $this->pdo->query("SHOW COLUMNS FROM brands LIKE 'logo_path'")->fetch();
+                if (!$chkBrandLogo) {
+                    $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_path VARCHAR(255) NULL;");
+                    $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_dark_path VARCHAR(255) NULL;");
+                    $this->pdo->exec("ALTER TABLE brands ADD COLUMN logo_alt VARCHAR(255) NULL;");
+                    $this->pdo->exec("ALTER TABLE brands ADD COLUMN is_featured TINYINT(1) NOT NULL DEFAULT 0;");
+                    $this->pdo->exec("ALTER TABLE brands ADD COLUMN featured_sort INT NOT NULL DEFAULT 0;");
+                }
             }
+
+            // Ensure show_wa_on_product_cards setting exists (default 0 / OFF)
+            try {
+                $chkSetting = $this->pdo->query("SELECT `key` FROM settings WHERE `key` = 'show_wa_on_product_cards' LIMIT 1")->fetch();
+                if (!$chkSetting) {
+                    $this->pdo->exec("INSERT INTO settings (`key`, value, description, group_name, updated_at) VALUES ('show_wa_on_product_cards', '0', 'Show WhatsApp order button on product cards', 'storefront', CURRENT_TIMESTAMP);");
+                }
+            } catch (\Throwable) {}
 
             // Sync cod_due on orders where default is 0
             $this->pdo->exec("UPDATE orders SET cod_due = MAX(0, total - advance_amount) WHERE cod_due = 0 AND total > 0;");

@@ -6,13 +6,20 @@
 <div class="container" style="padding-top: 1rem;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <div style="margin: 1.5rem 0 2rem;">
-    <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;"><?= e($brand['name']) ?> Accessories in Pakistan</h1>
-    <?php if (!empty($brand['intro_html'])): ?>
-      <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; max-width: 800px;">
-        <?= $brand['intro_html'] ?>
+  <div style="margin: 1.5rem 0 2rem; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+    <?php if (!empty($brand['logo_path'])): ?>
+      <div style="background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: center; height: 72px;">
+        <img src="<?= e($brand['logo_path']) ?>" alt="<?= e($brand['logo_alt'] ?: ($brand['name'] . ' logo')) ?>" style="max-height: 48px; max-width: 140px; object-fit: contain;" width="140" height="48">
       </div>
     <?php endif; ?>
+    <div>
+      <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;"><?= e($brand['name']) ?> Accessories in Pakistan</h1>
+      <?php if (!empty($brand['intro_html'])): ?>
+        <div style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; max-width: 800px;">
+          <?= $brand['intro_html'] ?>
+        </div>
+      <?php endif; ?>
+    </div>
   </div>
 
   <?php if (!empty($products)): ?>
