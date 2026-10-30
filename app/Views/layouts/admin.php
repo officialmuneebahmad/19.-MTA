@@ -1,751 +1,339 @@
 <?php
 /**
- * Multan Tech Accessories — Enterprise Admin Operations Console
- * Modern Cloud Infrastructure & Store Operations Architecture
+ * Multan Tech Accessories — Master Admin Operations Console (Part B)
+ * MultanTech.store
  */
 $adminPath = mta_admin_path();
 $currentUser = \App\Core\Session::get('admin_user', []);
-$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+$userName = $currentUser['name'] ?? 'Muhammad Tayyab';
+$userEmail = $currentUser['email'] ?? 'admin@multantech.store';
+$userInitials = 'MT';
+if (!empty($userName)) {
+    $parts = explode(' ', trim($userName));
+    $userInitials = strtoupper(substr($parts[0] ?? 'M', 0, 1) . substr($parts[1] ?? 'T', 0, 1));
+}
+
+// Helper to determine active navigation item
+$isActive = function(string $route) use ($currentPath, $adminPath): bool {
+    $target = rtrim($adminPath . '/' . ltrim($route, '/'), '/');
+    if ($route === '' || $route === '/') {
+        return $currentPath === $adminPath || $currentPath === $adminPath . '/';
+    }
+    return str_starts_with($currentPath, $target);
+};
 ?>
 <!DOCTYPE html>
 <html lang="en-PK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= e($meta_title ?? 'Operations Console — Multan Tech Accessories') ?></title>
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <title><?= e($meta_title ?? 'Store Management Console — Multan Tech Accessories') ?></title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="csrf-token" content="<?= e(\App\Core\Session::csrfToken()) ?>">
+  
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      /* Brand Identity */
-      --brand-orange: #FF6223;
-      --brand-orange-hover: #E54F12;
-      --brand-teal: #0EB4A9;
-      --brand-teal-hover: #099A90;
-
-      /* Enterprise Slate Console Theme */
-      --console-bg: #0B0E14;
-      --console-sidebar: #0D1117;
-      --console-sidebar-border: #1E232F;
-      --console-topbar: #0F131C;
-      --console-topbar-border: #1E232F;
-      --console-card: #131823;
-      --console-card-header: #181F2E;
-      --console-card-border: #1E2536;
-      --console-hover: #1A2131;
-      
-      --console-text: #E6EDF3;
-      --console-text-muted: #8B949E;
-      --console-text-dim: #5B6577;
-
-      --font-console: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', Consolas, monospace;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-console);
-      background-color: var(--console-bg);
-      color: var(--console-text);
-      display: flex;
-      min-height: 100vh;
-      font-size: 0.885rem;
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    /* Custom Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0B0E14; }
-    ::-webkit-scrollbar-thumb { background: #262D3D; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3B4459; }
-
-    /* -------------------------------------------------------------------------
-     * Sidebar Navigation
-     * ------------------------------------------------------------------------- */
-    .admin-sidebar {
-      width: 250px;
-      background: var(--console-sidebar);
-      border-right: 1px solid var(--console-sidebar-border);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      z-index: 50;
-      user-select: none;
-    }
-
-    .admin-brand {
-      padding: 1.25rem 1.25rem;
-      border-bottom: 1px solid var(--console-sidebar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand-id {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-    }
-
-    .brand-icon-box {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--brand-orange) 0%, #D84D34 100%);
-      color: #fff;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.95rem;
-      box-shadow: 0 2px 8px rgba(255, 98, 35, 0.35);
-    }
-
-    .brand-meta {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand-title {
-      font-size: 0.875rem;
-      font-weight: 800;
-      letter-spacing: -0.2px;
-      color: #FFFFFF;
-      line-height: 1.2;
-    }
-
-    .brand-subtitle {
-      font-size: 0.68rem;
-      color: var(--brand-teal);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .brand-badge {
-      font-size: 0.65rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      background: rgba(14, 180, 169, 0.15);
-      color: var(--brand-teal);
-      border: 1px solid rgba(14, 180, 169, 0.3);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-
-    .admin-nav {
-      padding: 1rem 0.75rem;
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .admin-nav-heading {
-      font-size: 0.675rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--console-text-dim);
-      padding: 0.75rem 0.65rem 0.35rem;
-      font-weight: 700;
-    }
-
-    .admin-nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.84rem;
-      color: var(--console-text-muted);
-      transition: all 0.15s ease;
-      position: relative;
-    }
-
-    .admin-nav-item svg {
-      width: 17px;
-      height: 17px;
-      stroke-width: 2;
-      flex-shrink: 0;
-      transition: stroke 0.15s ease;
-    }
-
-    .admin-nav-item:hover {
-      background: var(--console-hover);
-      color: var(--console-text);
-    }
-
-    .admin-nav-item.active {
-      background: rgba(255, 98, 35, 0.12);
-      color: var(--brand-orange);
-      font-weight: 700;
-    }
-
-    .admin-nav-item.active svg {
-      stroke: var(--brand-orange);
-    }
-
-    .admin-nav-item.active::before {
-      content: '';
-      position: absolute;
-      left: -0.75rem;
-      top: 15%;
-      bottom: 15%;
-      width: 3px;
-      background: var(--brand-orange);
-      border-radius: 0 2px 2px 0;
-    }
-
-    .admin-nav-pill {
-      margin-left: auto;
-      font-size: 0.675rem;
-      font-weight: 700;
-      padding: 0.1rem 0.45rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--console-text-muted);
-    }
-
-    /* -------------------------------------------------------------------------
-     * Topbar & Content Area
-     * ------------------------------------------------------------------------- */
-    .admin-main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      background: var(--console-bg);
-    }
-
-    .admin-topbar {
-      height: 56px;
-      background: var(--console-topbar);
-      border-bottom: 1px solid var(--console-topbar-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 1.75rem;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-    }
-
-    .admin-breadcrumb {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.825rem;
-      color: var(--console-text-muted);
-    }
-
-    .admin-breadcrumb a:hover {
-      color: var(--console-text);
-    }
-
-    .admin-breadcrumb .active {
-      color: #FFFFFF;
-      font-weight: 700;
-    }
-
-    .admin-topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .sys-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.25rem 0.65rem;
-      background: rgba(14, 180, 169, 0.1);
-      border: 1px solid rgba(14, 180, 169, 0.25);
-      color: var(--brand-teal);
-      border-radius: 999px;
-      letter-spacing: 0.3px;
-    }
-
-    .status-dot-pulse {
-      width: 6px;
-      height: 6px;
-      background: var(--brand-teal);
-      border-radius: 50%;
-      box-shadow: 0 0 6px var(--brand-teal);
-    }
-
-    .admin-body {
-      padding: 1.75rem 2rem 3rem;
-      flex: 1;
-      max-width: 1500px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    /* -------------------------------------------------------------------------
-     * Enterprise Card Component
-     * ------------------------------------------------------------------------- */
-    .admin-card {
-      background: var(--console-card);
-      border: 1px solid var(--console-card-border);
-      border-radius: var(--radius-md);
-      padding: 1.35rem 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    }
-
-    .admin-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--console-card-border);
-    }
-
-    .admin-card-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: -0.1px;
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      padding: 0.45rem 0.85rem;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.825rem;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .btn svg {
-      width: 15px;
-      height: 15px;
-      stroke-width: 2;
-    }
-
-    .btn-primary {
-      background: var(--brand-orange);
-      color: #FFFFFF;
-      border-color: var(--brand-orange);
-      box-shadow: 0 2px 6px rgba(255, 98, 35, 0.25);
-    }
-
-    .btn-primary:hover {
-      background: var(--brand-orange-hover);
-      border-color: var(--brand-orange-hover);
-      transform: translateY(-1px);
-    }
-
-    .btn-secondary {
-      background: #171E2B;
-      color: var(--console-text);
-      border-color: var(--console-card-border);
-    }
-
-    .btn-secondary:hover {
-      background: #20293B;
-      border-color: #2D374D;
-      color: #FFFFFF;
-    }
-
-    .btn-teal {
-      background: var(--brand-teal);
-      color: #0A1C1A;
-      font-weight: 700;
-    }
-
-    .btn-teal:hover {
-      background: var(--brand-teal-hover);
-      color: #0A1C1A;
-    }
-
-    .btn-danger {
-      background: rgba(220, 38, 38, 0.15);
-      color: #F87171;
-      border-color: rgba(220, 38, 38, 0.3);
-    }
-
-    .btn-danger:hover {
-      background: rgba(220, 38, 38, 0.3);
-      color: #FFFFFF;
-    }
-
-    .btn-sm {
-      padding: 0.3rem 0.65rem;
-      font-size: 0.775rem;
-    }
-
-    /* Alerts */
-    .alert {
-      padding: 0.85rem 1.15rem;
-      border-radius: var(--radius-sm);
-      margin-bottom: 1.25rem;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border: 1px solid transparent;
-    }
-
-    .alert-success {
-      background: rgba(14, 180, 169, 0.12);
-      color: #2DD4BF;
-      border-color: rgba(14, 180, 169, 0.3);
-    }
-
-    .alert-error {
-      background: rgba(239, 68, 68, 0.12);
-      color: #F87171;
-      border-color: rgba(239, 68, 68, 0.3);
-    }
-
-    .alert-warning {
-      background: rgba(245, 158, 11, 0.12);
-      color: #FBBF24;
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .alert-info {
-      background: rgba(59, 130, 246, 0.12);
-      color: #60A5FA;
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    /* Tables */
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.84rem;
-    }
-
-    .admin-table th {
-      background: var(--console-card-header);
-      text-align: left;
-      padding: 0.75rem 1rem;
-      font-weight: 700;
-      border-bottom: 1px solid var(--console-card-border);
-      color: var(--console-text-muted);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .admin-table td {
-      padding: 0.85rem 1rem;
-      border-bottom: 1px solid var(--console-card-border);
-      vertical-align: middle;
-      color: var(--console-text);
-    }
-
-    .admin-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Status Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      text-transform: capitalize;
-    }
-
-    .badge-success {
-      background: rgba(14, 180, 169, 0.15);
-      color: #2DD4BF;
-      border: 1px solid rgba(14, 180, 169, 0.3);
-    }
-
-    .badge-warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #FBBF24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    .badge-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    .badge-neutral {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--console-text-muted);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .badge-info {
-      background: rgba(59, 130, 246, 0.15);
-      color: #60A5FA;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    /* Form Controls */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.825rem;
-      margin-bottom: 0.4rem;
-      color: var(--console-text);
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 0.65rem 0.85rem;
-      border: 1px solid var(--console-card-border);
-      border-radius: var(--radius-sm);
-      font-size: 0.885rem;
-      background: #0B0E14;
-      color: #FFFFFF;
-      font-family: inherit;
-      transition: border-color 0.15s ease;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--brand-orange);
-      box-shadow: 0 0 0 2px rgba(255, 98, 35, 0.2);
-    }
-
-    .form-help {
-      font-size: 0.75rem;
-      color: var(--console-text-muted);
-      margin-top: 0.35rem;
-    }
-
-    /* Monospace Code Pill */
-    .code-pill {
-      font-family: var(--font-mono);
-      font-size: 0.775rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--console-card-border);
-      color: #38BDF8;
-    }
-
-    @media (max-width: 900px) {
-      .admin-sidebar {
-        width: 68px;
+  
+  <link rel="stylesheet" href="/assets/css/admin.css">
+  <script>
+    // Immediate early theme application to prevent FOUC
+    try {
+      var saved = localStorage.getItem('mta_admin_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
-      .admin-brand .brand-meta,
-      .admin-brand .brand-badge,
-      .admin-nav-heading,
-      .admin-nav-item span:not(:first-child),
-      .admin-nav-pill {
-        display: none;
-      }
-      .admin-nav-item {
-        justify-content: center;
-        padding: 0.75rem;
-      }
-      .admin-topbar {
-        padding: 0 1rem;
-      }
-      .admin-body {
-        padding: 1rem;
-      }
-    }
-  </style>
+    } catch (e) {}
+  </script>
 </head>
 <body>
 
-  <!-- Enterprise Sidebar -->
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <div class="brand-id">
-        <div class="brand-icon-box">M</div>
-        <div class="brand-meta">
-          <span class="brand-title">MTA Console</span>
-          <span class="brand-subtitle">Operations Portal</span>
-        </div>
-      </div>
-      <span class="brand-badge">PROD</span>
-    </div>
+  <!-- Mobile Off-Canvas Backdrop -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
-    <nav class="admin-nav">
-      <div class="admin-nav-heading">Operations</div>
-      <a href="<?= e($adminPath) ?>" class="admin-nav-item <?= $currentPath === $adminPath ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
-        <span>Telemetry</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/sync" class="admin-nav-item <?= str_contains($currentPath, '/sync') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
-        <span>Supplier Feed</span>
-        <span class="admin-nav-pill">Auto</span>
-      </a>
-
-      <div class="admin-nav-heading">Catalog & Fulfillment</div>
-      <a href="<?= e($adminPath) ?>/products" class="admin-nav-item <?= str_contains($currentPath, '/products') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-        <span>Inventory Items</span>
-        <span class="admin-nav-pill">991</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/import" class="admin-nav-item <?= str_contains($currentPath, '/import') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-        <span>Data Ingestion</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/categories" class="admin-nav-item <?= $currentPath === $adminPath . '/categories' ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-        <span>Taxonomy Nodes</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/categories/mappings" class="admin-nav-item <?= str_contains($currentPath, '/categories/mappings') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-        <span>Feed Mappings</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/orders" class="admin-nav-item <?= str_contains($currentPath, '/orders') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-        <span>Dispatch Orders</span>
-      </a>
-
-      <div class="admin-nav-heading">SEO & Automation</div>
-      <a href="<?= e($adminPath) ?>/banners" class="admin-nav-item <?= str_contains($currentPath, '/banners') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-        <span>Billboard Banners</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/guides" class="admin-nav-item <?= str_contains($currentPath, '/guides') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        <span>Knowledge Guides</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/queue" class="admin-nav-item <?= str_contains($currentPath, '/queue') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-        <span>AI Rewriter Pipeline</span>
-      </a>
-      <a href="<?= e($adminPath) ?>/seo-audit" class="admin-nav-item <?= str_contains($currentPath, '/seo-audit') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <span>Technical SEO Audit</span>
-      </a>
-
-      <div class="admin-nav-heading">Platform</div>
-      <a href="<?= e($adminPath) ?>/settings" class="admin-nav-item <?= str_contains($currentPath, '/settings') ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Environment Config</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main Console -->
-  <div class="admin-main">
-    <header class="admin-topbar">
-      <div class="admin-breadcrumb">
-        <span>Console</span>
-        <span style="opacity: 0.4;">/</span>
-        <span class="active"><?= e($page_title ?? 'Operations Overview') ?></span>
+  <div class="admin-shell">
+    
+    <!-- -----------------------------------------------------------------------
+         1. Left Navigation Sidebar
+         ----------------------------------------------------------------------- -->
+    <aside id="admin-sidebar" class="admin-sidebar" aria-label="Main Administration Navigation">
+      
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <a href="<?= e($adminPath) ?>" class="brand-link" title="MTA Admin Dashboard">
+          <div class="brand-logo-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+              <path d="M12 12v9"></path>
+              <path d="m8 17 4 4 4-4"></path>
+            </svg>
+          </div>
+          <div class="brand-text-group">
+            <div class="brand-name">Multan Tech</div>
+            <div class="brand-console-badge">ADMIN CONSOLE</div>
+          </div>
+        </a>
+        <button type="button" id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
       </div>
 
-      <div class="admin-topbar-actions">
-        <!-- Live Status Pill -->
-        <div class="sys-status-badge">
-          <span class="status-dot-pulse"></span>
-          <span>ONLINE &bull; SQLITE</span>
-        </div>
+      <!-- Main Navigation Menu -->
+      <nav class="sidebar-nav">
+        
+        <div class="nav-section-title">Core Management</div>
 
-        <!-- Quick Sync Action -->
-        <form action="<?= e($adminPath) ?>/sync/trigger" method="POST" style="display:inline;">
-          <?= mta_csrf_field() ?>
-          <button type="submit" class="btn btn-secondary btn-sm" title="Schedule immediate background supplier sync">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
-            <span>Sync Supplier</span>
-          </button>
-        </form>
-
-        <!-- View Storefront Link -->
-        <a href="/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" title="Open customer-facing storefront in new tab">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          <span>Storefront &nearr;</span>
+        <!-- Dashboard -->
+        <a href="<?= e($adminPath) ?>" class="nav-item <?= $isActive('') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          <span>Dashboard</span>
         </a>
 
-        <!-- Admin Profile & Logout -->
-        <div style="display: flex; align-items: center; gap: 0.65rem; border-left: 1px solid var(--console-card-border); padding-left: 0.85rem;">
-          <div style="display: flex; flex-direction: column; text-align: right;">
-            <span style="font-size: 0.8rem; font-weight: 700; color: #FFFFFF; line-height: 1.2;">
-              <?= e($currentUser['name'] ?? 'Muneeb Ahmad') ?>
-            </span>
-            <span style="font-size: 0.68rem; color: var(--brand-orange); font-weight: 700; text-transform: uppercase;">
-              <?= e($currentUser['role'] ?? 'Owner') ?>
-            </span>
+        <!-- Customer Orders -->
+        <a href="<?= e($adminPath) ?>/orders" class="nav-item <?= $isActive('orders') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          <span>Customer Orders</span>
+        </a>
+
+        <!-- Products -->
+        <a href="<?= e($adminPath) ?>/products" class="nav-item <?= $isActive('products') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+          <span>Products Catalog</span>
+        </a>
+
+        <!-- Categories -->
+        <a href="<?= e($adminPath) ?>/categories" class="nav-item <?= $isActive('categories') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          <span>Categories & Mapping</span>
+        </a>
+
+        <!-- WhatsApp Orders & Inquiries -->
+        <a href="<?= e($adminPath) ?>/whatsapp-orders" class="nav-item <?= $isActive('whatsapp-orders') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span>WhatsApp Orders</span>
+        </a>
+
+        <!-- Export Data -->
+        <a href="<?= e($adminPath) ?>/export" class="nav-item <?= $isActive('export') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Export Data</span>
+        </a>
+
+        <!-- Store Settings -->
+        <a href="<?= e($adminPath) ?>/settings" class="nav-item <?= $isActive('settings') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span>Store Settings</span>
+        </a>
+
+        <div class="nav-section-title">Catalog Operations</div>
+
+        <!-- Multi-Source Import -->
+        <a href="<?= e($adminPath) ?>/import" class="nav-item <?= $isActive('import') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          <span>Quick Add & Import</span>
+        </a>
+
+        <!-- Promotional Banners -->
+        <a href="<?= e($adminPath) ?>/banners" class="nav-item <?= $isActive('banners') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <span>Banners & Promos</span>
+        </a>
+
+        <!-- Buying Guides / Articles -->
+        <a href="<?= e($adminPath) ?>/guides" class="nav-item <?= $isActive('guides') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>Buying Guides</span>
+        </a>
+
+        <!-- AI Content Production Queue -->
+        <a href="<?= e($adminPath) ?>/queue" class="nav-item <?= $isActive('queue') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+          <span>AI Content Queue</span>
+        </a>
+
+        <!-- SEO Audit & 404 Redirects -->
+        <a href="<?= e($adminPath) ?>/seo-audit" class="nav-item <?= $isActive('seo-audit') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span>SEO & 404 Audit</span>
+        </a>
+
+        <!-- Supplier Sync Telemetry -->
+        <a href="<?= e($adminPath) ?>/sync" class="nav-item <?= $isActive('sync') ? 'active' : '' ?>">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
+          <span>Supplier Sync (991)</span>
+        </a>
+
+      </nav>
+
+      <!-- Sidebar Bottom Area -->
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" rel="noopener noreferrer" class="sidebar-live-store-link" title="Open Public Storefront in New Tab">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>View Live Store</span>
+        </a>
+
+        <form action="<?= e($adminPath) ?>/logout" method="POST" style="margin-top: 0.5rem;">
+          <?= mta_csrf_field() ?>
+          <button type="submit" class="sidebar-signout-btn" data-confirm="Are you sure you want to end your administration session?">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Sign Out</span>
+          </button>
+        </form>
+      </div>
+
+    </aside>
+
+    <!-- -----------------------------------------------------------------------
+         2. Main Application Area & Top Bar
+         ----------------------------------------------------------------------- -->
+    <div class="admin-main">
+      
+      <!-- Top Navigation Bar -->
+      <header class="admin-topbar">
+        
+        <!-- Left Title & Mobile Menu Trigger -->
+        <div class="topbar-left">
+          <button type="button" id="sidebar-toggle-btn" class="topbar-menu-btn" aria-label="Open Navigation Menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
+          <div class="topbar-title-wrap">
+            <h1 class="topbar-heading"><?= e($page_title ?? 'Store Management Console') ?></h1>
+            <div class="topbar-breadcrumbs">
+              <span>MTA Control</span>
+              <span class="sep">/</span>
+              <span class="current"><?= e($page_title ?? 'Dashboard') ?></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Quick Actions -->
+        <div class="topbar-right">
+          
+          <!-- Quick Action: Export JSON -->
+          <button type="button" id="quick-export-btn" class="btn-topbar-action" title="Export Store Data (JSON)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span class="btn-text">Export JSON</span>
+          </button>
+
+          <!-- Day / Night Mode Toggle -->
+          <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark / Light Theme" title="Toggle Theme">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+
+          <!-- Live Store Quick-Link -->
+          <a href="/" target="_blank" rel="noopener noreferrer" class="btn-live-store-top" title="Open Storefront in New Tab">
+            <span>Live Store</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          </a>
+
+          <!-- Admin Profile Pill -->
+          <div class="admin-profile-pill" title="<?= e($userEmail) ?>">
+            <div class="admin-avatar"><?= e($userInitials) ?></div>
+            <div class="admin-profile-info">
+              <div class="admin-profile-email"><?= e($userEmail) ?></div>
+              <div class="admin-role-badge">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>Owner &bull; 2FA Active</span>
+              </div>
+            </div>
           </div>
 
+          <!-- Logout Form Button -->
           <form action="<?= e($adminPath) ?>/logout" method="POST" style="display:inline;">
             <?= mta_csrf_field() ?>
-            <button type="submit" class="btn btn-danger btn-sm" title="Sign out of administration console">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <button type="submit" class="btn-topbar-logout" title="Sign Out" data-confirm="Sign out of the administration console?">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </button>
           </form>
-        </div>
-      </div>
-    </header>
 
-    <main class="admin-body">
-      <!-- Flash Messages -->
-      <?php if (\App\Core\Session::hasFlash('success')): ?>
-        <div class="alert alert-success">
-          <span><?= e(\App\Core\Session::getFlash('success')) ?></span>
         </div>
-      <?php endif; ?>
 
-      <?php if (\App\Core\Session::hasFlash('error')): ?>
-        <div class="alert alert-error">
-          <span><?= e(\App\Core\Session::getFlash('error')) ?></span>
-        </div>
-      <?php endif; ?>
+      </header>
 
-      <?php if (\App\Core\Session::hasFlash('warning')): ?>
-        <div class="alert alert-warning">
-          <span><?= e(\App\Core\Session::getFlash('warning')) ?></span>
-        </div>
-      <?php endif; ?>
+      <!-- Content Canvas -->
+      <main class="admin-content-canvas">
+        
+        <!-- Flash Alert Banners -->
+        <?php if (\App\Core\Session::hasFlash('success')): ?>
+          <div class="admin-alert admin-alert-success" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <div><?= e(\App\Core\Session::getFlash('success')) ?></div>
+          </div>
+        <?php endif; ?>
 
-      <?php if (\App\Core\Session::hasFlash('info')): ?>
-        <div class="alert alert-info">
-          <span><?= e(\App\Core\Session::getFlash('info')) ?></span>
-        </div>
-      <?php endif; ?>
+        <?php if (\App\Core\Session::hasFlash('error')): ?>
+          <div class="admin-alert admin-alert-error" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <div><?= e(\App\Core\Session::getFlash('error')) ?></div>
+          </div>
+        <?php endif; ?>
 
-      <!-- View Content Slot -->
-      <?= $content ?? '' ?>
-    </main>
+        <?php if (\App\Core\Session::hasFlash('warning')): ?>
+          <div class="admin-alert admin-alert-warning" role="alert">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            <div><?= e(\App\Core\Session::getFlash('warning')) ?></div>
+          </div>
+        <?php endif; ?>
+
+        <!-- Primary View Slot -->
+        <?= $content ?? '' ?>
+
+      </main>
+
+    </div>
+
   </div>
+
+  <!-- -------------------------------------------------------------------------
+       3. Export Data Modal Dialog (Re-Auth Gated)
+       ------------------------------------------------------------------------- -->
+  <div id="exportModal" class="admin-modal-overlay" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title">Export Store Data</h3>
+        <button type="button" class="modal-close" aria-label="Close Dialog">&times;</button>
+      </div>
+      <form action="<?= e($adminPath) ?>/export/download" method="POST">
+        <?= mta_csrf_field() ?>
+        <div class="admin-modal-body">
+          <p style="font-size:0.875rem; color:var(--admin-text-muted); margin-bottom:1.25rem;">
+            Select the dataset and export format. For store security, all administrative data exports are recorded in the permanent audit trail.
+          </p>
+
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label">Dataset</label>
+            <select name="dataset" class="form-control" required>
+              <option value="products">Products & Inventory (All 991 Catalog Items)</option>
+              <option value="orders">Customer Orders & COD Invoices</option>
+              <option value="customers">Customers Directory & City Distribution</option>
+              <option value="inquiries">WhatsApp Inquiries & Clicks Log</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label class="form-label">Export Format</label>
+            <select name="format" class="form-control" required>
+              <option value="json">JSON Format (Machine-Readable / API Integration)</option>
+              <option value="csv">CSV Spreadsheet (Excel / Google Sheets)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate Export File</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Master Admin Controller JS -->
+  <script src="/assets/js/admin.js"></script>
 
 </body>
 </html>

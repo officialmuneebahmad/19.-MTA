@@ -1,7 +1,7 @@
 <?php
 /**
- * Multan Tech Accessories — Enterprise Admin Login View
- * Modern Cloud Infrastructure & Store Operations Architecture
+ * Multan Tech Accessories — Master Admin Login View (Part B)
+ * MTA Palette: Primary Orange #FF6B2C, Teal #14B8A6, Cream #FAF9F5, Dark Charcoal #262624
  */
 $adminPath = mta_admin_path();
 ?>
@@ -11,31 +11,29 @@ $adminPath = mta_admin_path();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Operations Console Login — Multan Tech Accessories</title>
-  <meta name="robots" content="noindex, nofollow">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --brand-orange: #FF6223;
-      --brand-orange-hover: #E54F12;
-      --brand-teal: #0EB4A9;
-      --console-bg: #0B0E14;
-      --console-card: #131823;
-      --console-border: #1E2536;
-      --console-text: #E6EDF3;
-      --console-text-muted: #8B949E;
-      --font-console: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mta-orange: #FF6B2C;
+      --mta-orange-hover: #E8501A;
+      --mta-teal: #14B8A6;
+      --admin-bg: #FAF9F5;
+      --admin-card: #FFFFFF;
+      --admin-border: #EFECE6;
+      --admin-text: #262624;
+      --admin-text-muted: #6B7280;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font-console);
-      background: var(--console-bg);
-      color: var(--console-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--admin-bg);
+      color: var(--admin-text);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -47,11 +45,11 @@ $adminPath = mta_admin_path();
       max-width: 440px;
     }
     .login-card {
-      background: var(--console-card);
-      border: 1px solid var(--console-border);
-      border-radius: 14px;
-      padding: 2.25rem 2rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      background: var(--admin-card);
+      border: 1px solid var(--admin-border);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
       position: relative;
       overflow: hidden;
     }
@@ -61,8 +59,8 @@ $adminPath = mta_admin_path();
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--brand-orange), var(--brand-teal));
+      height: 4px;
+      background: linear-gradient(90deg, var(--mta-orange), var(--mta-teal));
     }
     .brand-header {
       text-align: center;
@@ -72,135 +70,145 @@ $adminPath = mta_admin_path();
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: rgba(255, 98, 35, 0.12);
-      border: 1px solid rgba(255, 98, 35, 0.25);
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
+      background: rgba(255, 107, 44, 0.1);
+      border: 1px solid rgba(255, 107, 44, 0.2);
+      padding: 0.4rem 0.9rem;
+      border-radius: 9999px;
       margin-bottom: 1rem;
     }
     .brand-icon {
-      width: 22px;
-      height: 22px;
-      background: var(--brand-orange);
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, var(--mta-orange) 0%, var(--mta-orange-hover) 100%);
       color: #fff;
-      border-radius: 4px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 800;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
     .brand-logo-text {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      color: var(--brand-orange);
-      letter-spacing: 0.5px;
+      color: var(--mta-orange);
+      letter-spacing: 0.6px;
       text-transform: uppercase;
     }
     .brand-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: #FFFFFF;
-      margin-bottom: 0.35rem;
-      letter-spacing: -0.2px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--admin-text);
+      line-height: 1.2;
     }
     .brand-subtitle {
-      font-size: 0.825rem;
-      color: var(--console-text-muted);
+      font-size: 0.85rem;
+      color: var(--admin-text-muted);
+      margin-top: 0.4rem;
+    }
+    .alert {
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      line-height: 1.4;
+    }
+    .alert-error {
+      background: #FFE4E6;
+      border: 1px solid #FECDD3;
+      color: #9F1239;
+    }
+    .alert-success {
+      background: #D1FAE5;
+      border: 1px solid #A7F3D0;
+      color: #065F46;
+    }
+    .alert-warning {
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      color: #92400E;
     }
     .form-group {
       margin-bottom: 1.25rem;
     }
     .form-group label {
       display: block;
+      font-size: 0.8rem;
       font-weight: 600;
-      font-size: 0.825rem;
       margin-bottom: 0.45rem;
-      color: var(--console-text);
+      color: var(--admin-text);
     }
     .form-control {
       width: 100%;
-      padding: 0.75rem 0.95rem;
-      border: 1px solid var(--console-border);
-      border-radius: 8px;
-      font-size: 0.925rem;
-      background: #0B0E14;
-      color: #FFFFFF;
+      height: 46px;
+      padding: 0 1rem;
+      background: #FFFFFF;
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      color: var(--admin-text);
       font-family: inherit;
-      transition: all 0.15s ease;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
     .form-control:focus {
-      outline: none;
-      border-color: var(--brand-orange);
-      box-shadow: 0 0 0 2px rgba(255, 98, 35, 0.25);
+      border-color: var(--mta-orange);
+      box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.15);
     }
     .btn-submit {
       width: 100%;
-      padding: 0.85rem;
-      background: var(--brand-orange);
+      height: 48px;
+      background: linear-gradient(135deg, var(--mta-orange) 0%, var(--mta-orange-hover) 100%);
       color: #FFFFFF;
       border: none;
-      border-radius: 8px;
-      font-weight: 700;
+      border-radius: 12px;
+      font-family: inherit;
       font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      box-shadow: 0 4px 12px rgba(255, 98, 35, 0.3);
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 4px 12px rgba(255, 107, 44, 0.25);
+      transition: opacity 0.15s, transform 0.15s;
     }
     .btn-submit:hover {
-      background: var(--brand-orange-hover);
+      opacity: 0.95;
       transform: translateY(-1px);
-    }
-    .alert {
-      padding: 0.85rem 1rem;
-      border-radius: 8px;
-      margin-bottom: 1.25rem;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .alert-error {
-      background: rgba(239, 68, 68, 0.15);
-      color: #F87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    .alert-success {
-      background: rgba(14, 180, 169, 0.15);
-      color: #2DD4BF;
-      border: 1px solid rgba(14, 180, 169, 0.3);
-    }
-    .alert-warning {
-      background: rgba(245, 158, 11, 0.15);
-      color: #FBBF24;
-      border: 1px solid rgba(245, 158, 11, 0.3);
     }
     .credentials-hint {
       margin-top: 1.5rem;
-      padding: 0.85rem 1rem;
-      border-radius: 8px;
-      background: rgba(14, 180, 169, 0.08);
-      border: 1px dashed rgba(14, 180, 169, 0.3);
-      font-size: 0.775rem;
-      color: var(--console-text-muted);
-      line-height: 1.5;
+      padding: 1rem;
+      background: #F5F3ED;
+      border-radius: 12px;
+      border: 1px dashed #DCD8D0;
+      font-size: 0.8rem;
+      color: var(--admin-text-muted);
+      line-height: 1.6;
     }
-    .credentials-hint strong {
-      color: var(--brand-teal);
+    .credentials-hint code {
+      background: #FFFFFF;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      border: 1px solid var(--admin-border);
+      font-weight: 600;
+      color: var(--admin-text);
     }
     .back-store {
       text-align: center;
       margin-top: 1.5rem;
-      font-size: 0.825rem;
-      color: var(--console-text-muted);
+      font-size: 0.85rem;
+      color: var(--admin-text-muted);
     }
     .back-store a {
-      color: var(--brand-orange);
+      color: var(--mta-orange);
       text-decoration: none;
       font-weight: 600;
     }
@@ -254,7 +262,7 @@ $adminPath = mta_admin_path();
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
             <label for="password" style="margin-bottom: 0;">Password</label>
-            <button type="button" onclick="const p=document.getElementById('password'); p.type = p.type==='password'?'text':'password'; this.innerText = p.type==='password'?'Show':'Hide';" style="background:none; border:none; color:var(--brand-teal); font-size:0.75rem; cursor:pointer; font-weight:700;">Show</button>
+            <button type="button" onclick="const p=document.getElementById('password'); p.type = p.type==='password'?'text':'password'; this.innerText = p.type==='password'?'Show':'Hide';" style="background:none; border:none; color:var(--mta-teal); font-size:0.75rem; cursor:pointer; font-weight:700;">Show</button>
           </div>
           <input type="password" id="password" name="password" required class="form-control" placeholder="Enter administrator password">
         </div>
@@ -273,7 +281,7 @@ $adminPath = mta_admin_path();
     </div>
 
     <div class="back-store">
-      <a href="/" target="_blank">&larr; Return to Customer Storefront</a>
+      <a href="/" target="_blank" rel="noopener noreferrer">&larr; Return to Customer Storefront</a>
     </div>
   </div>
 

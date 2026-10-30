@@ -160,11 +160,14 @@ class ProductController
         $metaDesc = trim((string)$request->post('meta_description', ''));
         $descHtml = trim((string)$request->post('description_html', ''));
 
-        // If override is set, sell_price reflects override
+        // If override is set, auto-snap to next value ending in 99
+        $notice = "Product #{$id} updated successfully.";
         if ($priceOverride !== null && $priceOverride > 0) {
-            $effectiveSellPrice = $priceOverride;
+            $effectiveSellPrice = \App\Services\PricingService::snapPrice($priceOverride);
+            $priceOverride = $effectiveSellPrice;
+            $notice = "Product #{$id} updated (price saved as Rs. " . number_format($effectiveSellPrice) . ").";
         } else {
-            $effectiveSellPrice = $sellPrice;
+            $effectiveSellPrice = \App\Services\PricingService::sellPrice((int)round((float)$product['supplier_price']));
         }
 
         $db->execute(
@@ -218,17 +221,22 @@ class ProductController
         $isActive = (int)$request->post('is_active', 1);
 
         $priceOverride = ($overrideRaw !== '') ? (float)$overrideRaw : null;
-        $syncService = new \App\Services\SupplierSyncService();
-        $sellPrice = ($priceOverride !== null && $priceOverride > 0) 
-            ? $priceOverride 
-            : $syncService->calculateSellingPrice((float)$product['supplier_price']);
+        if ($priceOverride !== null && $priceOverride > 0) {
+            $priceOverride = \App\Services\PricingService::snapPrice($priceOverride);
+            $sellPrice = $priceOverride;
+            $msg = "Quick updates saved for product #{$id} (price saved as Rs. " . number_format($sellPrice) . ").";
+        } else {
+            $priceOverride = null;
+            $sellPrice = \App\Services\PricingService::sellPrice((int)round((float)$product['supplier_price']));
+            $msg = "Quick updates saved for product #{$id}.";
+        }
 
         $db->execute(
             "UPDATE products SET price_override = ?, sell_price = ?, pinned = ?, is_active = ?, updated_at = ? WHERE id = ?",
             [$priceOverride, $sellPrice, $pinned, $isActive, date('Y-m-d H:i:s'), $id]
         );
 
-        Session::flash('success', "Quick updates saved for product #{$id}.");
+        Session::flash('success', $msg);
         return $resp->redirect($adminPath . '/products');
     }
 }

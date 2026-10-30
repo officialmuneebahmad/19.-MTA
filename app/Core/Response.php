@@ -24,6 +24,16 @@ class Response
         return $this->statusCode;
     }
 
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
+    }
+
     public function header(string $name, string $value): self
     {
         $this->headers[$name] = $value;

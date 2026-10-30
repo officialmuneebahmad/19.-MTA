@@ -48,85 +48,231 @@ select option {
   border-color: #33322D !important;
 }
 
+/* ==========================================================================
+   A2. Unified Component System: Buttons (@layer components)
+   ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.25rem;
-  font-size: 0.925rem;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 1rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14.5px;
   font-weight: 600;
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  gap: 8px;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
+.btn svg,
+.btn .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn.is-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btn-spin 0.6s linear infinite;
+}
+
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+
+/* Primary Button (Orange filled, 48px for main CTAs) */
 .btn-primary {
-  background-color: var(--accent-strong);
-  color: var(--accent-contrast);
+  min-height: 48px;
+  height: 48px;
+  background-color: #FF6B2C;
+  color: #FFFFFF;
+  border-color: #FF6B2C;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
+  background-color: #E8501A;
+  border-color: #E8501A;
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
+/* Secondary Button (Clean outline, 12px radius) */
 .btn-secondary {
-  background-color: var(--surface-2);
+  background-color: var(--surface);
   color: var(--text);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
 }
 
 .btn-secondary:hover {
-  background-color: var(--surface-3);
+  background-color: var(--surface-2);
   border-color: var(--border-strong);
+  color: var(--text);
+  transform: translateY(-1px);
 }
 
+/* WhatsApp Button (Green, 12px radius) */
 .btn-whatsapp {
-  background-color: var(--whatsapp);
+  background-color: #25D366;
   color: #FFFFFF;
-  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-color: #25D366;
 }
 
 .btn-whatsapp:hover {
-  background-color: var(--whatsapp-hover);
-  border-color: rgba(0, 0, 0, 0.3);
+  background-color: #1EBE5D;
+  border-color: #1EBE5D;
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
-/* WhatsApp Outlined Button (Transparent background, crisp 1.5px green border, green icon) */
 .btn-whatsapp-outline {
-  background-color: transparent !important;
-  color: var(--text) !important;
-  border: 1.5px solid #25D366 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 0.35rem !important;
-  text-decoration: none !important;
+  background-color: transparent;
+  color: var(--text);
+  border: 1.5px solid #25D366;
 }
 
 .btn-whatsapp-outline:hover {
-  background-color: rgba(37, 211, 102, 0.1) !important;
-  border-color: #25D366 !important;
+  background-color: rgba(37, 211, 102, 0.1);
+  border-color: #25D366;
+  color: #25D366;
   transform: translateY(-1px);
 }
 
-/* Card Action Button Consistency: Exact same 38px height and typography */
-.btn-card-action {
-  width: 100% !important;
-  height: 38px !important;
-  box-sizing: border-box !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  font-size: 0.825rem !important;
-  font-weight: 700 !important;
-  border-radius: var(--radius-sm) !important;
-  padding: 0 0.5rem !important;
-  white-space: nowrap !important;
-  text-align: center !important;
-  line-height: 1 !important;
+/* Ghost Button */
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text);
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  background-color: var(--surface-2);
+}
+
+/* Icon-Only Button: 36px visual, 44px touch area (A1) */
+.btn-icon {
+  min-height: 44px;
+  min-width: 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  position: relative;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.btn-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.btn-icon:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+}
+
+.btn-icon-wa {
+  border-color: rgba(37, 211, 102, 0.35);
+  background: rgba(37, 211, 102, 0.08);
+  color: #25D366;
+}
+
+.btn-icon-wa:hover {
+  background: rgba(37, 211, 102, 0.2);
+  border-color: #25D366;
+  color: #25D366;
+}
+
+/* Card-Specific Actions Row & Grid */
+.product-card-actions-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.card-action-form {
+  margin: 0;
+  display: flex;
+}
+
+.btn-card-btn {
+  width: 100%;
+  min-height: 44px;
+  height: 44px;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.product-card-actions-row .btn-icon {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+.btn-share-text {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .product-card-actions-row {
+    grid-template-columns: 1fr auto;
+  }
+  .product-card-actions-row .card-action-form {
+    grid-column: 1 / -1;
+  }
 }
 
 .btn-outline-call {
@@ -1586,4 +1732,216 @@ select option {
 
 .product-description-content li strong {
   color: var(--accent-strong);
+}
+
+/* ==========================================================================
+   A4. Product Description & Details Spacing Component System (.prose-mta)
+   ========================================================================== */
+.prose-mta {
+  line-height: 1.7;
+  max-width: 70ch;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.prose-mta p {
+  margin-bottom: 1em;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.prose-mta p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-mta h3,
+.prose-mta h4 {
+  margin-top: 1.75em;
+  margin-bottom: 0.6em;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+
+.prose-mta ul,
+.prose-mta ol {
+  margin: 1em 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.prose-mta li {
+  margin-bottom: 0.5em;
+  padding-left: 1.25em;
+  position: relative;
+  line-height: 1.6;
+}
+
+.prose-mta ul li::before {
+  content: "•";
+  color: var(--accent-strong);
+  font-weight: bold;
+  font-size: 1.2em;
+  position: absolute;
+  left: 0.2em;
+  top: -0.1em;
+}
+
+/* Key Features list with check icons and 12px gaps */
+.product-key-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 1.25rem 0;
+}
+
+.product-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 0.925rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.product-feature-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #10B981;
+  margin-top: 1px;
+}
+
+/* Specifications as clean two-column table */
+.specs-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.specs-table tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.specs-table tr:last-child {
+  border-bottom: none;
+}
+
+.specs-table tr:nth-child(even) {
+  background-color: var(--surface-2);
+}
+
+.specs-table tr:nth-child(odd) {
+  background-color: var(--surface);
+}
+
+.specs-table th,
+.specs-table td {
+  padding: 12px 16px;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.specs-table th,
+.specs-table .spec-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  width: 35%;
+  border-right: 1px solid var(--border);
+}
+
+.specs-table td,
+.specs-table .spec-value {
+  color: var(--text);
+  width: 65%;
+}
+
+@media (max-width: 600px) {
+  .specs-table th,
+  .specs-table td,
+  .specs-table .spec-label,
+  .specs-table .spec-value {
+    display: block;
+    width: 100%;
+    border-right: none;
+  }
+  .specs-table .spec-label {
+    padding-bottom: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .specs-table .spec-value {
+    padding-top: 0;
+    padding-bottom: 12px;
+  }
+}
+
+/* Product Section Spacing */
+.product-page-section {
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+@media (max-width: 600px) {
+  .product-page-section {
+    margin-top: 32px;
+    margin-bottom: 32px;
+  }
+}
+
+.product-card-padded {
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+@media (max-width: 600px) {
+  .product-card-padded {
+    padding: 20px;
+  }
+}
+
+/* Toast Notification (A1) */
+.mta-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(17, 24, 39, 0.95);
+  color: #FFFFFF;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(8px);
+}
+[data-theme="dark"] .mta-toast {
+  background: rgba(250, 249, 245, 0.95);
+  color: #111827;
+}
+.mta-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }

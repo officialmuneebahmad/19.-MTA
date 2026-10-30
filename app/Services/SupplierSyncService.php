@@ -160,10 +160,11 @@ class SupplierSyncService
                 );
                 $subcatTitle = isset($p['ProductSubCategoryTitle']) ? trim((string)$p['ProductSubCategoryTitle']) : null;
 
-                // Calculate Selling Price
+                // Calculate Selling Price via Master Pricing Engine
                 $sellPrice = $this->calculateSellingPrice($supplierPrice, $markupPercent, $markupFixed, $roundTo);
 
-                // Compute deterministic MD5 content hash
+                // Compute deterministic MD5 content hash (incorporates PricingService settings signature)
+                $pricingHash = PricingService::getSettingsHash();
                 $hashData = implode('|', [
                     $title,
                     number_format($supplierPrice, 2, '.', ''),
@@ -173,8 +174,7 @@ class SupplierSyncService
                     $subcatTitle ?? '',
                     $cleanDetail,
                     $imageUrl,
-                    $markupPercent,
-                    $markupFixed,
+                    $pricingHash,
                 ]);
                 $contentHash = md5($hashData);
 
@@ -344,15 +344,12 @@ class SupplierSyncService
      * - If supplier price >= 3000:
      *   300 + (round UP / ceiling to next hundred) + 99
      */
+    /**
+     * Compute selling price via Master Pricing Engine (Single Source of Truth)
+     */
     public function calculateSellingPrice(float $supplierPrice, float $percent = 0, float $fixed = 0, int $roundTo = 100): float
     {
-        if ($supplierPrice <= 0) {
-            return 0.00;
-        }
-
-        $markup = ($supplierPrice < 3000) ? 100.0 : 300.0;
-        $rounded = ceil(($supplierPrice + $markup) / 100) * 100;
-        return (float)($rounded + 99);
+        return (float)PricingService::sellPrice((int)round($supplierPrice));
     }
 
     /**

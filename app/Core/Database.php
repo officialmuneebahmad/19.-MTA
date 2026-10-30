@@ -115,19 +115,131 @@ class Database
     {
         try {
             if ($this->driver === 'sqlite') {
-                $cols = $this->pdo->query("PRAGMA table_info(products)")->fetchAll(PDO::FETCH_ASSOC);
-                if (!empty($cols)) {
-                    $names = array_column($cols, 'name');
-                    if (!in_array('stock_status', $names, true)) {
-                        $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status TEXT NOT NULL DEFAULT 'in_stock';");
+                // Products
+                $pCols = array_column($this->pdo->query("PRAGMA table_info(products)")->fetchAll(PDO::FETCH_ASSOC), 'name');
+                if (!empty($pCols) && !in_array('stock_status', $pCols, true)) {
+                    $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status TEXT NOT NULL DEFAULT 'in_stock';");
+                }
+
+                // Orders
+                $oCols = array_column($this->pdo->query("PRAGMA table_info(orders)")->fetchAll(PDO::FETCH_ASSOC), 'name');
+                if (!empty($oCols)) {
+                    if (!in_array('advance_amount', $oCols, true)) {
+                        $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_amount REAL NOT NULL DEFAULT 0.00;");
+                    }
+                    if (!in_array('advance_verified_at', $oCols, true)) {
+                        $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_verified_at DATETIME NULL;");
+                    }
+                    if (!in_array('cod_due', $oCols, true)) {
+                        $this->pdo->exec("ALTER TABLE orders ADD COLUMN cod_due REAL NOT NULL DEFAULT 0.00;");
                     }
                 }
+
+                // Users
+                $uCols = array_column($this->pdo->query("PRAGMA table_info(users)")->fetchAll(PDO::FETCH_ASSOC), 'name');
+                if (!empty($uCols)) {
+                    if (!in_array('totp_secret', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN totp_secret TEXT NULL;");
+                    }
+                    if (!in_array('backup_codes_json', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN backup_codes_json TEXT NULL;");
+                    }
+                    if (!in_array('is_2fa_enabled', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN is_2fa_enabled INTEGER NOT NULL DEFAULT 0;");
+                    }
+                    if (!in_array('must_change_password', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN must_change_password INTEGER NOT NULL DEFAULT 0;");
+                    }
+                    if (!in_array('failed_logins', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN failed_logins INTEGER NOT NULL DEFAULT 0;");
+                    }
+                    if (!in_array('locked_until', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN locked_until DATETIME NULL;");
+                    }
+                    if (!in_array('last_reauth_at', $uCols, true)) {
+                        $this->pdo->exec("ALTER TABLE users ADD COLUMN last_reauth_at DATETIME NULL;");
+                    }
+                }
+
+                // WhatsApp Inquiries Table
+                $this->pdo->exec("CREATE TABLE IF NOT EXISTS whatsapp_inquiries (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    product_id INTEGER NULL,
+                    product_title TEXT NULL,
+                    page_url TEXT NULL,
+                    ip_address TEXT NULL,
+                    user_agent TEXT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );");
+
+                // Audit Log Table
+                $this->pdo->exec("CREATE TABLE IF NOT EXISTS audit_log (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NULL,
+                    action TEXT NOT NULL,
+                    entity_type TEXT NULL,
+                    entity_id TEXT NULL,
+                    details TEXT NULL,
+                    ip_address TEXT NULL,
+                    user_agent TEXT NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );");
+
             } elseif ($this->driver === 'mysql') {
                 $check = $this->pdo->query("SHOW COLUMNS FROM products LIKE 'stock_status'")->fetch();
                 if (!$check) {
                     $this->pdo->exec("ALTER TABLE products ADD COLUMN stock_status VARCHAR(20) NOT NULL DEFAULT 'in_stock';");
                 }
+
+                // Orders
+                $chkAdv = $this->pdo->query("SHOW COLUMNS FROM orders LIKE 'advance_amount'")->fetch();
+                if (!$chkAdv) {
+                    $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00;");
+                    $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_verified_at DATETIME NULL;");
+                    $this->pdo->exec("ALTER TABLE orders ADD COLUMN cod_due DECIMAL(12,2) NOT NULL DEFAULT 0.00;");
+                }
+
+                // Users
+                $chkTotp = $this->pdo->query("SHOW COLUMNS FROM users LIKE 'totp_secret'")->fetch();
+                if (!$chkTotp) {
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN totp_secret VARCHAR(64) NULL;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN backup_codes_json TEXT NULL;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN is_2fa_enabled TINYINT(1) NOT NULL DEFAULT 0;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN must_change_password TINYINT(1) NOT NULL DEFAULT 0;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN failed_logins INT NOT NULL DEFAULT 0;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN locked_until DATETIME NULL;");
+                    $this->pdo->exec("ALTER TABLE users ADD COLUMN last_reauth_at DATETIME NULL;");
+                }
+
+                // WhatsApp Inquiries Table
+                $this->pdo->exec("CREATE TABLE IF NOT EXISTS whatsapp_inquiries (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    product_id INT NULL,
+                    product_title VARCHAR(255) NULL,
+                    page_url VARCHAR(500) NULL,
+                    ip_address VARCHAR(45) NULL,
+                    user_agent VARCHAR(255) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    KEY idx_inquiry_created (created_at)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+
+                // Audit Log Table
+                $this->pdo->exec("CREATE TABLE IF NOT EXISTS audit_log (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NULL,
+                    action VARCHAR(100) NOT NULL,
+                    entity_type VARCHAR(50) NULL,
+                    entity_id VARCHAR(50) NULL,
+                    details TEXT NULL,
+                    ip_address VARCHAR(45) NULL,
+                    user_agent VARCHAR(255) NULL,
+                    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    KEY idx_audit_created (created_at)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
             }
+
+            // Sync cod_due on orders where default is 0
+            $this->pdo->exec("UPDATE orders SET cod_due = MAX(0, total - advance_amount) WHERE cod_due = 0 AND total > 0;");
 
             // Ensure obsolete placeholder tokens in settings table are replaced with registered token
             $this->pdo->exec("UPDATE settings SET value = 'f1f3b0294c3f7c2328e41d42e59d2877' WHERE key = 'supplier_token' AND (value = 'd65090a5f72172720b1806a9d37aa9a4' OR value LIKE 'TODO%' OR value = '');");

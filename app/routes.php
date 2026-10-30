@@ -32,6 +32,8 @@ use App\Admin\ProductController as AdminProductController;
 use App\Admin\ImportController as AdminImportController;
 use App\Admin\CategoryController as AdminCategoryController;
 use App\Admin\OrderController as AdminOrderController;
+use App\Admin\WhatsAppOrderController as AdminWhatsAppOrderController;
+use App\Admin\ExportController as AdminExportController;
 use App\Admin\BannerController as AdminBannerController;
 use App\Admin\GuideController as AdminGuideController;
 use App\Admin\ContentQueueController as AdminContentQueueController;
@@ -111,18 +113,21 @@ $router->get('/sitemap-pages.xml', [SeoController::class, 'pages']);
 // ======================================================================
 $adminBase = trim((string)mta_config('app.admin_path', mta_setting('admin_path', 'mta-control-9872')), '/');
 
-// Admin Shortcuts / Convenience Redirects
-$router->get('/admin', [AdminAuthController::class, 'redirectToDashboard']);
-$router->get('/admin/login', [AdminAuthController::class, 'redirectToLogin']);
-$router->get('/login', [AdminAuthController::class, 'redirectToLogin']);
-$router->get('/admin-login', [AdminAuthController::class, 'redirectToLogin']);
+// Old in-store admin URLs return plain 404 (handled by Router default 404)
 
 // Admin Auth Routes (No auth middleware)
 $router->get("/{$adminBase}/login", [AdminAuthController::class, 'showLogin']);
 $router->post("/{$adminBase}/login", [AdminAuthController::class, 'login'], [CsrfMiddleware::class]);
+$router->get("/{$adminBase}/2fa/setup", [AdminAuthController::class, 'show2faSetup']);
+$router->post("/{$adminBase}/2fa/setup", [AdminAuthController::class, 'process2faSetup'], [CsrfMiddleware::class]);
+$router->get("/{$adminBase}/2fa/verify", [AdminAuthController::class, 'show2faVerify']);
+$router->post("/{$adminBase}/2fa/verify", [AdminAuthController::class, 'process2faVerify'], [CsrfMiddleware::class]);
 $router->post("/{$adminBase}/logout", [AdminAuthController::class, 'logout'], [CsrfMiddleware::class]);
+$router->post("/{$adminBase}/logout-all", [AdminAuthController::class, 'logoutAllDevices'], [CsrfMiddleware::class]);
 $router->get("/{$adminBase}/change-password", [AdminAuthController::class, 'showChangePassword']);
 $router->post("/{$adminBase}/change-password", [AdminAuthController::class, 'changePassword'], [CsrfMiddleware::class]);
+$router->get("/{$adminBase}/reauth", [AdminAuthController::class, 'showReauth']);
+$router->post("/{$adminBase}/reauth", [AdminAuthController::class, 'processReauth'], [CsrfMiddleware::class]);
 
 // Protected Admin Management Routes
 $adminMw = [AuthMiddleware::class];
@@ -151,6 +156,15 @@ $router->post("/{$adminBase}/categories/mappings", [AdminCategoryController::cla
 $router->get("/{$adminBase}/orders", [AdminOrderController::class, 'index'], $adminMw);
 $router->get("/{$adminBase}/orders/{id}", [AdminOrderController::class, 'show'], $adminMw);
 $router->post("/{$adminBase}/orders/{id}", [AdminOrderController::class, 'update'], $adminCsrfMw);
+$router->post("/{$adminBase}/orders/{id}/verify-advance", [AdminOrderController::class, 'verifyAdvance'], $adminCsrfMw);
+
+// WhatsApp Orders & Inquiries
+$router->get("/{$adminBase}/whatsapp-orders", [AdminWhatsAppOrderController::class, 'index'], $adminMw);
+$router->post("/{$adminBase}/whatsapp-orders/create", [AdminWhatsAppOrderController::class, 'create'], $adminCsrfMw);
+
+// Data Export & Backup Center
+$router->get("/{$adminBase}/export", [AdminExportController::class, 'index'], $adminMw);
+$router->post("/{$adminBase}/export/download", [AdminExportController::class, 'download'], $adminCsrfMw);
 
 // Banners
 $router->get("/{$adminBase}/banners", [AdminBannerController::class, 'index'], $adminMw);
@@ -188,3 +202,5 @@ $router->post("/{$adminBase}/sync/seed-backup", [AdminSyncController::class, 'se
 // Settings
 $router->get("/{$adminBase}/settings", [AdminSettingsController::class, 'index'], $adminMw);
 $router->post("/{$adminBase}/settings", [AdminSettingsController::class, 'update'], $adminCsrfMw);
+$router->post("/{$adminBase}/settings/cache-clear", [AdminSettingsController::class, 'cacheClear'], $adminCsrfMw);
+$router->post("/{$adminBase}/settings/reprice", [AdminSettingsController::class, 'reprice'], $adminCsrfMw);

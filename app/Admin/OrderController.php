@@ -148,4 +148,48 @@ class OrderController
         Session::flash('success', "Order #{$order['order_number']} status updated to '{$status}'.");
         return $resp->redirect($adminPath . '/orders/' . $id);
     }
+
+    public function verifyAdvance(int $id, Request $request): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        $db = Database::getInstance();
+
+        $order = $db->fetch("SELECT * FROM orders WHERE id = ? LIMIT 1", [$id]);
+        if (!$order) {
+            Session::flash('error', 'Order not found.');
+            return $resp->redirect($adminPath . '/orders');
+        }
+
+        $advance = max(0, (float)$request->post('advance_amount', 0));
+        $ref = trim((string)$request->post('advance_reference', ''));
+        $total = (float)$order['total'];
+        $codDue = max(0.0, $total - $advance);
+
+        $notes = trim((string)($order['customer_notes'] ?? ''));
+        if ($ref !== '') {
+            $notes .= ($notes ? "\n" : '') . "[Advance Verified: Rs. " . number_format($advance) . " via Ref/TID: " . $ref . " on " . date('Y-m-d H:i') . "]";
+        }
+
+        $db->execute(
+            "UPDATE orders SET 
+                advance_amount = ?, 
+                advance_verified_at = CURRENT_TIMESTAMP, 
+                cod_due = ?, 
+                customer_notes = ?,
+                updated_at = CURRENT_TIMESTAMP 
+             WHERE id = ?",
+            [$advance, $codDue, $notes, $id]
+        );
+
+        \App\Services\AuditLogger::log('verify_advance', 'order', (string)$id, [
+            'order_number' => $order['order_number'],
+            'advance_amount' => $advance,
+            'reference' => $ref,
+            'cod_due' => $codDue,
+        ]);
+
+        Session::flash('success', "Advance of Rs. " . number_format($advance) . " verified. Outstanding COD is now Rs. " . number_format($codDue) . ".");
+        return $resp->redirect($adminPath . '/orders/' . $id);
+    }
 }

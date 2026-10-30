@@ -78,15 +78,56 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
           <span style="color: #666;">Delivery Charge:</span>
           <span><?= (float)$order['delivery_charge'] <= 0 ? 'FREE' : mta_money($order['delivery_charge']) ?></span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem; color: #9B3828; border-top: 1px solid var(--admin-border); padding-top: 0.5rem; margin-top: 0.25rem;">
-          <span>Grand Total (COD):</span>
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: var(--admin-text); border-top: 1px solid var(--admin-border); padding-top: 0.5rem; margin-top: 0.25rem;">
+          <span>Order Grand Total:</span>
           <span><?= mta_money($order['total']) ?></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 0.95rem; color: var(--mta-teal);">
+          <span>Advance Paid:</span>
+          <span>- <?= mta_money($order['advance_amount'] ?? 0) ?></span>
+        </div>
+        <?php if (!empty($order['advance_verified_at'])): ?>
+          <div style="font-size: 0.75rem; color: var(--mta-teal); text-align: right; margin-top: -0.2rem;">
+            &check; Verified on <?= date('d M Y, h:i A', strtotime($order['advance_verified_at'])) ?>
+          </div>
+        <?php endif; ?>
+        <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.15rem; color: #FF6B2C; border-top: 2px dashed #FF6B2C; padding-top: 0.5rem; margin-top: 0.25rem;">
+          <span>Outstanding COD Due:</span>
+          <span><?= mta_money($order['cod_due'] ?? max(0, $order['total'] - ($order['advance_amount'] ?? 0))) ?></span>
         </div>
       </div>
     </div>
 
-    <!-- Right: Status & Courier Controls -->
+    <!-- Right: Status & Courier Controls + Advance Verification -->
     <div>
+      <!-- Advance Verification Form Card -->
+      <div class="admin-card" style="margin-bottom: 1.5rem; border-left: 4px solid var(--mta-teal);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--admin-text); margin: 0;">Advance Payment</h3>
+          <?php if (!empty($order['advance_verified_at'])): ?>
+            <span class="badge badge-success">Verified</span>
+          <?php else: ?>
+            <span class="badge badge-amber">Unverified</span>
+          <?php endif; ?>
+        </div>
+
+        <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/verify-advance" method="POST">
+          <?= mta_csrf_field() ?>
+          <div class="form-group" style="margin-bottom: 0.65rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Advance Amount (PKR)</label>
+            <input type="number" name="advance_amount" value="<?= (float)($order['advance_amount'] ?? 0) > 0 ? (int)$order['advance_amount'] : 500 ?>" min="0" step="1" required class="form-control" style="font-size: 0.9rem;">
+          </div>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label style="font-size: 0.8rem; font-weight: 600;">Reference / TID (JazzCash / EasyPaisa / Bank)</label>
+            <input type="text" name="advance_reference" placeholder="e.g. TID 04928174928" class="form-control" style="font-size: 0.85rem;">
+          </div>
+          <button type="submit" class="btn btn-primary btn-sm" style="width: 100%; justify-content: center;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Verify Advance Payment</span>
+          </button>
+        </form>
+      </div>
+
       <div class="admin-card" style="margin-bottom: 0;">
         <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem;">Dispatch & Courier Controls</h3>
 

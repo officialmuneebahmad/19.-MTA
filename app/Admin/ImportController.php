@@ -69,6 +69,7 @@ class ImportController
 
             $title = trim($data['title'] ?? $data['name'] ?? '');
             $price = (float)($data['price'] ?? $data['sell_price'] ?? 0);
+            $price = (float)\App\Services\PricingService::snapPrice($price);
             if ($title === '' || $price <= 0) {
                 $skipped++;
                 continue;
@@ -157,6 +158,7 @@ class ImportController
         }
 
         $price = (float)$request->post('fallback_price', 1500);
+        $price = (float)\App\Services\PricingService::snapPrice($price);
         $categoryId = (int)$request->post('category_id', 1);
 
         if ($extractedTitle === '') {

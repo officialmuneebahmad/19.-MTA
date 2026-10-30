@@ -39,22 +39,71 @@ class Session
             || (isset($_SERVER['HTTP_CF_VISITOR']) && str_contains((string)$_SERVER['HTTP_CF_VISITOR'], 'https'));
 
         if (!headers_sent()) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_name('mta_session');
+            }
             session_set_cookie_params([
-                'lifetime' => 86400 * 14, // 14 days
+                'lifetime' => 0, // Session cookie (closes with browser / timeouts)
                 'path' => '/',
                 'domain' => '',
                 'secure' => $isHttps,
                 'httponly' => true,
-                'samesite' => 'Lax',
+                'samesite' => 'Strict',
             ]);
         }
 
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            @session_start();
+        }
         self::$started = true;
+
+        // Admin Session Expiration Guard: Idle 30m, Absolute 8h
+        if (!empty($_SESSION['admin_user'])) {
+            $now = time();
+            $lastActive = (int)($_SESSION['admin_last_activity'] ?? $now);
+            $loginTime = (int)($_SESSION['admin_login_time'] ?? $now);
+
+            // Idle timeout: 30 minutes (1800 seconds)
+            if (($now - $lastActive) > 1800) {
+                self::destroy();
+                return;
+            }
+
+            // Absolute timeout: 8 hours (28800 seconds)
+            if (($now - $loginTime) > 28800) {
+                self::destroy();
+                return;
+            }
+
+            $_SESSION['admin_last_activity'] = $now;
+        }
 
         if (empty($_SESSION['_csrf_token'])) {
             $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
         }
+    }
+
+    public static function isAdmin(): bool
+    {
+        self::start();
+        return !empty($_SESSION['admin_user']) && is_array($_SESSION['admin_user']);
+    }
+
+    public static function isReauthenticated(): bool
+    {
+        self::start();
+        if (!self::isAdmin()) {
+            return false;
+        }
+        $reauthAt = (int)($_SESSION['admin_reauth_at'] ?? 0);
+        // Re-authentication valid for 15 minutes (900 seconds)
+        return (time() - $reauthAt) < 900;
+    }
+
+    public static function setReauthenticated(): void
+    {
+        self::start();
+        $_SESSION['admin_reauth_at'] = time();
     }
 
     public static function get(string $key, mixed $default = null): mixed
@@ -111,7 +160,9 @@ class Session
     public static function regenerate(): void
     {
         self::start();
-        session_regenerate_id(true);
+        if (!headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
+            @session_regenerate_id(true);
+        }
         $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
     }
 

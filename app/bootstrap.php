@@ -158,6 +158,49 @@ function mta_whatsapp_url(string $phone = '923070655275', string $message = ''):
 }
 
 // ----------------------------------------------------------------------
+// WhatsApp Share Link Builder (Server-Side URL-Encoded Message)
+// ----------------------------------------------------------------------
+function mta_share_whatsapp_url(string $title, int|float $price, string $cleanUrl): string {
+    $priceText = ($price > 0) ? ('Rs. ' . number_format((float)$price, 0)) : 'Price on WhatsApp';
+    $shareUrl = $cleanUrl;
+    $sep = str_contains($shareUrl, '?') ? '&' : '?';
+    $shareUrl .= $sep . 'utm_source=whatsapp&utm_medium=share';
+
+    $text = $title . "\n" . $priceText . "\n" . $shareUrl;
+    return 'https://wa.me/?text=' . rawurlencode($text);
+}
+
+// ----------------------------------------------------------------------
+// Description HTML Cleaner (Removes stray &nbsp;, empty tags, duplicate titles)
+// ----------------------------------------------------------------------
+function mta_clean_description_html(?string $html, string $productTitle = ''): string {
+    if (empty($html)) {
+        return '';
+    }
+
+    // 1. Remove duplicate headings matching product title
+    if ($productTitle !== '') {
+        $escapedTitle = preg_quote($productTitle, '/');
+        $html = preg_replace('/<h[1-6][^>]*>\s*' . $escapedTitle . '\s*<\/h[1-6]>/i', '', $html);
+    }
+
+    // 2. Replace excessive &nbsp; runs with standard space
+    $html = preg_replace('/(&nbsp;|\x{00A0})+/u', ' ', $html);
+
+    // 3. Remove empty paragraphs or spans
+    $html = preg_replace('/<p[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/p>/i', '', $html);
+    $html = preg_replace('/<span[^>]*>(\s|&nbsp;)*<\/span>/i', '', $html);
+
+    // 4. Ensure tables have specs-table class
+    $html = str_replace('<table', '<table class="specs-table"', $html);
+
+    // 5. Clean up excessive line breaks
+    $html = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $html);
+
+    return trim($html);
+}
+
+// ----------------------------------------------------------------------
 // Category-Specific SVG Icons Helper
 // ----------------------------------------------------------------------
 function mta_category_icon(string $slug): string {

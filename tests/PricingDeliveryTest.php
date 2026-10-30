@@ -9,6 +9,8 @@ require_once __DIR__ . '/../app/bootstrap.php';
 
 use App\Core\Database;
 use App\Services\DeliveryCalculator;
+use App\Services\PricingService;
+use App\Services\SupplierSyncService;
 
 class PricingDeliveryTest
 {
@@ -25,13 +27,79 @@ class PricingDeliveryTest
     {
         echo "\n=== Running Pricing & Delivery Tests ===\n";
 
+        $this->testPricingEngineUnitCases();
+        $this->testManualPriceSnap();
+        $this->testTotpService();
         $this->testFreeDeliveryAboveThreshold();
         $this->testMultanLocalDelivery();
         $this->testNationwideDelivery();
         $this->testSecondOrderFreeDelivery();
-        $this->testMarkupCalculation();
+        $this->testAllProductsRepriced();
 
-        echo "All Pricing & Delivery tests passed successfully!\n";
+        echo "\nAll Pricing & Delivery tests passed successfully!\n";
+    }
+
+    private function testPricingEngineUnitCases(): void
+    {
+        echo "Testing PricingService::sellPrice() required test cases... ";
+
+        $cases = [
+            160 => 399,
+            250 => 499,
+            1000 => 1199,
+            1999 => 2199,
+            2000 => 2399,
+            2001 => 2499,
+            3690 => 4099,
+            4130 => 4599,
+            4990 => 5399,
+            5890 => 6299,
+            0 => 0,
+        ];
+
+        foreach ($cases as $supplierPrice => $expectedSellPrice) {
+            $actual = PricingService::sellPrice($supplierPrice);
+            if ($actual !== $expectedSellPrice) {
+                throw new \RuntimeException(
+                    "Pricing failure for supplier price {$supplierPrice}: Expected {$expectedSellPrice}, got {$actual}"
+                );
+            }
+
+            if ($actual > 0) {
+                if ($actual % 100 !== 99) {
+                    throw new \RuntimeException("Result {$actual} does not end in 99");
+                }
+            }
+        }
+
+        echo "PASSED (all 11 unit test cases verified)\n";
+    }
+
+    private function testManualPriceSnap(): void
+    {
+        echo "Testing PricingService::snapPrice() for overrides... ";
+
+        assert(PricingService::snapPrice(1500) === 1599, '1500 must snap to 1599');
+        assert(PricingService::snapPrice(1599) === 1599, '1599 must remain 1599');
+        assert(PricingService::snapPrice(1600) === 1699, '1600 must snap to 1699');
+        assert(PricingService::snapPrice(1601) === 1699, '1601 must snap to 1699');
+        assert(PricingService::snapPrice(0) === 0, '0 must remain 0');
+
+        echo "PASSED\n";
+    }
+
+    private function testTotpService(): void
+    {
+        echo "Testing TotpService RFC 6238 TOTP & Backup Codes... ";
+        $secret = \App\Services\TotpService::generateSecret();
+        $code = \App\Services\TotpService::calculateCode($secret);
+        assert(strlen($code) === 6, 'Code must be 6 digits');
+        assert(\App\Services\TotpService::verifyCode($secret, $code) === true, 'Valid code must verify');
+        assert(\App\Services\TotpService::verifyCode($secret, '000000') === false, 'Invalid code must fail');
+        $backups = \App\Services\TotpService::generateBackupCodes(10);
+        assert(count($backups['plain']) === 10, 'Must generate 10 backup codes');
+        assert(count($backups['hashed']) === 10, 'Must generate 10 hashed backup codes');
+        echo "PASSED\n";
     }
 
     private function testFreeDeliveryAboveThreshold(): void
@@ -71,7 +139,6 @@ class PricingDeliveryTest
         echo "Testing Rule 2: Free Delivery on 2nd Order... ";
         $testPhone = '03078888888';
         
-        // Ensure test order exists for this phone
         $this->db->execute(
             "INSERT INTO orders (order_number, customer_name, customer_phone, city, shipping_address, subtotal, delivery_charge, total, status, created_at)
              VALUES ('MTA-TEST-001', 'Test Customer', ?, 'Lahore', 'Gulberg III', 1500, 250, 1750, 'delivered', ?)",
@@ -83,28 +150,22 @@ class PricingDeliveryTest
         assert($result['is_free'] === true, '2nd order is_free must be true');
         assert($result['is_second_order'] === true, 'is_second_order must be true');
 
-        // Cleanup test order
         $this->db->execute("DELETE FROM orders WHERE order_number = 'MTA-TEST-001'");
         echo "PASSED\n";
     }
 
-    private function testMarkupCalculation(): void
+    private function testAllProductsRepriced(): void
     {
-        echo "Testing Pricing: Tiered Ceiling Rounding (Round UP) + 99 Formula... ";
-        $syncService = new \App\Services\SupplierSyncService();
-        
-        // Under 3000 (+100, round UP to next hundred, +99)
-        assert($syncService->calculateSellingPrice(160.0) === 399.0, '160 must yield 399');
-        assert($syncService->calculateSellingPrice(250.0) === 499.0, '250 must yield 499');
-        assert($syncService->calculateSellingPrice(2400.0) === 2599.0, '2400 must yield 2599');
-        assert($syncService->calculateSellingPrice(2420.0) === 2699.0, '2420 must yield 2699');
-        
-        // 3000 and above (+300, round UP to next hundred, +99)
-        assert($syncService->calculateSellingPrice(3690.0) === 4099.0, '3690 must yield 4099');
-        assert($syncService->calculateSellingPrice(4130.0) === 4599.0, '4130 must yield 4599');
-        assert($syncService->calculateSellingPrice(5000.0) === 5399.0, '5000 must yield 5399');
-        
-        echo "PASSED\n";
+        echo "Testing Re-pricing all catalog products in database... ";
+        $count = PricingService::repriceAllProducts();
+        assert($count === 991, "All 991 products must be re-priced, got {$count}");
+
+        $invalidPrices = $this->db->fetchAll(
+            "SELECT id, sku, title, sell_price FROM products WHERE sell_price > 0 AND (CAST(sell_price AS INTEGER) % 100) != 99"
+        );
+        assert(empty($invalidPrices), "Found products with sell_price not ending in 99: " . count($invalidPrices));
+
+        echo "PASSED (all 991 products re-priced and verified ending in 99)\n";
     }
 }
 

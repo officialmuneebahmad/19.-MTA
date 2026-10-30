@@ -14,7 +14,4 @@ Disallow: /*?*sort=
 Disallow: /*?*filter=
 Disallow: /*?*utm_*
 
-# Disallow Obfuscated Admin Paths
-Disallow: /*control-*
-
 Sitemap: https://multantech.store/sitemap.xml

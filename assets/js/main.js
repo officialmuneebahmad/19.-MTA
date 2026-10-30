@@ -138,108 +138,146 @@ function initSearchAutocomplete() {
 }
 
 // -------------------------------------------------------------
-// 4. Accessible Hero Carousel
+// 4. Accessible Real-Time Carousel with Live Dot Tracking (A6)
 // -------------------------------------------------------------
 function initHeroCarousel() {
-  const carousel = document.querySelector('.hero-carousel');
-  if (!carousel) return;
+  const carousels = document.querySelectorAll('.hero-carousel, .carousel');
+  if (!carousels.length) return;
 
-  const track = carousel.querySelector('.carousel-track');
-  const slides = carousel.querySelectorAll('.carousel-slide');
-  const dots = carousel.querySelectorAll('.carousel-dot');
-  const prevBtn = carousel.querySelector('.carousel-arrow-prev');
-  const nextBtn = carousel.querySelector('.carousel-arrow-next');
-
-  if (slides.length <= 1) return;
-
-  let currentIndex = 0;
-  let timer = null;
   const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  function goToSlide(index) {
-    currentIndex = (index + slides.length) % slides.length;
-    track.scrollTo({
-      left: slides[currentIndex].offsetLeft,
-      behavior: isReducedMotion ? 'auto' : 'smooth'
-    });
-    dots.forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentIndex);
-    });
-  }
+  carousels.forEach(carousel => {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const dots = carousel.querySelectorAll('.carousel-dot');
+    const prevBtn = carousel.querySelector('.carousel-arrow-prev');
+    const nextBtn = carousel.querySelector('.carousel-arrow-next');
 
-  function startAutoplay() {
-    if (isReducedMotion) return;
-    stopAutoplay();
-    timer = setInterval(() => {
-      goToSlide(currentIndex + 1);
-    }, 5000);
-  }
+    if (slides.length <= 1) return;
 
-  function stopAutoplay() {
-    if (timer) clearInterval(timer);
-  }
+    let currentIndex = 0;
+    let timer = null;
+    let isScrolling = false;
+    let scrollTimeout = null;
 
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      goToSlide(currentIndex + 1);
-      startAutoplay();
-    });
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      goToSlide(currentIndex - 1);
-      startAutoplay();
-    });
-  }
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => {
-      goToSlide(i);
-      startAutoplay();
-    });
-  });
-
-  // Track manual / touch swipes on mobile and sync dots in real time
-  let isScrolling = false;
-  let scrollTimeout = null;
-
-  track.addEventListener('scroll', () => {
-    if (!isScrolling) {
-      window.requestAnimationFrame(() => {
-        const slideWidth = track.clientWidth || (slides[0] ? slides[0].offsetWidth : 0);
-        if (slideWidth > 0) {
-          const newIndex = Math.round(track.scrollLeft / slideWidth);
-          if (newIndex >= 0 && newIndex < slides.length && newIndex !== currentIndex) {
-            currentIndex = newIndex;
-            dots.forEach((dot, i) => {
-              dot.classList.toggle('active', i === currentIndex);
-            });
-          }
-        }
-        isScrolling = false;
+    function updateActiveDot(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentIndex = index;
+      dots.forEach((dot, i) => {
+        const isActive = (i === currentIndex);
+        dot.classList.toggle('active', isActive);
+        dot.setAttribute('aria-current', isActive ? 'true' : 'false');
       });
-      isScrolling = true;
     }
 
-    // Refresh autoplay countdown once user finishes swiping
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      startAutoplay();
-    }, 4000);
-  }, { passive: true });
+    function goToSlide(index) {
+      const targetIndex = (index + slides.length) % slides.length;
+      updateActiveDot(targetIndex);
+      track.scrollTo({
+        left: slides[targetIndex].offsetLeft,
+        behavior: isReducedMotion ? 'auto' : 'smooth'
+      });
+    }
 
-  carousel.addEventListener('mouseenter', stopAutoplay);
-  carousel.addEventListener('mouseleave', startAutoplay);
-  carousel.addEventListener('focusin', stopAutoplay);
-  carousel.addEventListener('focusout', startAutoplay);
-  carousel.addEventListener('touchstart', stopAutoplay, { passive: true });
-  carousel.addEventListener('touchend', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(startAutoplay, 4000);
-  }, { passive: true });
+    function startAutoplay() {
+      if (isReducedMotion) return;
+      stopAutoplay();
+      timer = setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, 5000);
+    }
 
-  startAutoplay();
+    function stopAutoplay() {
+      if (timer) clearInterval(timer);
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        goToSlide(currentIndex + 1);
+        startAutoplay();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        goToSlide(currentIndex - 1);
+        startAutoplay();
+      });
+    }
+
+    dots.forEach((dot, i) => {
+      dot.setAttribute('aria-current', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', () => {
+        goToSlide(i);
+        startAutoplay();
+      });
+    });
+
+    // Real-Time Passive Scroll Listener throttled with requestAnimationFrame
+    track.addEventListener('scroll', () => {
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          const slideWidth = track.clientWidth || (slides[0] ? slides[0].offsetWidth : 0);
+          if (slideWidth > 0) {
+            const rawIndex = track.scrollLeft / slideWidth;
+            const newIndex = Math.min(slides.length - 1, Math.max(0, Math.round(rawIndex)));
+            if (newIndex !== currentIndex) {
+              updateActiveDot(newIndex);
+            }
+          }
+          isScrolling = false;
+        });
+        isScrolling = true;
+      }
+
+      // Reset autoplay countdown after manual swipe
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(startAutoplay, 4000);
+    }, { passive: true });
+
+    // Modern 'scrollend' event fallback where supported
+    if ('onscrollend' in window) {
+      track.addEventListener('scrollend', () => {
+        const slideWidth = track.clientWidth || (slides[0] ? slides[0].offsetWidth : 0);
+        if (slideWidth > 0) {
+          const finalIndex = Math.min(slides.length - 1, Math.max(0, Math.round(track.scrollLeft / slideWidth)));
+          updateActiveDot(finalIndex);
+        }
+      }, { passive: true });
+    }
+
+    // IntersectionObserver backup for momentum scrolling
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+            const idx = Array.prototype.indexOf.call(slides, entry.target);
+            if (idx !== -1 && idx !== currentIndex) {
+              updateActiveDot(idx);
+            }
+          }
+        });
+      }, {
+        root: track,
+        threshold: [0.55, 0.9]
+      });
+
+      slides.forEach(slide => observer.observe(slide));
+    }
+
+    // Interaction pause rules: pause on touch, hover and focus
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', startAutoplay);
+    carousel.addEventListener('touchstart', stopAutoplay, { passive: true });
+    carousel.addEventListener('touchend', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(startAutoplay, 4000);
+    }, { passive: true });
+
+    startAutoplay();
+  });
 }
 
 // -------------------------------------------------------------
@@ -373,21 +411,81 @@ function escapeHtml(str) {
 }
 
 // -------------------------------------------------------------
-// 9. WhatsApp & Native Product Sharing
+// 9. WhatsApp Product Sharing & GA4 Consent Event (A1)
 // -------------------------------------------------------------
+window.shareOnWhatsApp = function(url, title) {
+  // Fire GA4 share event only after consent
+  if (typeof gtag === 'function' && window.mtaAnalyticsConsent) {
+    try {
+      gtag('event', 'share', {
+        method: 'WhatsApp',
+        content_type: 'product',
+        item_id: url
+      });
+    } catch (e) {}
+  }
+};
+
 window.shareProductWhatsApp = function(title, price, url) {
-  var fullUrl = url || window.location.href;
-  var text = "Check out this product on Multan Tech Accessories:\n*" + title + "*\nPrice: " + price + "\n" + fullUrl;
+  const fullUrl = url || window.location.href;
+  const cleanUrl = fullUrl.split('?')[0];
+  const sep = cleanUrl.includes('?') ? '&' : '?';
+  const targetUrl = cleanUrl + sep + 'utm_source=whatsapp&utm_medium=share';
+  const priceText = price || 'Ask Price on WhatsApp';
+  const text = title + "\n" + priceText + "\n" + targetUrl;
   
-  if (navigator.share && /mobile|android|iphone|ipad/i.test(navigator.userAgent)) {
-    navigator.share({
-      title: title,
-      text: text,
-      url: fullUrl
-    }).catch(function() {
-      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+  window.shareOnWhatsApp(targetUrl, title);
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+};
+
+// -------------------------------------------------------------
+// 10. Copy Link with Toast & Textarea Fallback (A1)
+// -------------------------------------------------------------
+window.copyProductLink = function(url) {
+  const cleanUrl = (url || window.location.href).split('?')[0];
+  
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(cleanUrl).then(() => {
+      showToast('Link copied');
+    }).catch(() => {
+      fallbackCopyText(cleanUrl);
     });
   } else {
-    window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
+    fallbackCopyText(cleanUrl);
   }
+};
+
+function fallbackCopyText(text) {
+  const textArea = document.createElement('textarea');
+  textArea.value = text;
+  textArea.style.position = 'fixed';
+  textArea.style.left = '-9999px';
+  textArea.style.top = '0';
+  textArea.setAttribute('readonly', '');
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    const success = document.execCommand('copy');
+    showToast(success ? 'Link copied' : 'Failed to copy link');
+  } catch (err) {
+    showToast('Link copied');
+  }
+  document.body.removeChild(textArea);
+}
+
+window.showToast = function(msg) {
+  let toast = document.getElementById('mta-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'mta-toast';
+    toast.className = 'mta-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2400);
 };
