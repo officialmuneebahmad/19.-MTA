@@ -20,3 +20,4 @@ All brand logos below were directly retrieved from official primary manufacturer
 1. **SVG Sanitization**: All XML vectors stripped of `<script>`, external URIs, event handlers, and entity declarations.
 2. **Transparent Backgrounds**: Every raster logo is 100% transparent PNG converted to WebP with preserved alpha channel.
 3. **Contrast Guarantee**: The `.brand-tile` container enforces a light background (`#FFFFFF !important`) in both Day and Night modes so brand colors render with zero distortion.
+

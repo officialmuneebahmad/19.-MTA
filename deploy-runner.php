@@ -40,3 +40,4 @@ if (isset($_GET['unlink']) && $_GET['unlink'] === '1') {
 header('Content-Type: application/json; charset=UTF-8');
 header('X-MTA-Build: ' . (defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0'));
 echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+

@@ -81,3 +81,4 @@ In your StackCP Hosting Panel under **Cron Jobs**, add this one-time command:
 > 1. Navigate to **Edge Caching / CDN**.
 > 2. Click **Purge All Cache**.
 > 3. Verify immediately by checking `curl -I https://multantech.store` to confirm `X-MTA-Build: 2026.10.31-v2.4.0`.
+

@@ -18,3 +18,4 @@ The following 7 brands have active catalog products in the live database, but an
 - **Featured Strip Exclusion**: None of these 7 brands render in the homepage Featured Brands strip (zero text fallback tiles, preventing irregular visual boxes).
 - **Store Accessibility**: All 7 brands remain indexed and navigable on the dedicated `/brands` catalog index and via product categorization.
 - **Admin Management**: Store admins can upload high-resolution vectors or WebP files at any time via the Admin Portal at `/mta-control-9872/brands` to instantly promote any of these brands into the homepage strip.
+

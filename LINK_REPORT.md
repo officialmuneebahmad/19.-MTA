@@ -71,3 +71,4 @@ All key destinations below return HTTP 200 OK and are reachable within ≤ 2 cli
 | **SEO** | `/sitemap-brands.xml` | 200 OK | Valid XML brand sitemap |
 | **SEO** | `/sitemap-guides.xml` | 200 OK | Valid XML editorial sitemap |
 | **Admin** | `/mta-control-9872` | 200 OK | Noindex, nofollow, separate session |
+
