@@ -1,5 +1,5 @@
 <?php
 require_once __DIR__ . '/../app/bootstrap.php';
 $db = App\Core\Database::getInstance();
-$cols = $db->fetchAll("PRAGMA table_info(users)");
-echo json_encode($cols, JSON_PRETTY_PRINT);
+$u = $db->fetch("SELECT id, name, email, role, failed_logins, locked_until, must_change_password, password_hash FROM users WHERE id = 1");
+echo json_encode($u, JSON_PRETTY_PRINT);

@@ -130,3 +130,4 @@ $$\text{Imported Catalog (991)} = \text{In Stock (833)} + \text{Out of Stock (15
    ```
 4. **Use Standard UI Components:**
    Wrap view in `.admin-panel` or `.admin-card`, use `.admin-table` for data rows, and standard `.btn .btn-primary` actions.
+
