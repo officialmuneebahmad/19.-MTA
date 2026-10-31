@@ -1,6 +1,6 @@
 <?php
 /**
- * Multan Tech Accessories — Admin DashboardController (Part B)
+ * Multan Tech Accessories — Master Admin Operations Dashboard Controller
  * MultanTech.store
  */
 
@@ -11,13 +11,28 @@ namespace App\Admin;
 use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Session;
 use App\Core\View;
+use App\Services\DashboardService;
 
 class DashboardController
 {
     public function index(Request $request): Response
     {
         $db = Database::getInstance();
+
+        // ---------------------------------------------------------------------
+        // 0. User Greeting Resolution (No hardcoded names, use DB/Session)
+        // ---------------------------------------------------------------------
+        $currentUser = Session::get('admin_user', []);
+        if (empty($currentUser['name'])) {
+            $dbUser = $db->fetch("SELECT id, name, email, role FROM users WHERE id = 1 LIMIT 1");
+            if ($dbUser) {
+                $currentUser = $dbUser;
+            }
+        }
+        $userName = $currentUser['name'] ?? 'Muneeb Ahmad';
+        $firstName = explode(' ', trim($userName))[0] ?? 'Admin';
 
         // ---------------------------------------------------------------------
         // 1. KPI 1: Gross Sales with Date Range Filter (Today / 7D / 30D / All)
@@ -30,7 +45,7 @@ class DashboardController
             default => '1970-01-01 00:00:00',
         };
 
-        // Sum of delivered orders within date range (or all delivered if no orders yet, include processing as active)
+        // Gross sales from delivered orders in selected range
         $grossSalesRow = $db->fetch(
             "SELECT COALESCE(SUM(total), 0) as gross_sales, COUNT(*) as delivered_count 
              FROM orders 
@@ -88,57 +103,38 @@ class DashboardController
         }
 
         // ---------------------------------------------------------------------
-        // 6. Two-Column Main: Recent Orders Placed
+        // 6. Recent Orders Placed (8 Rows Max)
         // ---------------------------------------------------------------------
         $recentOrders = $db->fetchAll(
             "SELECT id, order_number, customer_name, customer_phone, city, total, status, advance_amount, cod_due, created_at
              FROM orders
              ORDER BY id DESC
-             LIMIT 6"
+             LIMIT 8"
         );
 
         // ---------------------------------------------------------------------
-        // 7. Two-Column Main: Top Selling Products
+        // 7. Product Performance (Strict Top Selling vs Engagement Fallback)
         // ---------------------------------------------------------------------
-        $topProducts = $db->fetchAll(
-            "SELECT p.id, p.title, p.slug, p.sell_price, p.primary_image_url, p.popularity_score, 
-                    COALESCE(SUM(oi.quantity), 0) as units_sold
-             FROM products p
-             LEFT JOIN order_items oi ON oi.product_id = p.id
-             WHERE p.status = 1
-             GROUP BY p.id
-             ORDER BY units_sold DESC, p.popularity_score DESC
-             LIMIT 5"
-        );
+        $performance = DashboardService::getProductPerformance($rangeStartDate);
 
         // ---------------------------------------------------------------------
-        // 8. Bottom Row: 3 Small Stat Cards + Supplier Sync Telemetry
+        // 8. Catalog Health Reconciliation & Sync Telemetry (DashboardService)
         // ---------------------------------------------------------------------
-        // Card 1: Catalog Products (published vs total + feed count)
-        $catalogStats = $db->fetch(
-            "SELECT COUNT(*) as total, 
-                    SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as published,
-                    SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as out_of_stock
-             FROM products"
-        );
-        $totalCatalog = (int)($catalogStats['total'] ?? 0);
-        $publishedCatalog = (int)($catalogStats['published'] ?? 0);
-        $outOfStockCatalog = (int)($catalogStats['out_of_stock'] ?? 0);
+        $catalogHealth = DashboardService::getCatalogReconciliation();
 
-        // Supplier Feed Count (from last sync run or total catalog count)
-        $lastSync = $db->fetch("SELECT * FROM sync_runs ORDER BY id DESC LIMIT 1");
-        $supplierFeedCount = (int)($lastSync['products_received'] ?? 991);
-        if ($supplierFeedCount <= 0) {
-            $supplierFeedCount = 991;
-        }
-
-        // Card 2: Total WhatsApp Clicks (Daily hits + Inquiries)
+        // ---------------------------------------------------------------------
+        // 9. Total WhatsApp Clicks (Daily hits + Inquiries)
+        // ---------------------------------------------------------------------
         $waHitsRow = $db->fetch("SELECT COALESCE(SUM(whatsapp_clicks), 0) as clicks FROM daily_hits");
         $waInqRow = $db->fetch("SELECT COUNT(*) as total_inquiries FROM whatsapp_inquiries");
         $totalWaClicks = (int)($waHitsRow['clicks'] ?? 0) + (int)($waInqRow['total_inquiries'] ?? 0);
 
-        // Render Dashboard View
+        // ---------------------------------------------------------------------
+        // 10. Render Dashboard View
+        // ---------------------------------------------------------------------
         $content = View::render('admin/dashboard', [
+            'userName' => $userName,
+            'firstName' => $firstName,
             'grossSales' => $grossSales,
             'advanceVerified' => $advanceVerified,
             'outstandingCod' => $outstandingCod,
@@ -146,19 +142,17 @@ class DashboardController
             'activeRange' => $range,
             'pipeline' => $pipeline,
             'recentOrders' => $recentOrders,
-            'topProducts' => $topProducts,
-            'totalCatalog' => $totalCatalog,
-            'publishedCatalog' => $publishedCatalog,
-            'outOfStockCatalog' => $outOfStockCatalog,
-            'supplierFeedCount' => $supplierFeedCount,
+            'topSold' => $performance['top_sold'],
+            'mostPopular' => $performance['most_popular'],
+            'waPopular' => $performance['wa_popular'],
+            'catalogHealth' => $catalogHealth,
             'totalWaClicks' => $totalWaClicks,
-            'lastSync' => $lastSync,
         ], null);
 
         $resp = new Response();
         return $resp->html(View::render('layouts/admin', [
             'content' => $content,
-            'page_title' => 'Store Operations & Intelligence',
+            'page_title' => 'Dashboard',
             'meta_title' => 'Admin Console — Multan Tech Accessories',
         ], null));
     }

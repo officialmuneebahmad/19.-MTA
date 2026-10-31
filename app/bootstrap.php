@@ -22,7 +22,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.10.31-v2.4.0');
+    define('MTA_BUILD_VERSION', '2026.10.31-v2.5.0-admin-ui');
 }
 
 // ----------------------------------------------------------------------

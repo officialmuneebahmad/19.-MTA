@@ -57,7 +57,7 @@ class ExportController
 
         // 1. Re-Authentication Gate Check (Required within 15 minutes)
         if (!Session::isReauthenticated()) {
-            Session::flash('warning', 'Security policy requires password or 2FA verification before exporting store data.');
+            Session::flash('warning', 'Security policy requires password verification before exporting store data.');
             return $resp->redirect($adminPath . '/reauth?return_to=' . urlencode($adminPath . '/export'));
         }
 

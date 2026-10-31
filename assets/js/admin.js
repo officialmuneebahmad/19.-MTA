@@ -1,5 +1,5 @@
 /**
- * Multan Tech Accessories — Admin Console JavaScript (Part B)
+ * Multan Tech Accessories — Master Admin Operations Controller JS
  * MultanTech.store
  */
 
@@ -7,7 +7,7 @@
   'use strict';
 
   // ---------------------------------------------------------------------------
-  // 1. Theme Management (Day / Night Mode)
+  // 1. Theme Management (Day / Night Mode with LocalStorage Persistence)
   // ---------------------------------------------------------------------------
   const STORAGE_KEY = 'mta_admin_theme';
 
@@ -26,7 +26,9 @@
       document.documentElement.removeAttribute('data-theme');
       updateThemeIcons(false);
     }
-    localStorage.setItem(STORAGE_KEY, theme);
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch (e) {}
   }
 
   function toggleTheme() {
@@ -44,7 +46,7 @@
   }
 
   // ---------------------------------------------------------------------------
-  // 2. Mobile Sidebar Off-Canvas Navigation
+  // 2. Mobile Sidebar Off-Canvas Navigation Drawer
   // ---------------------------------------------------------------------------
   function initMobileSidebar() {
     const toggleBtn = document.getElementById('sidebar-toggle-btn');
@@ -75,23 +77,31 @@
         closeSidebar();
       }
     });
+
+    // Handle resize to close drawer if expanded to desktop
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024 && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    });
   }
 
   // ---------------------------------------------------------------------------
-  // 3. Export Dialog & Re-Auth Modal
+  // 3. Modals & Dialogs (Export & Glossary)
   // ---------------------------------------------------------------------------
   function initModals() {
     const exportBtn = document.getElementById('quick-export-btn');
     const exportModal = document.getElementById('exportModal');
-    const reauthModal = document.getElementById('reauthModal');
+    const glossaryBtn = document.getElementById('btn-catalog-glossary');
+    const glossaryModal = document.getElementById('glossaryModal');
 
     function openModal(modal) {
       if (!modal) return;
       modal.classList.add('active');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
-      const input = modal.querySelector('input, button');
-      if (input) input.focus();
+      const focusable = modal.querySelector('input, select, button');
+      if (focusable) focusable.focus();
     }
 
     function closeModal(modal) {
@@ -108,6 +118,13 @@
       });
     }
 
+    if (glossaryBtn && glossaryModal) {
+      glossaryBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        openModal(glossaryModal);
+      });
+    }
+
     document.querySelectorAll('.modal-close, .modal-backdrop').forEach(function (el) {
       el.addEventListener('click', function () {
         const modal = el.closest('.admin-modal-overlay');
@@ -121,10 +138,10 @@
       }
     });
 
-    // Handle forms requiring re-authentication
+    // Confirmation dialogs on destructive actions
     document.querySelectorAll('[data-confirm]').forEach(function (el) {
       el.addEventListener('click', function (e) {
-        const msg = el.getAttribute('data-confirm') || 'Are you sure you want to perform this action?';
+        const msg = el.getAttribute('data-confirm') || 'Are you sure you want to proceed?';
         if (!confirm(msg)) {
           e.preventDefault();
         }
@@ -164,11 +181,7 @@
     const toast = document.createElement('div');
     toast.className = `admin-toast admin-toast-${type}`;
     toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-      <div style="display:flex;align-items:center;gap:0.75rem;">
-        <span style="font-weight:600;font-size:0.875rem;">${message}</span>
-      </div>
-    `;
+    toast.innerHTML = `<span style="font-weight:600;font-size:0.875rem;">${message}</span>`;
 
     container.appendChild(toast);
     setTimeout(() => {
@@ -195,4 +208,3 @@
 
   window.toggleAdminTheme = toggleTheme;
 })();
-

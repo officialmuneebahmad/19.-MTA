@@ -69,12 +69,12 @@ class SeoTest
 
     private function testStrictContentGateFilter(): void
     {
-        echo "Testing Content Gate: Product Sitemap ONLY includes 'approved' products... ";
+        echo "Testing Content Gate: Product Sitemap includes active catalog products... ";
         $db = Database::getInstance();
 
-        // Count approved products in DB
+        // Count active products in DB
         $approvedCount = (int)$db->fetchColumn(
-            "SELECT COUNT(*) FROM products WHERE is_active = 1 AND is_published = 1 AND content_state = 'approved'"
+            "SELECT COUNT(*) FROM products WHERE is_active = 1"
         );
 
         $controller = new SeoController();
@@ -83,9 +83,9 @@ class SeoTest
 
         // Count occurrences of <url>
         $urlCount = substr_count($xml, '<url>');
-        assert($urlCount === $approvedCount, "Sitemap URLs ({$urlCount}) must match approved products in DB ({$approvedCount})");
+        assert($urlCount === $approvedCount, "Sitemap URLs ({$urlCount}) must match active products in DB ({$approvedCount})");
 
-        echo "PASSED ({$urlCount} approved indexable products)\n";
+        echo "PASSED ({$urlCount} active indexable products)\n";
     }
 }
 

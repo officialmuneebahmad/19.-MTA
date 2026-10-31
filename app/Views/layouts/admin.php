@@ -1,18 +1,17 @@
 <?php
 /**
- * Multan Tech Accessories — Master Admin Operations Console (Part B)
+ * Multan Tech Accessories — Master Admin Operations Console App Shell
  * MultanTech.store
  */
 $adminPath = mta_admin_path();
 $currentUser = \App\Core\Session::get('admin_user', []);
 $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
-$userName = $currentUser['name'] ?? 'Muhammad Tayyab';
+$userName = $currentUser['name'] ?? 'Muneeb Ahmad';
 $userEmail = $currentUser['email'] ?? 'admin@multantech.store';
-$userInitials = 'MT';
-if (!empty($userName)) {
-    $parts = explode(' ', trim($userName));
-    $userInitials = strtoupper(substr($parts[0] ?? 'M', 0, 1) . substr($parts[1] ?? 'T', 0, 1));
-}
+
+$parts = explode(' ', trim($userName));
+$firstName = $parts[0] ?? 'Admin';
+$userInitials = strtoupper(substr($parts[0] ?? 'M', 0, 1) . substr($parts[1] ?? 'A', 0, 1));
 
 // Helper to determine active navigation item
 $isActive = function(string $route) use ($currentPath, $adminPath): bool {
@@ -22,6 +21,8 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
     }
     return str_starts_with($currentPath, $target);
 };
+
+$buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
 ?>
 <!DOCTYPE html>
 <html lang="en-PK">
@@ -37,7 +38,14 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="shortcut icon" href="/favicon.ico">
   
-  <link rel="stylesheet" href="/assets/css/admin.css">
+  <!-- Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Admin Design System & Safety Net -->
+  <link rel="stylesheet" href="/assets/css/admin.css?v=<?= e($buildVersion) ?>">
+
   <script>
     // Immediate early theme application to prevent FOUC
     try {
@@ -45,6 +53,8 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
       var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (saved === 'dark' || (!saved && prefersDark)) {
         document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
       }
     } catch (e) {}
   </script>
@@ -57,7 +67,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
   <div class="admin-shell">
     
     <!-- -----------------------------------------------------------------------
-         1. Left Navigation Sidebar
+         1. Left Navigation Sidebar (264px Desktop / Off-Canvas Drawer Mobile)
          ----------------------------------------------------------------------- -->
     <aside id="admin-sidebar" class="admin-sidebar" aria-label="Main Administration Navigation">
       
@@ -110,13 +120,13 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
           <span>Categories & Mapping</span>
         </a>
 
-        <!-- Brands & Logos (Task 3) -->
+        <!-- Brands & Logos -->
         <a href="<?= e($adminPath) ?>/brands" class="nav-item <?= $isActive('brands') ? 'active' : '' ?>">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 16 12 12 8"></polygon></svg>
           <span>Brand Logos & Featured</span>
         </a>
 
-        <!-- WhatsApp Orders & Inquiries -->
+        <!-- WhatsApp Orders -->
         <a href="<?= e($adminPath) ?>/whatsapp-orders" class="nav-item <?= $isActive('whatsapp-orders') ? 'active' : '' ?>">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
           <span>WhatsApp Orders</span>
@@ -193,7 +203,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
     </aside>
 
     <!-- -----------------------------------------------------------------------
-         2. Main Application Area & Top Bar
+         2. Main Application Area & Top Bar (64px Sticky Topbar)
          ----------------------------------------------------------------------- -->
     <div class="admin-main">
       
@@ -216,6 +226,14 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
           </div>
         </div>
 
+        <!-- Global Search Bar in Topbar -->
+        <div class="topbar-search-wrap">
+          <form action="<?= e($adminPath) ?>/products" method="GET" class="topbar-search-form">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="topbar-search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" name="q" placeholder="Search catalog, orders, SKU..." class="topbar-search-input" aria-label="Search Catalog and Orders">
+          </form>
+        </div>
+
         <!-- Right Quick Actions -->
         <div class="topbar-right">
           
@@ -236,14 +254,14 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           </a>
 
-          <!-- Admin Profile Pill -->
+          <!-- Admin Profile Pill (No 2FA mention, real name) -->
           <div class="admin-profile-pill" title="<?= e($userEmail) ?>">
             <div class="admin-avatar"><?= e($userInitials) ?></div>
             <div class="admin-profile-info">
-              <div class="admin-profile-email"><?= e($userEmail) ?></div>
+              <div class="admin-profile-name"><?= e($userName) ?></div>
               <div class="admin-role-badge">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <span>Owner &bull; 2FA Active</span>
+                <span class="role-dot"></span>
+                <span>Owner</span>
               </div>
             </div>
           </div>
@@ -260,7 +278,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
 
       </header>
 
-      <!-- Content Canvas -->
+      <!-- Content Canvas (Max 1440px) -->
       <main class="admin-content-canvas">
         
         <!-- Flash Alert Banners -->
@@ -295,7 +313,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
   </div>
 
   <!-- -------------------------------------------------------------------------
-       3. Export Data Modal Dialog (Re-Auth Gated)
+       3. Export Data Modal Dialog
        ------------------------------------------------------------------------- -->
   <div id="exportModal" class="admin-modal-overlay" aria-hidden="true">
     <div class="modal-backdrop"></div>
@@ -308,7 +326,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
         <?= mta_csrf_field() ?>
         <div class="admin-modal-body">
           <p style="font-size:0.875rem; color:var(--admin-text-muted); margin-bottom:1.25rem;">
-            Select the dataset and export format. For store security, all administrative data exports are recorded in the permanent audit trail.
+            Select the dataset and export format. All administrative data exports are recorded in the security audit trail.
           </p>
 
           <div class="form-group" style="margin-bottom:1rem;">
@@ -339,7 +357,7 @@ $isActive = function(string $route) use ($currentPath, $adminPath): bool {
   </div>
 
   <!-- Master Admin Controller JS -->
-  <script src="/assets/js/admin.js"></script>
+  <script src="/assets/js/admin.js?v=<?= e($buildVersion) ?>" defer></script>
 
 </body>
 </html>
