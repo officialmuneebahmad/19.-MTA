@@ -15,7 +15,19 @@ class View
 
     public static function render(string $template, array $data = [], ?string $layout = 'layouts/main'): string
     {
-        $templateFile = self::$viewsDir . '/' . ltrim($template, '/') . '.php';
+        $cleanTemplate = ltrim($template, '/');
+
+        // Layouts must never be wrapped in another layout unless explicitly requested
+        if (str_starts_with($cleanTemplate, 'layouts/')) {
+            $layout = null;
+        }
+
+        // Admin templates (views and auth) must never be wrapped in the storefront layout
+        if ($layout === 'layouts/main' && str_starts_with($cleanTemplate, 'admin/')) {
+            $layout = null;
+        }
+
+        $templateFile = self::$viewsDir . '/' . $cleanTemplate . '.php';
         if (!file_exists($templateFile)) {
             throw new RuntimeException("View template not found: {$templateFile}");
         }

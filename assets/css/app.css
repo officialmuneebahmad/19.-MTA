@@ -2050,8 +2050,8 @@ select option {
 }
 
 .brand-tile.brand-tile-dark {
-  background: #1E2024 !important;
-  border-color: #33363D !important;
+  background: #FFFFFF !important;
+  border-color: var(--border) !important;
 }
 
 /* Form Select Option styling for Mobile Dark Mode */

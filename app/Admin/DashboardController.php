@@ -153,13 +153,13 @@ class DashboardController
             'supplierFeedCount' => $supplierFeedCount,
             'totalWaClicks' => $totalWaClicks,
             'lastSync' => $lastSync,
-        ]);
+        ], null);
 
         $resp = new Response();
         return $resp->html(View::render('layouts/admin', [
             'content' => $content,
             'page_title' => 'Store Operations & Intelligence',
             'meta_title' => 'Admin Console — Multan Tech Accessories',
-        ]));
+        ], null));
     }
 }

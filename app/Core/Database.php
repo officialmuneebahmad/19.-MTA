@@ -300,17 +300,23 @@ class Database
 
             // Sync Brand Logos & Featured Status
             $brandLogos = [
-                'xiaomi' => '/assets/brands/xiaomi.svg',
+                'xiaomi' => '/assets/brands/xiaomi.webp',
                 'lenovo' => '/assets/brands/lenovo.svg',
                 'logitech' => '/assets/brands/logitech.svg',
                 'hp' => '/assets/brands/hp.svg',
                 'xbox' => '/assets/brands/xbox.svg',
-                'xtrike-me' => '/assets/brands/xtrike-me.svg',
+                'xtrike-me' => '/assets/brands/xtrike-me.webp',
                 'remax' => '/assets/brands/remax.webp',
                 'romoss' => '/assets/brands/romoss.webp',
                 'orico' => '/assets/brands/orico.webp',
                 'ldnio' => '/assets/brands/ldnio.webp',
                 'joyroom' => '/assets/brands/joyroom.webp',
+                'western-digital' => '/assets/brands/western-digital.svg',
+                'xprinter' => '/assets/brands/xprinter.webp',
+                'digital-persona' => '/assets/brands/digital-persona.webp',
+                'alfa' => '/assets/brands/alfa.webp',
+                'marvo' => '/assets/brands/marvo.webp',
+                'boya' => '/assets/brands/boya.webp',
             ];
 
             try {

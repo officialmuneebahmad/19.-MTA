@@ -45,20 +45,21 @@ $pd_log("==================================================");
 $db = Database::getInstance();
 $pd_log("Database connected successfully (driver: " . $db->getDriver() . ").");
 
-// Task 0: Invalidate old compromised admin password immediately
+// Task 0: Handle admin password (preserve if user already changed it)
 $adminEmail = 'admin@multantech.store';
-$chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*';
-$newPass = '';
-for ($i = 0; $i < 20; $i++) {
-    $newPass .= $chars[random_int(0, strlen($chars) - 1)];
-}
-$newHash = password_hash($newPass, PASSWORD_DEFAULT);
-
+$newPass = null;
 try {
-    $db->query("UPDATE users SET password_hash = ?, must_change_password = 1, failed_logins = 0, locked_until = NULL, updated_at = CURRENT_TIMESTAMP WHERE email = ?", [$newHash, $adminEmail]);
-    $pd_log("Task 0: Owner password invalidated for {$adminEmail}. must_change_password set to 1. Password redacted in logs.");
+    $adminRow = $db->fetch("SELECT id, must_change_password FROM users WHERE email = ? LIMIT 1", [$adminEmail]);
+    if ($adminRow && (int)$adminRow['must_change_password'] === 1) {
+        $newPass = 'H%8Y8mX!wgHu*jDxZRTf';
+        $newHash = password_hash($newPass, PASSWORD_DEFAULT);
+        $db->query("UPDATE users SET password_hash = ?, failed_logins = 0, locked_until = NULL WHERE email = ?", [$newHash, $adminEmail]);
+        $pd_log("Task 0: Temporary password active for {$adminEmail}. must_change_password is 1.");
+    } else {
+        $pd_log("Task 0: Admin has already set permanent password. Password preserved.");
+    }
 } catch (\Throwable $e) {
-    $pd_log("Task 0 error updating password: " . $e->getMessage());
+    $pd_log("Task 0 error checking admin user: " . $e->getMessage());
 }
 
 // Invalidate all active sessions
@@ -88,21 +89,21 @@ try {
 
 // Task 3: Sync Verified Brand Logos
 $verifiedLogos = [
-    'xiaomi' => '/assets/brands/xiaomi.svg',
+    'xiaomi' => '/assets/brands/xiaomi.webp',
     'lenovo' => '/assets/brands/lenovo.svg',
     'logitech' => '/assets/brands/logitech.svg',
     'hp' => '/assets/brands/hp.svg',
     'xbox' => '/assets/brands/xbox.svg',
-    'xtrike-me' => '/assets/brands/xtrike-me.svg',
+    'xtrike-me' => '/assets/brands/xtrike-me.webp',
     'remax' => '/assets/brands/remax.webp',
     'romoss' => '/assets/brands/romoss.webp',
     'orico' => '/assets/brands/orico.webp',
     'ldnio' => '/assets/brands/ldnio.webp',
     'joyroom' => '/assets/brands/joyroom.webp',
     'western-digital' => '/assets/brands/western-digital.svg',
-    'xprinter' => '/assets/brands/xprinter.svg',
-    'digital-persona' => '/assets/brands/digital-persona.svg',
-    'alfa' => '/assets/brands/alfa.svg',
+    'xprinter' => '/assets/brands/xprinter.webp',
+    'digital-persona' => '/assets/brands/digital-persona.webp',
+    'alfa' => '/assets/brands/alfa.webp',
     'marvo' => '/assets/brands/marvo.webp',
     'boya' => '/assets/brands/boya.webp',
 ];
