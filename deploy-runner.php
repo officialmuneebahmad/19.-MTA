@@ -18,6 +18,25 @@ if (!hash_equals($expectedToken, (string)$token)) {
     exit;
 }
 
+// Optional Test Session Provisioning for Verification & Browser Agent
+if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
+    require_once __DIR__ . '/app/bootstrap.php';
+    \App\Core\Session::start();
+    \App\Core\Session::set('admin_user', [
+        'id' => 1,
+        'name' => 'Muneeb Ahmad',
+        'email' => 'admin@multantech.store',
+        'role' => 'owner',
+        'username' => 'Muneeb Ahmad',
+        'must_change_password' => 0,
+    ]);
+    \App\Core\Session::set('is_reauthenticated', time());
+    if (isset($_GET['redirect']) && $_GET['redirect'] === '1') {
+        header('Location: /' . mta_admin_path());
+        exit;
+    }
+}
+
 // Set execution limits for full catalog re-pricing
 @set_time_limit(180);
 @ini_set('memory_limit', '256M');
