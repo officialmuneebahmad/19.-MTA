@@ -49,11 +49,11 @@ class SeoController
         $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
         $db = Database::getInstance();
 
-        // Critical SEO Gate: Only indexable products (active, published, and content_state = 'approved')
+        // Critical SEO Gate: Only active, publicly accessible products
         $products = $db->fetchAll(
             "SELECT slug, updated_at, created_at 
              FROM products 
-             WHERE is_active = 1 AND is_published = 1 AND content_state = 'approved'
+             WHERE is_active = 1
              ORDER BY id ASC"
         );
 
