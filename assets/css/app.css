@@ -608,12 +608,17 @@ select option {
   height: 12px;
 }
 
-/* Hover on Desktop + Click Toggle on Mobile */
-.dropdown:hover .dropdown-menu,
-.dropdown:focus-within .dropdown-menu,
+/* Click Toggle on Mobile / Keyboard + Hover on Desktop */
 .dropdown.open .dropdown-menu {
   display: block;
   animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    animation: dropdownFadeIn 0.15s ease-out;
+  }
 }
 
 @keyframes dropdownFadeIn {
@@ -986,30 +991,35 @@ select option {
   }
 }
 
-/* Mobile: Clean 2-column grid. Pairs 1-8 side-by-side, 9th item centered with standard card size */
+/* Mobile: Clean 2-column grid. Pairs 1-8 side-by-side, 9th item spans both columns */
 @media (max-width: 600px) {
   .category-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.75rem !important;
   }
   .category-tile {
-    grid-column: auto !important;
+    grid-column: span 1 !important;
+    grid-column-start: auto !important;
+    grid-column-end: auto !important;
     width: 100% !important;
     max-width: 100% !important;
     padding: 1rem 0.75rem;
   }
   .category-tile:nth-child(7),
   .category-tile:nth-child(8) {
-    grid-column: auto !important;
+    grid-column: span 1 !important;
+    grid-column-start: auto !important;
+    grid-column-end: auto !important;
     width: 100% !important;
     max-width: 100% !important;
     justify-self: stretch !important;
   }
+  .category-tile:last-child:nth-child(odd),
   .category-tile:nth-child(9) {
     grid-column: 1 / -1 !important;
-    width: calc(50% - 0.375rem) !important;
-    max-width: calc(50% - 0.375rem) !important;
-    justify-self: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
   }
 }
 
@@ -1264,6 +1274,7 @@ select option {
 
 .footer-bottom {
   padding-top: 2rem;
+  padding-bottom: 5.5rem;
   border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -1463,6 +1474,8 @@ select option {
     flex-direction: column;
     gap: 0.75rem;
     text-align: center;
+    padding-bottom: 6rem !important;
+    padding-right: 4.5rem !important;
   }
 
   /* Product Page Mobile Layout */
@@ -2034,6 +2047,26 @@ select option {
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+.brand-tile.brand-tile-dark {
+  background: #1E2024 !important;
+  border-color: #33363D !important;
+}
+
+/* Form Select Option styling for Mobile Dark Mode */
+select option,
+#city-calc option {
+  background-color: var(--surface, #FAF9F5);
+  color: var(--text, #141413);
+}
+
+[data-theme="dark"] select option,
+[data-theme="dark"] #city-calc option,
+.dark select option,
+.dark #city-calc option {
+  background-color: #262624 !important;
+  color: #EDECE8 !important;
 }
 
 @media (hover: hover) and (pointer: fine) {

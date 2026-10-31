@@ -55,8 +55,8 @@ body {
 .announcement-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: marquee 35s linear infinite;
-  padding-left: 100%;
+  animation: marquee 28s linear infinite;
+  padding-left: 0;
 }
 
 .announcement-bar:hover .announcement-track,
@@ -66,7 +66,7 @@ body {
 
 @keyframes marquee {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  100% { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -95,11 +95,15 @@ body {
   transform: translateY(-100%);
 }
 
+.container,
 .header-container {
   width: 100%;
   max-width: 1320px;
   margin: 0 auto;
   padding: 0 1.25rem;
+}
+
+.header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,8 +139,11 @@ body {
   .site-header {
     height: 64px;
   }
+  .container,
   .header-container {
     padding: 0 0.85rem;
+  }
+  .header-container {
     gap: 0.65rem;
   }
 }
@@ -145,8 +152,11 @@ body {
   .site-header {
     height: 58px;
   }
+  .container,
   .header-container {
     padding: 0 0.75rem;
+  }
+  .header-container {
     gap: 0.45rem;
   }
   .mta-logo {

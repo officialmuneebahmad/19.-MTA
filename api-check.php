@@ -129,22 +129,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $message = "Live sync exception: " . $e->getMessage();
             $messageType = 'error';
         }
-    } elseif ($_POST['action'] === 'reset_admin_password') {
-        try {
-            $adminEmail = 'admin@multantech.store';
-            $hash = password_hash('MultanTech@2026!', PASSWORD_DEFAULT);
-            $existing = $db->fetch("SELECT id FROM users WHERE email = ?", [$adminEmail]);
-            if ($existing) {
-                $db->execute("UPDATE users SET password_hash = ?, failed_logins = 0, locked_until = NULL, must_change_password = 0 WHERE id = ?", [$hash, $existing['id']]);
-            } else {
-                $db->execute("INSERT INTO users (name, email, password_hash, role, must_change_password) VALUES (?, ?, ?, 'owner', 0)", ['Muneeb Ahmad', $adminEmail, $hash]);
-            }
-            $message = "SUCCESS! Admin credentials verified / reset. Login: admin@multantech.store / Password: MultanTech@2026!";
-            $messageType = 'success';
-        } catch (Throwable $e) {
-            $message = "Error configuring admin user: " . $e->getMessage();
-            $messageType = 'error';
-        }
     } elseif ($_POST['action'] === 'git_pull_update') {
         try {
             $output = [];
@@ -165,16 +149,6 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         }
     }
 }
-
-// Ensure default owner admin exists
-try {
-    $db = Database::getInstance();
-    $adminEmail = 'admin@multantech.store';
-    $existing = $db->fetch("SELECT id FROM users WHERE email = ?", [$adminEmail]);
-    if (!$existing) {
-        $db->execute("INSERT INTO users (name, email, password_hash, role, must_change_password) VALUES (?, ?, ?, 'owner', 0)", ['Muneeb Ahmad', $adminEmail, password_hash('MultanTech@2026!', PASSWORD_DEFAULT)]);
-    }
-} catch (Throwable) {}
 
 // -------------------------------------------------------------
 // 1. Check Server Outbound IP
@@ -415,10 +389,10 @@ try {
       </div>
     </div>
 
-    <!-- Admin Portal Credentials & Quick Access -->
+    <!-- Admin Portal Quick Access -->
     <div class="card" style="border: 2px solid #0EB4A9; background: #F0FDF4;">
       <div class="card-title" style="color: #0E7064;">
-        <span>🔐 Admin Portal Access Credentials</span>
+        <span>🔐 Admin Portal Quick Access</span>
       </div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
         <div style="background: #FFFFFF; padding: 1rem; border-radius: 8px; border: 1px solid #BBF7D0;">
@@ -429,14 +403,6 @@ try {
             </a>
           </div>
         </div>
-        <div style="background: #FFFFFF; padding: 1rem; border-radius: 8px; border: 1px solid #BBF7D0;">
-          <div style="font-size: 0.75rem; text-transform: uppercase; color: #5E5D59; font-weight: 700;">Admin Email</div>
-          <div style="font-size: 1.1rem; font-weight: 800; color: #141413; margin-top: 0.25rem;">admin@multantech.store</div>
-        </div>
-        <div style="background: #FFFFFF; padding: 1rem; border-radius: 8px; border: 1px solid #BBF7D0;">
-          <div style="font-size: 0.75rem; text-transform: uppercase; color: #5E5D59; font-weight: 700;">Admin Password</div>
-          <div style="font-size: 1.1rem; font-weight: 800; color: #FF6223; margin-top: 0.25rem;">MultanTech@2026!</div>
-        </div>
       </div>
       <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
         <a href="/<?= e($adminPath) ?>/login" target="_blank" class="btn btn-teal">
@@ -446,12 +412,6 @@ try {
           <input type="hidden" name="action" value="git_pull_update">
           <button type="submit" class="btn" style="background: #0B0E14; color: #FFFFFF; border: 1px solid #1E2536;" onclick="return confirm('Pull latest updates from GitHub origin/master and flush cache?');">
             🚀 Pull Latest Code from GitHub (git pull)
-          </button>
-        </form>
-        <form method="POST">
-          <input type="hidden" name="action" value="reset_admin_password">
-          <button type="submit" class="btn" style="background: #FFFFFF; border: 1px solid #0EB4A9; color: #0E7064;">
-            Reset Admin Password to Default (MultanTech@2026!)
           </button>
         </form>
       </div>

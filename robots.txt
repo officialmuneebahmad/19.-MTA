@@ -10,6 +10,8 @@ Disallow: /order/
 Disallow: /track-order
 Disallow: /search
 Disallow: /api/
+Disallow: /mta-control-9872/
+Disallow: /mta-control-9872
 Disallow: /*?*sort=
 Disallow: /*?*filter=
 Disallow: /*?*utm_*

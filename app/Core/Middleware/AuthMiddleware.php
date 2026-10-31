@@ -20,7 +20,7 @@ class AuthMiddleware
 
         if (!$user) {
             $resp = new Response();
-            Session::flash('error', 'Please log in to access the administration dashboard.');
+            Session::flash('info', 'Please log in to access the administration dashboard.');
             return $resp->redirect('/' . $adminPath . '/login');
         }
 

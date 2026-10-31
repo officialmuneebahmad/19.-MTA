@@ -48,13 +48,9 @@ class OrderController
         $total = (int)($countRow['total'] ?? 0);
         $totalPages = max(1, (int)ceil($total / $perPage));
 
-        $fetchParams = $params;
-        $fetchParams[] = $perPage;
-        $fetchParams[] = $offset;
-
         $orders = $db->fetchAll(
-            "SELECT * FROM orders WHERE {$whereClause} ORDER BY id DESC LIMIT ? OFFSET ?",
-            $fetchParams
+            "SELECT * FROM orders WHERE {$whereClause} ORDER BY id DESC LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
+            $params
         );
 
         $content = View::render('admin/orders/index', [

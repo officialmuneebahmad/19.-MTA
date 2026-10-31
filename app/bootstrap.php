@@ -221,3 +221,78 @@ function mta_category_icon(string $slug): string {
         default => '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>',
     };
 }
+
+// ----------------------------------------------------------------------
+// Verified Brand Logo Validator Helper
+// ----------------------------------------------------------------------
+function mta_verify_brand_logo(?string $relPath): array {
+    static $cache = [];
+    if (empty($relPath)) {
+        return ['status' => 'missing', 'is_dark_needed' => false];
+    }
+    if (isset($cache[$relPath])) {
+        return $cache[$relPath];
+    }
+
+    $fullPath = MTA_ROOT . $relPath;
+    if (!file_exists($fullPath) || !is_file($fullPath)) {
+        return $cache[$relPath] = ['status' => 'missing', 'is_dark_needed' => false];
+    }
+    $size = @filesize($fullPath);
+    if ($size < 50) {
+        return $cache[$relPath] = ['status' => 'broken', 'is_dark_needed' => false];
+    }
+
+    $ext = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+    if ($ext === 'svg') {
+        $content = @file_get_contents($fullPath);
+        if ($content === false || stripos($content, '<svg') === false || stripos($content, 'Wikimedia Error') !== false || stripos($content, 'xmlns=') === false) {
+            return $cache[$relPath] = ['status' => 'broken', 'is_dark_needed' => false];
+        }
+        $isDark = (stripos($content, 'fill="#fff"') !== false || stripos($content, 'fill="#ffffff"') !== false || stripos($content, 'fill="white"') !== false);
+        return $cache[$relPath] = ['status' => 'ok', 'is_dark_needed' => $isDark];
+    }
+
+    if (function_exists('imagecreatefromwebp') && $ext === 'webp') {
+        $img = @imagecreatefromwebp($fullPath);
+    } elseif (function_exists('imagecreatefrompng') && $ext === 'png') {
+        $img = @imagecreatefrompng($fullPath);
+    } else {
+        $img = @imagecreatefromstring(@file_get_contents($fullPath));
+    }
+
+    if (!$img) {
+        return $cache[$relPath] = ['status' => 'broken', 'is_dark_needed' => false];
+    }
+
+    $w = imagesx($img);
+    $h = imagesy($img);
+    if ($w < 10 || $h < 10) {
+        imagedestroy($img);
+        return $cache[$relPath] = ['status' => 'broken', 'is_dark_needed' => false];
+    }
+
+    $samples = 0;
+    $whiteSamples = 0;
+    $stepX = max(1, (int)($w / 15));
+    $stepY = max(1, (int)($h / 15));
+    for ($y = 0; $y < $h; $y += $stepY) {
+        for ($x = 0; $x < $w; $x += $stepX) {
+            $rgba = imagecolorat($img, $x, $y);
+            $alpha = ($rgba >> 24) & 0x7F;
+            if ($alpha < 100) {
+                $r = ($rgba >> 16) & 0xFF;
+                $g = ($rgba >> 8) & 0xFF;
+                $b = $rgba & 0xFF;
+                $samples++;
+                if ($r > 240 && $g > 240 && $b > 240) {
+                    $whiteSamples++;
+                }
+            }
+        }
+    }
+    imagedestroy($img);
+    $isDark = ($samples > 0 && ($whiteSamples / $samples) > 0.85);
+
+    return $cache[$relPath] = ['status' => 'ok', 'is_dark_needed' => $isDark];
+}

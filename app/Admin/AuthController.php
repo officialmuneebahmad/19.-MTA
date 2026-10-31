@@ -32,7 +32,7 @@ class AuthController
 
         return $resp->html(View::render('admin/auth/login', [
             'meta_title' => 'Admin Authentication — Multan Tech Accessories',
-        ]));
+        ], null));
     }
 
     public function login(Request $request): Response
@@ -100,22 +100,54 @@ class AuthController
             [$user['id']]
         );
 
-        // Check 2FA requirement (Mandatory for owner)
-        if (empty($user['is_2fa_enabled']) || empty($user['totp_secret'])) {
-            // Initiate mandatory 2FA enrollment
+        // Check if 2FA is explicitly required via setting (Default OFF / 0)
+        $require2fa = mta_setting('require_2fa', '0') === '1';
+
+        if ($require2fa) {
+            if (empty($user['is_2fa_enabled']) || empty($user['totp_secret'])) {
+                Session::set('2fa_pending', [
+                    'user_id' => (int)$user['id'],
+                    'time' => time(),
+                ]);
+                return $resp->redirect($adminPath . '/2fa/setup');
+            }
             Session::set('2fa_pending', [
                 'user_id' => (int)$user['id'],
                 'time' => time(),
             ]);
-            return $resp->redirect($adminPath . '/2fa/setup');
+            return $resp->redirect($adminPath . '/2fa/verify');
         }
 
-        // User has 2FA enabled -> proceed to 2FA verification prompt
-        Session::set('2fa_pending', [
-            'user_id' => (int)$user['id'],
-            'time' => time(),
-        ]);
-        return $resp->redirect($adminPath . '/2fa/verify');
+        // Direct Login without 2FA (Task 1):
+        Session::regenerate();
+        Session::remove('2fa_pending');
+
+        $db->execute(
+            "UPDATE users SET last_login_at = CURRENT_TIMESTAMP, last_login_ip = ?, last_reauth_at = CURRENT_TIMESTAMP WHERE id = ?",
+            [$request->ip(), $user['id']]
+        );
+
+        $_SESSION['admin_user'] = [
+            'id' => (int)$user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'role' => $user['role'],
+            'username' => $user['name'],
+            'must_change_password' => (int)$user['must_change_password'],
+        ];
+        $_SESSION['admin_login_time'] = time();
+        $_SESSION['admin_last_activity'] = time();
+        $_SESSION['admin_reauth_at'] = time();
+
+        AuditLogger::log('login_success', 'user', (string)$user['id'], ['email' => $user['email']]);
+
+        if ((int)$user['must_change_password'] === 1) {
+            Session::flash('warning', 'Please choose a new, secure password for your account.');
+            return $resp->redirect($adminPath . '/change-password');
+        }
+
+        Session::flash('success', 'Welcome back, ' . htmlspecialchars($user['name'], ENT_QUOTES, 'UTF-8') . '!');
+        return $resp->redirect($adminPath);
     }
 
     public function show2faSetup(): Response
@@ -151,7 +183,7 @@ class AuthController
             'secret' => $secret,
             'backupCodes' => $backupCodes,
             'otpAuthUri' => $otpAuthUri,
-        ]));
+        ], null));
     }
 
     public function process2faSetup(Request $request): Response
@@ -235,7 +267,7 @@ class AuthController
 
         return $resp->html(View::render('admin/auth/2fa-verify', [
             'meta_title' => 'Two-Factor Verification — Multan Tech Accessories',
-        ]));
+        ], null));
     }
 
     public function process2faVerify(Request $request): Response
@@ -328,7 +360,7 @@ class AuthController
         return $resp->html(View::render('admin/auth/reauth', [
             'returnTo' => $returnTo,
             'meta_title' => 'Re-Authentication Required — Multan Tech Accessories',
-        ]));
+        ], null));
     }
 
     public function processReauth(Request $request): Response
@@ -345,20 +377,11 @@ class AuthController
         $user = $db->fetch("SELECT * FROM users WHERE id = ? LIMIT 1", [$userSession['id']]);
 
         $password = (string)$request->post('password', '');
-        $totpCode = trim((string)$request->post('totp_code', ''));
         $returnTo = (string)$request->post('return_to', $adminPath);
 
-        $authenticated = false;
-
-        if (!empty($password) && password_verify($password, $user['password_hash'])) {
-            $authenticated = true;
-        } elseif (!empty($totpCode) && !empty($user['totp_secret']) && TotpService::verifyCode($user['totp_secret'], $totpCode)) {
-            $authenticated = true;
-        }
-
-        if (!$authenticated) {
+        if (empty($password) || !password_verify($password, $user['password_hash'])) {
             AuditLogger::log('reauth_failed', 'user', (string)$user['id']);
-            Session::flash('error', 'Authentication failed. Please enter the correct password or 2FA code.');
+            Session::flash('error', 'Authentication failed. Please enter your correct administrator password.');
             return $resp->redirect($adminPath . '/reauth?return_to=' . urlencode($returnTo));
         }
 
@@ -402,7 +425,7 @@ class AuthController
         $resp = new Response();
         return $resp->html(View::render('admin/auth/change-password', [
             'meta_title' => 'Change Initial Password — Multan Tech Accessories',
-        ]));
+        ], null));
     }
 
     public function changePassword(Request $request): Response

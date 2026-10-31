@@ -15,12 +15,15 @@
 
   <div class="brands-grid" role="list">
     <?php foreach ($brands as $brand): ?>
-      <a href="/brands/<?= e($brand['slug']) ?>" class="brand-tile" aria-label="<?= e($brand['name']) ?> products" role="listitem">
-        <?php if (!empty($brand['logo_path'])): ?>
-          <img src="<?= e($brand['logo_path']) ?>" alt="<?= e($brand['logo_alt'] ?: ($brand['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
-        <?php else: ?>
-          <span class="brand-tile-text"><?= e($brand['name']) ?> (<?= (int)($brand['product_count'] ?? 0) ?>)</span>
-        <?php endif; ?>
+      <?php 
+        $logoCheck = mta_verify_brand_logo($brand['logo_path'] ?? null);
+        if ($logoCheck['status'] !== 'ok') {
+            continue; // Task 3 Rule: Omit brands without verified logos; never show broken images or text tiles
+        }
+        $tileClass = 'brand-tile' . ($logoCheck['is_dark_needed'] ? ' brand-tile-dark' : '');
+      ?>
+      <a href="/brands/<?= e($brand['slug']) ?>" class="<?= $tileClass ?>" aria-label="<?= e($brand['name']) ?> products" role="listitem">
+        <img src="<?= e($brand['logo_path']) ?>" alt="<?= e($brand['logo_alt'] ?: ($brand['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
       </a>
     <?php endforeach; ?>
   </div>

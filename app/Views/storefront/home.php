@@ -115,11 +115,16 @@
 
     <div class="brands-grid" role="list">
       <?php foreach ($featuredBrands as $b): ?>
-        <?php if (!empty($b['logo_path'])): ?>
-          <a href="/brands/<?= e($b['slug']) ?>" class="brand-tile" aria-label="<?= e($b['name']) ?> products" role="listitem">
-            <img src="<?= e($b['logo_path']) ?>" alt="<?= e($b['logo_alt'] ?: ($b['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
-          </a>
-        <?php endif; ?>
+        <?php 
+          $logoCheck = mta_verify_brand_logo($b['logo_path'] ?? null);
+          if ($logoCheck['status'] !== 'ok') {
+              continue;
+          }
+          $tileClass = 'brand-tile' . ($logoCheck['is_dark_needed'] ? ' brand-tile-dark' : '');
+        ?>
+        <a href="/brands/<?= e($b['slug']) ?>" class="<?= $tileClass ?>" aria-label="<?= e($b['name']) ?> products" role="listitem">
+          <img src="<?= e($b['logo_path']) ?>" alt="<?= e($b['logo_alt'] ?: ($b['name'] . ' logo')) ?>" class="brand-tile-logo" width="120" height="48" loading="lazy">
+        </a>
       <?php endforeach; ?>
     </div>
   </section>

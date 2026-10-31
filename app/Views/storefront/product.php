@@ -283,8 +283,12 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
       <div class="product-grid">
         <?php foreach ($relatedProducts as $rel): ?>
           <?php 
-            $product = $rel;
-            require MTA_APP . '/Views/partials/product-card.php'; 
+            try {
+              $product = $rel;
+              require MTA_APP . '/Views/partials/product-card.php'; 
+            } catch (\Throwable $e) {
+              // Silently ignore corrupt single item to prevent 500 error display
+            }
           ?>
         <?php endforeach; ?>
       </div>

@@ -127,11 +127,21 @@ $adminPath = mta_admin_path();
         <?php foreach ($brands as $b): ?>
           <tr>
             <td>
-              <div style="background:#FFFFFF; border:1px solid var(--admin-card-border); border-radius:6px; padding:6px 10px; width:120px; height:50px; display:flex; align-items:center; justify-content:center;">
-                <?php if (!empty($b['logo_path'])): ?>
+              <?php $check = mta_verify_brand_logo($b['logo_path'] ?? null); ?>
+              <div style="background:<?= $check['is_dark_needed'] ? '#1E2024' : '#FFFFFF' ?>; border:1px solid var(--admin-card-border); border-radius:6px; padding:6px 10px; width:120px; height:50px; display:flex; align-items:center; justify-content:center;">
+                <?php if ($check['status'] === 'ok'): ?>
                   <img src="<?= e($b['logo_path']) ?>" alt="<?= e($b['name']) ?>" style="max-width:100%; max-height:40px; object-fit:contain;">
                 <?php else: ?>
-                  <span style="font-size:0.75rem; color:#94A3B8; font-weight:700;">No Logo</span>
+                  <span style="font-size:0.75rem; color:#94A3B8; font-weight:700;"><?= strtoupper($check['status']) ?></span>
+                <?php endif; ?>
+              </div>
+              <div style="margin-top:4px; font-size:0.7rem; font-weight:700;">
+                <?php if ($check['status'] === 'ok'): ?>
+                  <span style="color:#0E7064;">&#10003; Status: OK</span>
+                <?php elseif ($check['status'] === 'broken'): ?>
+                  <span style="color:#DC2626;">&#10007; Status: Broken</span>
+                <?php else: ?>
+                  <span style="color:#5E5D59;">&bull; Status: Missing</span>
                 <?php endif; ?>
               </div>
             </td>

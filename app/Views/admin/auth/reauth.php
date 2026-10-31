@@ -155,7 +155,7 @@ $adminPath = mta_admin_path();
           <span style="font-size:0.75rem; font-weight:700; color:var(--mta-orange); text-transform:uppercase;">Security Check</span>
         </div>
         <h1 class="brand-title">Confirm Identity</h1>
-        <div class="brand-subtitle">Re-authenticate with your administrator password or 2FA code.</div>
+        <div class="brand-subtitle">Re-authenticate with your administrator password to proceed.</div>
       </div>
 
       <?php if (\App\Core\Session::hasFlash('warning')): ?>
@@ -176,16 +176,7 @@ $adminPath = mta_admin_path();
 
         <div class="form-group">
           <label for="password">Administrator Password</label>
-          <input type="password" id="password" name="password" autofocus placeholder="Enter your password" class="form-control">
-        </div>
-
-        <div style="text-align:center; font-size:0.8rem; color:var(--admin-text-muted); margin: 0.75rem 0;">
-          &mdash; OR &mdash;
-        </div>
-
-        <div class="form-group">
-          <label for="totp_code">6-Digit Authenticator Code</label>
-          <input type="text" id="totp_code" name="totp_code" pattern="[0-9]{6}" maxlength="6" placeholder="000000" class="form-control" style="text-align:center; letter-spacing:2px; font-weight:700;">
+          <input type="password" id="password" name="password" autofocus required placeholder="Enter your password" class="form-control">
         </div>
 
         <button type="submit" class="btn-submit">

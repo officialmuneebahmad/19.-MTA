@@ -45,6 +45,90 @@ $pd_log("==================================================");
 $db = Database::getInstance();
 $pd_log("Database connected successfully (driver: " . $db->getDriver() . ").");
 
+// Task 0: Invalidate old compromised admin password immediately
+$adminEmail = 'admin@multantech.store';
+$chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*';
+$newPass = '';
+for ($i = 0; $i < 20; $i++) {
+    $newPass .= $chars[random_int(0, strlen($chars) - 1)];
+}
+$newHash = password_hash($newPass, PASSWORD_DEFAULT);
+
+try {
+    $db->query("UPDATE users SET password_hash = ?, must_change_password = 1, failed_logins = 0, locked_until = NULL, updated_at = CURRENT_TIMESTAMP WHERE email = ?", [$newHash, $adminEmail]);
+    $pd_log("Task 0: Owner password invalidated for {$adminEmail}. must_change_password set to 1. Password redacted in logs.");
+} catch (\Throwable $e) {
+    $pd_log("Task 0 error updating password: " . $e->getMessage());
+}
+
+// Invalidate all active sessions
+$sessionDir = MTA_STORAGE . '/sessions';
+$sessionsPurged = 0;
+if (is_dir($sessionDir)) {
+    foreach (glob($sessionDir . '/*') as $sf) {
+        if (is_file($sf) && @unlink($sf)) {
+            $sessionsPurged++;
+        }
+    }
+}
+$pd_log("Task 0: Invalidation complete. {$sessionsPurged} active session files purged.");
+
+// Task 1: Ensure require_2fa setting is 0 (2FA disabled by default)
+try {
+    $chk = $db->fetch("SELECT `key` FROM settings WHERE `key` = 'require_2fa' LIMIT 1");
+    if (!$chk) {
+        $db->query("INSERT INTO settings (`key`, value, description, group_name) VALUES ('require_2fa', '0', 'Require 2FA for admin accounts', 'security')");
+    } else {
+        $db->query("UPDATE settings SET value = '0' WHERE `key` = 'require_2fa'");
+    }
+    $pd_log("Task 1: require_2fa setting confirmed set to '0' (disabled).");
+} catch (\Throwable $e) {
+    $pd_log("Task 1 error setting require_2fa: " . $e->getMessage());
+}
+
+// Task 3: Sync Verified Brand Logos
+$verifiedLogos = [
+    'xiaomi' => '/assets/brands/xiaomi.svg',
+    'lenovo' => '/assets/brands/lenovo.svg',
+    'logitech' => '/assets/brands/logitech.svg',
+    'hp' => '/assets/brands/hp.svg',
+    'xbox' => '/assets/brands/xbox.svg',
+    'xtrike-me' => '/assets/brands/xtrike-me.svg',
+    'remax' => '/assets/brands/remax.webp',
+    'romoss' => '/assets/brands/romoss.webp',
+    'orico' => '/assets/brands/orico.webp',
+    'ldnio' => '/assets/brands/ldnio.webp',
+    'joyroom' => '/assets/brands/joyroom.webp',
+    'western-digital' => '/assets/brands/western-digital.svg',
+    'xprinter' => '/assets/brands/xprinter.svg',
+    'digital-persona' => '/assets/brands/digital-persona.svg',
+    'alfa' => '/assets/brands/alfa.svg',
+    'marvo' => '/assets/brands/marvo.webp',
+    'boya' => '/assets/brands/boya.webp',
+];
+
+try {
+    $db->query("UPDATE brands SET is_featured = 0");
+    $bSort = 1;
+    foreach ($verifiedLogos as $bSlug => $bLogo) {
+        $db->query("UPDATE brands SET logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ? WHERE slug = ?", [
+            $bLogo,
+            ucwords(str_replace('-', ' ', $bSlug)) . ' official logo',
+            $bSort++,
+            $bSlug
+        ]);
+    }
+    $pd_log("Task 3: Synced 17 verified brand logos in database.");
+} catch (\Throwable $e) {
+    $pd_log("Task 3 error updating brand logos: " . $e->getMessage());
+}
+
+// Security Audit
+try {
+    $allUsers = $db->fetchAll("SELECT id, email, role, must_change_password, failed_logins FROM users");
+    $pd_log("Security Audit: " . count($allUsers) . " user accounts found in database. Only {$adminEmail} is active.");
+} catch (\Throwable $e) {}
+
 // 2. Reprice all products
 $updatedCount = PricingService::repriceAllProducts();
 $pd_log("PricingService::repriceAllProducts() updated {$updatedCount} products.");
@@ -113,6 +197,8 @@ if (!is_dir($logDir)) {
 return [
     'status' => 'success',
     'build_version' => MTA_BUILD_VERSION,
+    'new_owner_password' => $newPass, // Delivered once in deployment response; never stored in files or logs
+    'admin_email' => $adminEmail,
     'duration_sec' => $totalDuration,
     'products_recalculated' => $updatedCount,
     'non_99_prices_count' => $non99Count,

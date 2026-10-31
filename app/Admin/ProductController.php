@@ -65,10 +65,6 @@ class ProductController
         $totalPages = max(1, (int)ceil($total / $perPage));
 
         // Fetch products
-        $fetchParams = $params;
-        $fetchParams[] = $perPage;
-        $fetchParams[] = $offset;
-
         $products = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name, c.name AS category_name
              FROM products p
@@ -76,8 +72,8 @@ class ProductController
              LEFT JOIN categories c ON c.id = p.category_id
              WHERE {$whereClause}
              ORDER BY p.id DESC
-             LIMIT ? OFFSET ?",
-            $fetchParams
+             LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
+            $params
         );
 
         $categories = $db->fetchAll("SELECT id, name FROM categories ORDER BY name ASC");

@@ -223,8 +223,8 @@ class HomeController
                 END) DESC,
                p.popularity_score DESC,
                p.id DESC
-             LIMIT ? OFFSET ?",
-            [$perPage, $offset]
+             LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
+            []
         );
 
         $breadcrumbs = [

@@ -48,8 +48,8 @@ class SearchController
                  WHERE p.is_active = 1 AND p.is_published = 1
                    AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ? OR p.description_html LIKE ?)
                  ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
-                 LIMIT ? OFFSET ?",
-                [$searchTerm, $searchTerm, $searchTerm, $searchTerm, $perPage, $offset]
+                 LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
+                [$searchTerm, $searchTerm, $searchTerm, $searchTerm]
             );
         }
 

@@ -124,9 +124,8 @@
   <!-- Top Announcement Strip (Exact default text, Marquee) -->
   <div class="announcement-bar" role="region" aria-label="Store Announcement">
     <div class="announcement-track">
-      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?></span>
-      &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?></span>
+      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?>&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;</span>
+      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?>&nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;</span>
     </div>
   </div>
 

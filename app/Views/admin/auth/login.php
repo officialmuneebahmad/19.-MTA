@@ -10,7 +10,7 @@ $adminPath = mta_admin_path();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operations Console Login — Multan Tech Accessories</title>
+  <title>Admin Login — Multan Tech Accessories</title>
   <meta name="robots" content="noindex, nofollow, noarchive">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
@@ -133,6 +133,11 @@ $adminPath = mta_admin_path();
       border: 1px solid #FCD34D;
       color: #92400E;
     }
+    .alert-info {
+      background: #E0F2FE;
+      border: 1px solid #BAE6FD;
+      color: #0369A1;
+    }
     .form-group {
       margin-bottom: 1.25rem;
     }
@@ -183,24 +188,6 @@ $adminPath = mta_admin_path();
       opacity: 0.95;
       transform: translateY(-1px);
     }
-    .credentials-hint {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      background: #F5F3ED;
-      border-radius: 12px;
-      border: 1px dashed #DCD8D0;
-      font-size: 0.8rem;
-      color: var(--admin-text-muted);
-      line-height: 1.6;
-    }
-    .credentials-hint code {
-      background: #FFFFFF;
-      padding: 0.15rem 0.45rem;
-      border-radius: 6px;
-      border: 1px solid var(--admin-border);
-      font-weight: 600;
-      color: var(--admin-text);
-    }
     .back-store {
       text-align: center;
       margin-top: 1.5rem;
@@ -224,11 +211,18 @@ $adminPath = mta_admin_path();
       <div class="brand-header">
         <div class="brand-logo-pill">
           <div class="brand-icon">M</div>
-          <span class="brand-logo-text">Operations Console</span>
+          <span class="brand-logo-text">Multan Tech</span>
         </div>
-        <h1 class="brand-title">Multan Tech Accessories</h1>
+        <h1 class="brand-title">Admin Login</h1>
         <div class="brand-subtitle">Administrator Authentication & Operations Portal</div>
       </div>
+
+      <?php if (\App\Core\Session::hasFlash('info')): ?>
+        <div class="alert alert-info">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span><?= e(\App\Core\Session::getFlash('info')) ?></span>
+        </div>
+      <?php endif; ?>
 
       <?php if (\App\Core\Session::hasFlash('error')): ?>
         <div class="alert alert-error">
@@ -256,7 +250,7 @@ $adminPath = mta_admin_path();
 
         <div class="form-group">
           <label for="email">Administrator Email</label>
-          <input type="email" id="email" name="email" value="<?= e($_POST['email'] ?? 'admin@multantech.store') ?>" required autofocus class="form-control" placeholder="admin@multantech.store">
+          <input type="email" id="email" name="email" value="<?= e($_POST['email'] ?? '') ?>" autocomplete="username" required autofocus class="form-control" placeholder="admin@multantech.store">
         </div>
 
         <div class="form-group">
@@ -264,24 +258,18 @@ $adminPath = mta_admin_path();
             <label for="password" style="margin-bottom: 0;">Password</label>
             <button type="button" onclick="const p=document.getElementById('password'); p.type = p.type==='password'?'text':'password'; this.innerText = p.type==='password'?'Show':'Hide';" style="background:none; border:none; color:var(--mta-teal); font-size:0.75rem; cursor:pointer; font-weight:700;">Show</button>
           </div>
-          <input type="password" id="password" name="password" required class="form-control" placeholder="Enter administrator password">
+          <input type="password" id="password" name="password" autocomplete="current-password" required class="form-control" placeholder="Enter administrator password">
         </div>
 
         <button type="submit" class="btn-submit">
-          <span>Authorize Access</span>
+          <span>Sign In</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </button>
       </form>
-
-      <div class="credentials-hint">
-        <div><strong>Default Credentials:</strong></div>
-        <div>Email: <code>admin@multantech.store</code></div>
-        <div>Password: <code>MultanTech@2026!</code></div>
-      </div>
     </div>
 
     <div class="back-store">
-      <a href="/" target="_blank" rel="noopener noreferrer">&larr; Return to Customer Storefront</a>
+      <a href="/" rel="noopener noreferrer">&larr; Return to storefront</a>
     </div>
   </div>
 
