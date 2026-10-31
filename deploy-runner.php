@@ -32,7 +32,7 @@ if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
     ]);
     \App\Core\Session::set('is_reauthenticated', time());
     if (isset($_GET['redirect']) && $_GET['redirect'] === '1') {
-        header('Location: /' . mta_admin_path());
+        header('Location: ' . mta_admin_path());
         exit;
     }
 }
