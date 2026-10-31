@@ -39,6 +39,7 @@ class Session
             || (isset($_SERVER['HTTP_CF_VISITOR']) && str_contains((string)$_SERVER['HTTP_CF_VISITOR'], 'https'));
 
         if (!headers_sent()) {
+            session_cache_limiter('');
             if (session_status() === PHP_SESSION_NONE) {
                 session_name('mta_session');
             }

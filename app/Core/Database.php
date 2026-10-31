@@ -268,6 +268,60 @@ class Database
                 }
             }
 
+            // Settings Migration (Suspect 4)
+            $requiredSettings = [
+                'pricing_margin_mode' => ['value' => 'Tiered', 'desc' => 'Pricing Margin Calculation Mode', 'group' => 'pricing'],
+                'show_wa_on_product_cards' => ['value' => '0', 'desc' => 'Show WhatsApp order button on product cards', 'group' => 'storefront'],
+                'social_facebook' => ['value' => 'https://www.facebook.com/profile.php?id=61590214397707', 'desc' => 'Official Facebook Page URL', 'group' => 'social'],
+                'social_instagram' => ['value' => 'https://www.instagram.com/multantechaccessories/', 'desc' => 'Official Instagram Profile URL', 'group' => 'social'],
+                'social_tiktok' => ['value' => '', 'desc' => 'Official TikTok Profile URL', 'group' => 'social'],
+                'admin_portal_url' => ['value' => '/mta-control-9872', 'desc' => 'Admin portal route path', 'group' => 'admin'],
+                'show_admin_link_in_footer' => ['value' => '1', 'desc' => 'Show Admin Link in Footer Bottom Bar', 'group' => 'storefront'],
+                'announcement_strip' => ['value' => 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE', 'desc' => 'Top Announcement Marquee Strip', 'group' => 'general'],
+                'announcement_text' => ['value' => 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE', 'desc' => 'Top announcement banner text', 'group' => 'storefront'],
+                'announcement_marquee' => ['value' => 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE', 'desc' => 'Header marquee announcement text', 'group' => 'storefront'],
+            ];
+
+            foreach ($requiredSettings as $sKey => $sData) {
+                try {
+                    $chk = $this->pdo->prepare("SELECT `value` FROM settings WHERE `key` = ? LIMIT 1");
+                    $chk->execute([$sKey]);
+                    $row = $chk->fetch();
+                    if (!$row) {
+                        $ins = $this->pdo->prepare("INSERT INTO settings (`key`, value, description, group_name, updated_at) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+                        $ins->execute([$sKey, $sData['value'], $sData['desc'], $sData['group']]);
+                    } elseif ($sKey === 'social_tiktok' && str_contains((string)$row['value'], 'TODO')) {
+                        $this->pdo->prepare("UPDATE settings SET value = '', updated_at = CURRENT_TIMESTAMP WHERE `key` = ?")->execute([$sKey]);
+                    } elseif (in_array($sKey, ['announcement_strip', 'announcement_text', 'announcement_marquee', 'pricing_margin_mode', 'show_wa_on_product_cards', 'social_facebook', 'social_instagram', 'admin_portal_url', 'show_admin_link_in_footer'], true)) {
+                        $this->pdo->prepare("UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?")->execute([$sData['value'], $sKey]);
+                    }
+                } catch (\Throwable) {}
+            }
+
+            // Sync Brand Logos & Featured Status
+            $brandLogos = [
+                'xiaomi' => '/assets/brands/xiaomi.svg',
+                'lenovo' => '/assets/brands/lenovo.svg',
+                'logitech' => '/assets/brands/logitech.svg',
+                'hp' => '/assets/brands/hp.svg',
+                'xbox' => '/assets/brands/xbox.svg',
+                'xtrike-me' => '/assets/brands/xtrike-me.svg',
+                'remax' => '/assets/brands/remax.webp',
+                'romoss' => '/assets/brands/romoss.webp',
+                'orico' => '/assets/brands/orico.webp',
+                'ldnio' => '/assets/brands/ldnio.webp',
+                'joyroom' => '/assets/brands/joyroom.webp',
+            ];
+
+            try {
+                $this->pdo->exec("UPDATE brands SET is_featured = 0");
+                $bStmt = $this->pdo->prepare("UPDATE brands SET logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ? WHERE slug = ?");
+                $sort = 1;
+                foreach ($brandLogos as $slug => $logoPath) {
+                    $bStmt->execute([$logoPath, ucfirst(str_replace('-', ' ', $slug)) . ' official logo', $sort++, $slug]);
+                }
+            } catch (\Throwable) {}
+
             // Ensure show_wa_on_product_cards setting exists (default 0 / OFF)
             try {
                 $chkSetting = $this->pdo->query("SELECT `key` FROM settings WHERE `key` = 'show_wa_on_product_cards' LIMIT 1")->fetch();

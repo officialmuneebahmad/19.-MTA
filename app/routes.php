@@ -51,6 +51,12 @@ $router->get('/', [HomeController::class, 'index']);
 $router->get('/best-sellers', [HomeController::class, 'bestSellers']);
 
 $router->get('/categories', [CategoryController::class, 'index']);
+$router->get('/categories/gaming-accessories', function(): Response {
+    $r = new Response();
+    $r->status(301);
+    $r->header('Location', '/categories/gaming');
+    return $r;
+});
 $router->get('/categories/{slug}', [CategoryController::class, 'show']);
 
 $router->get('/brands', [BrandController::class, 'index']);
@@ -88,7 +94,19 @@ $router->get('/author/{slug}', [GuideController::class, 'author']);
 // 4. STATIC & POLICY PAGES
 // ======================================================================
 $router->get('/about', [PageController::class, 'about']);
+$router->get('/about-us', function(): Response {
+    $r = new Response();
+    $r->status(301);
+    $r->header('Location', '/about');
+    return $r;
+});
 $router->get('/contact', [PageController::class, 'contact']);
+$router->get('/contact-us', function(): Response {
+    $r = new Response();
+    $r->status(301);
+    $r->header('Location', '/contact');
+    return $r;
+});
 $router->post('/contact', [PageController::class, 'sendContact'], [CsrfMiddleware::class]);
 $router->get('/shipping-and-delivery', [PageController::class, 'shipping']);
 $router->get('/returns-and-refunds', [PageController::class, 'returns']);
@@ -103,6 +121,7 @@ $router->get('/sitemap', [PageController::class, 'sitemap']);
 // 5. TECHNICAL SEO & SITEMAPS
 // ======================================================================
 $router->get('/sitemap.xml', [SeoController::class, 'index']);
+$router->get('/sitemap-products.xml', [SeoController::class, 'products']);
 $router->get('/sitemap-products-1.xml', [SeoController::class, 'products']);
 $router->get('/sitemap-categories.xml', [SeoController::class, 'categories']);
 $router->get('/sitemap-brands.xml', [SeoController::class, 'brands']);

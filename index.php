@@ -38,7 +38,6 @@ $pathOnly = parse_url($requestUri, PHP_URL_PATH) ?: '/';
 $isCacheable = ($requestMethod === 'GET')
     && empty($_GET['nocache'])
     && empty($_GET['refresh'])
-    && empty($_COOKIE['mta_session'])
     && !str_starts_with($pathOnly, '/cart')
     && !str_starts_with($pathOnly, '/checkout')
     && !str_starts_with($pathOnly, '/order')
@@ -62,6 +61,8 @@ if ($isCacheable) {
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < 3600)) {
         header('Content-Type: text/html; charset=UTF-8');
         header('X-MTA-Cache: HIT');
+        header('X-MTA-Build: 2026.10.31-v2.4.0');
+        header('Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=300');
         readfile($cacheFile);
         exit;
     }

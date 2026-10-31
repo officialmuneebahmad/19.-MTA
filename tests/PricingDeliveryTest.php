@@ -77,15 +77,36 @@ class PricingDeliveryTest
 
     private function testManualPriceSnap(): void
     {
-        echo "Testing PricingService::snapPrice() for overrides... ";
+        echo "Testing PricingService::stage2() / snapPrice() required test cases... ";
 
-        assert(PricingService::snapPrice(1500) === 1599, '1500 must snap to 1599');
-        assert(PricingService::snapPrice(1599) === 1599, '1599 must remain 1599');
-        assert(PricingService::snapPrice(1600) === 1699, '1600 must snap to 1699');
-        assert(PricingService::snapPrice(1601) === 1699, '1601 must snap to 1699');
-        assert(PricingService::snapPrice(0) === 0, '0 must remain 0');
+        $stage2Cases = [
+            3420 => 3499,
+            250 => 299,
+            1200 => 1299,
+            890 => 899,
+            1299 => 1299,
+            1300 => 1399,
+            99 => 99,
+            100 => 199,
+            0 => 0,
+        ];
 
-        echo "PASSED\n";
+        foreach ($stage2Cases as $input => $expected) {
+            $actual = PricingService::snapPrice($input);
+            if ($actual !== $expected) {
+                throw new \RuntimeException(
+                    "Stage 2 failure for input {$input}: Expected {$expected}, got {$actual}"
+                );
+            }
+            $stage2Direct = PricingService::stage2($input);
+            if ($stage2Direct !== $expected) {
+                throw new \RuntimeException(
+                    "stage2() direct failure for input {$input}: Expected {$expected}, got {$stage2Direct}"
+                );
+            }
+        }
+
+        echo "PASSED (all 9 Stage 2 test cases verified)\n";
     }
 
     private function testTotpService(): void

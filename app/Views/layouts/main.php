@@ -18,6 +18,7 @@
   <title><?= e($meta_title ?? 'Multan Tech Accessories — Authentic Tech & Accessories in Pakistan') ?></title>
   <meta name="description" content="<?= e($meta_description ?? 'Buy authentic computer and mobile accessories in Pakistan. Cash on Delivery across Multan, Lahore, Karachi & all cities. Free delivery over Rs. 5,000.') ?>">
   <meta name="theme-color" content="#FAF9F5">
+  <meta name="mta-build" content="<?= defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0' ?>">
   <link rel="canonical" href="<?= e($canonical_url ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
 
   <!-- Favicon (Circular) -->
@@ -84,7 +85,7 @@
       "@context": "https://schema.org",
       "@type": "ComputerStore",
       "name": "Multan Tech Accessories",
-      "url": "https://multantech.store",
+      "url": "<?= e(mta_url()) ?>",
       "telephone": "+923070655275",
       "address": {
         "@type": "PostalAddress",
@@ -123,9 +124,9 @@
   <!-- Top Announcement Strip (Exact default text, Marquee) -->
   <div class="announcement-bar" role="region" aria-label="Store Announcement">
     <div class="announcement-track">
-      <span><?= e(mta_setting('announcement_strip', 'CASH ON DELIVERY ALL PAKISTAN • 3 DAYS CHECK WARRANTY • MINIMUM DELIVERY CHARGES FOR MULTANIS • FREE DELIVERY OVER 5,000')) ?></span>
+      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?></span>
       &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;
-      <span><?= e(mta_setting('announcement_strip', 'CASH ON DELIVERY ALL PAKISTAN • 3 DAYS CHECK WARRANTY • MINIMUM DELIVERY CHARGES FOR MULTANIS • FREE DELIVERY OVER 5,000')) ?></span>
+      <span><?= e(mta_setting('announcement_text', mta_setting('announcement_strip', 'FREE DELIVERY ABOVE 5000 - FREE DELIVERY ON SECOND ORDER - MINIMUM DELIVERY ACROSS MULTAN RS. 100 - RS. 250 NATIONWIDE'))) ?></span>
     </div>
   </div>
 
@@ -431,15 +432,20 @@
             Your trusted destination for genuine computer hardware, mobile accessories, chargers, cables, and gaming gear in Pakistan. Shipped across Multan and nationwide with Cash on Delivery.
           </p>
           <div class="footer-socials">
-            <a href="<?= e(mta_setting('social_facebook', 'https://www.facebook.com/profile.php?id=61590214397707')) ?>" target="_blank" rel="noopener me" class="social-icon-btn" aria-label="Facebook">
+            <a href="<?= e(mta_setting('social_facebook', 'https://www.facebook.com/profile.php?id=61590214397707')) ?>" target="_blank" rel="noopener noreferrer me" class="social-icon-btn" aria-label="Facebook">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
             </a>
-            <a href="<?= e(mta_setting('social_instagram', 'https://www.instagram.com/multantechaccessories/')) ?>" target="_blank" rel="noopener me" class="social-icon-btn" aria-label="Instagram">
+            <a href="<?= e(mta_setting('social_instagram', 'https://www.instagram.com/multantechaccessories/')) ?>" target="_blank" rel="noopener noreferrer me" class="social-icon-btn" aria-label="Instagram">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="<?= e(mta_setting('social_tiktok', 'https://tiktok.com/@TODO-OWNER')) ?>" target="_blank" rel="noopener me" class="social-icon-btn" aria-label="TikTok">
+            <?php
+            $tiktok = trim((string)mta_setting('social_tiktok', ''));
+            if ($tiktok !== '' && !str_contains($tiktok, 'TODO')):
+            ?>
+            <a href="<?= e($tiktok) ?>" target="_blank" rel="noopener noreferrer me" class="social-icon-btn" aria-label="TikTok">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.86.13V9.4a6.33 6.33 0 0 0-.86-.06A6.34 6.34 0 0 0 3 15.68a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V9.07a8.16 8.16 0 0 0 4.91 1.63V7.28a4.81 4.81 0 0 1-1-.59z"/></svg>
             </a>
+            <?php endif; ?>
           </div>
         </div>
 
@@ -487,11 +493,19 @@
 
       </div>
 
+      <!-- Trademark Notice -->
+      <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:2rem; padding-top:1rem; border-top:1px solid var(--border);">
+        Brand names and logos are trademarks of their respective owners and are used to identify products we sell.
+      </div>
+
       <!-- Bottom Credits Strip -->
       <div class="footer-bottom">
         <div>
           &copy; <?= date('Y') ?> Multan Tech Accessories. All rights reserved.
           <span class="footer-credit">&bull; <?= e(mta_setting('founder_credit', 'Founded & Developed by Muneeb Ahmad')) ?></span>
+          <?php if (mta_setting('show_admin_link_in_footer', '1') === '1'): ?>
+            &bull; <a href="<?= e(mta_setting('admin_portal_url', '/mta-control-9872')) ?>" target="_blank" rel="noopener noreferrer nofollow" aria-label="Admin login (opens in a new tab)" style="color:var(--text-muted); text-decoration:underline;">Admin</a>
+          <?php endif; ?>
         </div>
         <div>
           Currency: <strong>PKR (Rs.)</strong> &bull; Serving Multan & All Pakistan

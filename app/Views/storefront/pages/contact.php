@@ -39,6 +39,22 @@
             <strong>Working Hours:</strong><br>
             <span style="color: var(--text-muted);">Monday &mdash; Saturday: 10:00 AM &ndash; 9:00 PM (PKT)<br>Sunday: WhatsApp assistance open</span>
           </div>
+
+          <div>
+            <strong>Follow Us:</strong><br>
+            <div style="display:flex; gap:0.75rem; margin-top:0.35rem;">
+              <a href="<?= e(mta_setting('social_facebook', 'https://www.facebook.com/profile.php?id=61590214397707')) ?>" target="_blank" rel="noopener noreferrer me" style="color:var(--text); font-weight:600; font-size:0.875rem; text-decoration:underline;">Facebook</a>
+              &bull;
+              <a href="<?= e(mta_setting('social_instagram', 'https://www.instagram.com/multantechaccessories/')) ?>" target="_blank" rel="noopener noreferrer me" style="color:var(--text); font-weight:600; font-size:0.875rem; text-decoration:underline;">Instagram</a>
+              <?php
+              $tiktok = trim((string)mta_setting('social_tiktok', ''));
+              if ($tiktok !== '' && !str_contains($tiktok, 'TODO')):
+              ?>
+              &bull;
+              <a href="<?= e($tiktok) ?>" target="_blank" rel="noopener noreferrer me" style="color:var(--text); font-weight:600; font-size:0.875rem; text-decoration:underline;">TikTok</a>
+              <?php endif; ?>
+            </div>
+          </div>
         </div>
 
         <div style="margin-top: 1.5rem;">

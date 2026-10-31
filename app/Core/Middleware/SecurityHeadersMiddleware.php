@@ -20,6 +20,7 @@ class SecurityHeadersMiddleware
 
             header('X-Content-Type-Options: nosniff');
             header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()');
+            header('X-MTA-Build: ' . (defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0'));
 
             if ($isAdminRequest) {
                 header('X-Robots-Tag: noindex, nofollow, noarchive');
@@ -30,6 +31,14 @@ class SecurityHeadersMiddleware
             } else {
                 header('X-Frame-Options: SAMEORIGIN');
                 header('Referrer-Policy: strict-origin-when-cross-origin');
+                if ($request->getMethod() === 'GET'
+                    && !str_starts_with($request->getPath(), '/cart')
+                    && !str_starts_with($request->getPath(), '/checkout')
+                    && !str_starts_with($request->getPath(), '/order')
+                    && !str_starts_with($request->getPath(), '/track-order')
+                    && !str_starts_with($request->getPath(), '/api')) {
+                    header('Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=300');
+                }
             }
 
             $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')

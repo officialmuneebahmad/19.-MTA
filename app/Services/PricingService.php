@@ -40,30 +40,43 @@ class PricingService
 
         // Load pricing configuration (cached static in memory, fallback to settings / defaults)
         $config = self::getConfig();
-        $threshold = (int)($config['threshold'] ?? 2000);
+        $marginMode = strtolower((string)($config['margin_mode'] ?? 'tiered'));
 
+        if ($marginMode === 'none') {
+            return self::stage2($price);
+        }
+
+        // Stage 1: Margin step
+        $threshold = (int)($config['threshold'] ?? 2000);
         if ($price < $threshold) {
             $add = (int)($config['tier1_add'] ?? 100);
             $mode = $config['tier1_mode'] ?? 'nearest';
             $x = $price + $add;
-            $hundreds = self::applyRounding($x, $mode);
-            $ending = (int)($config['tier1_ending'] ?? 99);
+            $stage1 = self::applyRounding($x, $mode);
         } else {
             $add = (int)($config['tier2_add'] ?? 300);
             $mode = $config['tier2_mode'] ?? 'up';
             $x = $price + $add;
-            $hundreds = self::applyRounding($x, $mode);
-            $ending = (int)($config['tier2_ending'] ?? 99);
+            $stage1 = self::applyRounding($x, $mode);
         }
 
-        $result = $hundreds + $ending;
+        // Stage 2: Final step (always on, idempotent)
+        return self::stage2($stage1);
+    }
 
-        // Guarantee output ends in 99 or 999
-        if ($result > 0 && ($result % 100 !== 99)) {
-            $result = ((int)floor($result / 100) * 100) + 99;
+    /**
+     * Stage 2: Round UP to the next number ending in 99.
+     * Formula: floor(price / 100) * 100 + 99.
+     * Idempotent: a price already ending in 99 returns itself.
+     */
+    public static function stage2(int|float $rawPrice): int
+    {
+        $price = (int)round($rawPrice);
+        if ($price <= 0) {
+            return 0;
         }
 
-        return $result;
+        return (int)(floor($price / 100) * 100 + 99);
     }
 
     /**
@@ -71,22 +84,7 @@ class PricingService
      */
     public static function snapPrice(int|float $rawPrice): int
     {
-        $price = (int)round($rawPrice);
-        if ($price <= 0) {
-            return 0;
-        }
-
-        if ($price % 100 === 99) {
-            return $price;
-        }
-
-        $hundreds = (int)floor($price / 100);
-        $candidate = ($hundreds * 100) + 99;
-        if ($candidate < $price) {
-            $candidate += 100;
-        }
-
-        return $candidate;
+        return self::stage2($rawPrice);
     }
 
     /**
@@ -104,13 +102,14 @@ class PricingService
     /**
      * Retrieve pricing configuration with runtime caching.
      */
-    public static function getConfig(): array
+    public static function getConfig(bool $refresh = false): array
     {
         static $cfg = null;
-        if ($cfg !== null) {
+        if ($cfg !== null && !$refresh) {
             return $cfg;
         }
 
+        $marginMode = (string)mta_setting('pricing_margin_mode', 'Tiered');
         $threshold = (int)mta_setting('pricing_tier_threshold', 2000);
         $tier1Add = (int)mta_setting('pricing_tier1_add', 100);
         $tier1Mode = (string)mta_setting('pricing_tier1_mode', 'nearest');
@@ -121,6 +120,7 @@ class PricingService
         $tier2Ending = (int)mta_setting('pricing_tier2_ending', 99);
 
         $cfg = [
+            'margin_mode' => $marginMode,
             'threshold' => $threshold > 0 ? $threshold : 2000,
             'tier1_add' => $tier1Add,
             'tier1_mode' => $tier1Mode,

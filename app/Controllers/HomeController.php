@@ -133,6 +133,11 @@ class HomeController
                     'url' => mta_url(),
                     'logo' => mta_url('/assets/images/logo.png'),
                     'telephone' => '+923070655275',
+                    'sameAs' => array_values(array_filter([
+                        mta_setting('social_facebook', 'https://www.facebook.com/profile.php?id=61590214397707'),
+                        mta_setting('social_instagram', 'https://www.instagram.com/multantechaccessories/'),
+                        (!empty(mta_setting('social_tiktok')) && !str_contains((string)mta_setting('social_tiktok'), 'TODO')) ? mta_setting('social_tiktok') : null,
+                    ])),
                     'address' => [
                         '@type' => 'PostalAddress',
                         'streetAddress' => 'Al-Quresh Phase 3, Sher Shah Road',
