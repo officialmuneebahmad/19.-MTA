@@ -61,6 +61,10 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
       } else {
         document.documentElement.removeAttribute('data-theme');
       }
+      var savedSidebar = localStorage.getItem('mta_admin_sidebar_collapsed');
+      if (savedSidebar === '1' && window.innerWidth >= 1024) {
+        document.documentElement.classList.add('sidebar-collapsed-init');
+      }
     } catch (e) {}
   </script>
 </head>
@@ -78,19 +82,15 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
       
       <!-- Brand Header -->
       <div class="sidebar-header">
-        <a href="<?= e($adminPath) ?>" class="brand-link" title="MTA Admin Dashboard">
-          <div class="brand-logo-box">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
-              <path d="M12 12v9"></path>
-              <path d="m8 17 4 4 4-4"></path>
-            </svg>
-          </div>
-          <div class="brand-text-group">
-            <div class="brand-name">Multan Tech</div>
-            <div class="brand-console-badge">ADMIN CONSOLE</div>
-          </div>
+        <a href="<?= e($adminPath) ?>" class="brand-link" title="Multan Tech Admin Console">
+          <img src="/assets/images/admin-logo.jpg" alt="Multan Tech" class="admin-sidebar-logo">
         </a>
+        <button type="button" id="sidebar-collapse-toggle" class="sidebar-collapse-btn" aria-label="Toggle Sidebar Navigation" title="Collapse / Expand Sidebar">
+          <svg class="sidebar-collapse-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="11 17 6 12 11 7"></polyline>
+            <polyline points="18 17 13 12 18 7"></polyline>
+          </svg>
+        </button>
         <button type="button" id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close Sidebar">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
@@ -191,14 +191,38 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
 
       <!-- Sidebar Bottom Area -->
       <div class="sidebar-footer">
-        <a href="/" target="_blank" rel="noopener noreferrer" class="sidebar-live-store-link" title="Open Public Storefront in New Tab">
+        
+        <!-- Muneeb Ahmad Owner Card (With User-Uploaded Portrait) -->
+        <div class="sidebar-user-card" title="Muneeb Ahmad (Owner) &bull; <?= e($userEmail) ?>">
+          <img src="/assets/images/muneeb-ahmad.jpg" alt="Muneeb Ahmad" class="sidebar-avatar-img">
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name">Muneeb Ahmad</div>
+            <div class="sidebar-user-role">
+              <span class="role-dot"></span>
+              <span>Owner</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Day / Night Mode Toggle (Moved to Sidebar) -->
+        <button type="button" id="sidebar-theme-toggle" class="sidebar-action-btn sidebar-theme-toggle" aria-label="Toggle Dark / Light Theme" title="Toggle Dark / Light Theme">
+          <span class="theme-icon-wrap">
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </span>
+          <span class="theme-toggle-label">Dark Mode</span>
+        </button>
+
+        <!-- Live Store Link -->
+        <a href="/" target="_blank" rel="noopener noreferrer" class="sidebar-action-btn sidebar-live-store-link" title="Open Public Storefront in New Tab">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           <span>View Live Store</span>
         </a>
 
-        <form action="<?= e($adminPath) ?>/logout" method="POST" style="margin-top: 0.5rem;">
+        <!-- Sign Out Button -->
+        <form action="<?= e($adminPath) ?>/logout" method="POST" style="margin: 0;">
           <?= mta_csrf_field() ?>
-          <button type="submit" class="sidebar-signout-btn" data-confirm="Are you sure you want to end your administration session?">
+          <button type="submit" class="sidebar-action-btn sidebar-signout-btn" data-confirm="Are you sure you want to end your administration session?" title="Sign Out">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             <span>Sign Out</span>
           </button>
@@ -208,7 +232,7 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
     </aside>
 
     <!-- -----------------------------------------------------------------------
-         2. Main Application Area & Top Bar (64px Sticky Topbar)
+         2. Main Application Area & Top Bar (Clean Icon-Only Header)
          ----------------------------------------------------------------------- -->
     <div class="admin-main">
       
@@ -231,58 +255,28 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
           </div>
         </div>
 
-        <!-- Global Search Bar in Topbar -->
-        <div class="topbar-search-wrap">
-          <form action="<?= e($adminPath) ?>/products" method="GET" class="topbar-search-form">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="topbar-search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" name="q" placeholder="Search catalog, orders, SKU..." class="topbar-search-input" aria-label="Search Catalog and Orders">
-          </form>
-        </div>
-
-        <!-- Right Quick Actions -->
+        <!-- Right Quick Action Icons (Search, Export JSON, Refresh ONLY) -->
         <div class="topbar-right">
           
-          <!-- Quick Action: Export JSON -->
-          <button type="button" id="quick-export-btn" class="btn-topbar-action" title="Export Store Data (JSON)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span class="btn-text">Export JSON</span>
-          </button>
-
-          <!-- Universal Page Refresh -->
-          <button type="button" id="topbar-refresh-btn" class="theme-toggle-btn" aria-label="Refresh Page Data" title="Refresh Page Data" onclick="this.classList.add('spinning'); window.location.reload();">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
-          </button>
-
-          <!-- Day / Night Mode Toggle -->
-          <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" aria-label="Toggle Dark / Light Theme" title="Toggle Theme">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-          </button>
-
-          <!-- Live Store Quick-Link -->
-          <a href="/" target="_blank" rel="noopener noreferrer" class="btn-live-store-top" title="Open Storefront in New Tab">
-            <span>Live Store</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-          </a>
-
-          <!-- Admin Profile Pill (No 2FA mention, real name) -->
-          <div class="admin-profile-pill" title="<?= e($userEmail) ?>">
-            <div class="admin-avatar"><?= e($userInitials) ?></div>
-            <div class="admin-profile-info">
-              <div class="admin-profile-name"><?= e($userName) ?></div>
-              <div class="admin-role-badge">
-                <span class="role-dot"></span>
-                <span>Owner</span>
-              </div>
-            </div>
+          <!-- Search Icon & Expandable Search Bar -->
+          <div class="topbar-search-box" id="topbarSearchBox">
+            <form action="<?= e($adminPath) ?>/products" method="GET" class="topbar-search-form">
+              <button type="submit" class="topbar-icon-btn topbar-search-icon-btn" aria-label="Search Catalog" title="Search catalog, orders, SKU...">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </button>
+              <input type="text" name="q" placeholder="Search catalog, orders, SKU..." class="topbar-search-input" aria-label="Search Catalog and Orders">
+            </form>
           </div>
 
-          <!-- Logout Form Button -->
-          <form action="<?= e($adminPath) ?>/logout" method="POST" style="display:inline;">
-            <?= mta_csrf_field() ?>
-            <button type="submit" class="btn-topbar-logout" title="Sign Out" data-confirm="Sign out of the administration console?">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-            </button>
-          </form>
+          <!-- Quick Action: Export JSON (Icon only) -->
+          <button type="button" id="quick-export-btn" class="topbar-icon-btn" aria-label="Export Store Data (JSON)" title="Export Store Data (JSON)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </button>
+
+          <!-- Universal Page Refresh (Icon only) -->
+          <button type="button" id="topbar-refresh-btn" class="topbar-icon-btn" aria-label="Refresh Page Data" title="Refresh Page Data" onclick="this.classList.add('spinning'); window.location.reload();">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
+          </button>
 
         </div>
 

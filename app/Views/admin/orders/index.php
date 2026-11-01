@@ -50,7 +50,7 @@ $adminPath = mta_admin_path();
       <strong id="selectedCountText" style="font-size: 0.95rem; color: var(--admin-text);">0 orders selected</strong>
     </div>
     <div style="display: flex; gap: 0.5rem; align-items: center;">
-      <button type="button" id="btnBulkDelete" class="btn btn-danger btn-sm" style="background: #DC2626; color: #fff;">
+      <button type="button" id="btnBulkDelete" class="btn btn-danger btn-sm">
         🗑️ Delete Selected Orders
       </button>
       <button type="button" id="btnCancelSelection" class="btn btn-secondary btn-sm">
@@ -131,7 +131,7 @@ $adminPath = mta_admin_path();
                 </a>
                 <form action="<?= e($adminPath) ?>/orders/<?= (int)$o['id'] ?>/delete" method="POST" style="display: inline-block; margin-left: 0.25rem;" onsubmit="return mtaConfirmTwice('Are you sure you want to delete Order #<?= e($o['order_number']) ?>?', '⚠️ FINAL CONFIRMATION: Permanently delete Order #<?= e($o['order_number']) ?> from the database?');">
                   <?= mta_csrf_field() ?>
-                  <button type="submit" class="btn btn-danger btn-sm" style="background: #DC2626; color: #fff; padding: 0.35rem 0.6rem;" title="Delete Order">
+                  <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.35rem 0.6rem;" title="Delete Order">
                     🗑️
                   </button>
                 </form>

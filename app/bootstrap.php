@@ -22,7 +22,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.01-v2.8.0-og-image-whatsapp-sharing');
+    define('MTA_BUILD_VERSION', '2026.11.01-v2.9.0-admin-header-sidebar-redesign');
 }
 
 // ----------------------------------------------------------------------

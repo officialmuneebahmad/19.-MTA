@@ -37,12 +37,24 @@
   }
 
   function updateThemeIcons(isDark) {
-    const btn = document.getElementById('theme-toggle-btn');
-    if (!btn) return;
-    btn.setAttribute('aria-label', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
-    btn.innerHTML = isDark
-      ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
-      : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    const btns = document.querySelectorAll('#theme-toggle-btn, #sidebar-theme-toggle');
+    btns.forEach(function (btn) {
+      btn.setAttribute('aria-label', isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+      const label = btn.querySelector('.theme-toggle-label');
+      if (label) {
+        label.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+      }
+      const moonIcon = btn.querySelector('.icon-moon');
+      const sunIcon = btn.querySelector('.icon-sun');
+      if (moonIcon && sunIcon) {
+        moonIcon.style.display = isDark ? 'none' : 'inline-block';
+        sunIcon.style.display = isDark ? 'inline-block' : 'none';
+      } else {
+        btn.innerHTML = isDark
+          ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>' + (label ? '<span class="theme-toggle-label">Light Mode</span>' : '')
+          : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>' + (label ? '<span class="theme-toggle-label">Dark Mode</span>' : '');
+      }
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -204,18 +216,44 @@
   };
 
   // ---------------------------------------------------------------------------
+  // 3. Desktop Collapsible Sidebar (Toggle between Full & Icon-Only Mode)
+  // ---------------------------------------------------------------------------
+  const COLLAPSE_KEY = 'mta_admin_sidebar_collapsed';
+
+  function initSidebarCollapse() {
+    const toggleBtn = document.getElementById('sidebar-collapse-toggle');
+    const shell = document.querySelector('.admin-shell');
+    if (!shell) return;
+
+    // Apply saved collapse state on desktop
+    const saved = localStorage.getItem(COLLAPSE_KEY);
+    if (saved === '1' && window.innerWidth >= 1024) {
+      shell.classList.add('sidebar-collapsed');
+    }
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener('click', function () {
+        const isCollapsed = shell.classList.toggle('sidebar-collapsed');
+        try {
+          localStorage.setItem(COLLAPSE_KEY, isCollapsed ? '1' : '0');
+        } catch (e) {}
+      });
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Boot Controller
   // ---------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
     initTheme();
     initMobileSidebar();
+    initSidebarCollapse();
     initModals();
     initKpiRangeFilter();
 
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', toggleTheme);
-    }
+    document.querySelectorAll('#theme-toggle-btn, #sidebar-theme-toggle').forEach(function (btn) {
+      btn.addEventListener('click', toggleTheme);
+    });
   });
 
   window.toggleAdminTheme = toggleTheme;

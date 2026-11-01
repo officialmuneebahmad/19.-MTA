@@ -25,7 +25,7 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
       </a>
       <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/delete" method="POST" style="display:inline;" onsubmit="return mtaConfirmTwice('Are you sure you want to delete Order #<?= e($orderNumber) ?>? This action cannot be undone.', '⚠️ FINAL CONFIRMATION: This will permanently delete Order #<?= e($orderNumber) ?> and all its items. Proceed?');">
         <?= mta_csrf_field() ?>
-        <button type="submit" class="btn btn-danger btn-sm" style="background: #DC2626; color: #fff;" title="Delete this order permanently">
+        <button type="submit" class="btn btn-danger btn-sm" title="Delete this order permanently">
           🗑️ Delete
         </button>
       </form>

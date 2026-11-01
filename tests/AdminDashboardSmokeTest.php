@@ -45,8 +45,8 @@ assert_test(
     "CSS Rule: Mobile close button hidden on desktop"
 );
 assert_test(
-    str_contains($cssContent, '--admin-bg: #FAF9F5;') && str_contains($cssContent, '--admin-bg: #262624;'),
-    "CSS Rule: Day (#FAF9F5) and Night (#262624) tokens present with zero dark blue"
+    str_contains($cssContent, '--admin-bg: #FAF9F5;') && str_contains($cssContent, '--admin-bg: #212121;'),
+    "CSS Rule: Day (#FAF9F5) and Night (#212121) tokens present with zero dark blue"
 );
 assert_test(
     !str_contains($cssContent, '#000080') && !str_contains($cssContent, '#001f3f'),

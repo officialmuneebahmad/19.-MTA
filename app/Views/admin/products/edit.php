@@ -27,39 +27,39 @@ if (empty($initialImages) && !empty($existingPrimary)) {
   .admin-edit-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.75rem;
   }
   @media (min-width: 992px) {
     .admin-edit-grid {
       grid-template-columns: 2fr 1fr;
-      gap: 2rem;
+      gap: 2.25rem;
     }
   }
   .admin-panel-card {
     background: var(--admin-card-bg);
     border: 1px solid var(--admin-card-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: 14px;
+    padding: 1.85rem 2rem;
+    margin-bottom: 1.85rem;
     color: var(--admin-text);
   }
   .form-group {
-    margin-bottom: 1.35rem;
+    margin-bottom: 1.65rem;
   }
   .form-group label {
     display: block;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.885rem;
     letter-spacing: 0.015em;
     line-height: 1.5;
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.55rem;
     color: var(--admin-text);
   }
   .form-control {
     width: 100%;
-    min-height: 44px;
-    padding: 0.65rem 0.9rem;
-    border-radius: 8px;
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
     font-size: 0.95rem;
     line-height: 1.5;
     letter-spacing: 0.01em;
@@ -67,6 +67,7 @@ if (empty($initialImages) && !empty($existingPrimary)) {
     background: var(--admin-card-bg);
     color: var(--admin-text);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
   }
   .form-control:focus {
     outline: none;
@@ -74,30 +75,30 @@ if (empty($initialImages) && !empty($existingPrimary)) {
     box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.2);
   }
   .form-control[disabled] {
-    background: var(--admin-card-header-bg, rgba(255, 255, 255, 0.05));
-    opacity: 0.75;
+    background: var(--admin-surface-muted, rgba(255, 255, 255, 0.05));
+    opacity: 0.85;
     cursor: not-allowed;
     color: var(--admin-text-muted);
   }
   .form-help {
     font-size: 0.775rem;
     color: var(--admin-text-muted);
-    margin-top: 0.35rem;
+    margin-top: 0.45rem;
     line-height: 1.45;
     letter-spacing: 0.01em;
   }
   .cloudinary-gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 1rem;
-    margin-top: 1.25rem;
+    gap: 1.25rem;
+    margin-top: 1.35rem;
   }
   .cloudinary-thumb-card {
     position: relative;
     border: 2px solid var(--admin-card-border);
     border-radius: 12px;
-    padding: 8px;
-    background: var(--admin-card-header-bg, rgba(255, 255, 255, 0.03));
+    padding: 10px;
+    background: var(--admin-surface-muted, rgba(255, 255, 255, 0.03));
     transition: all 0.2s ease;
     display: flex;
     flex-direction: column;
@@ -131,15 +132,15 @@ if (empty($initialImages) && !empty($existingPrimary)) {
   }
   .thumb-actions {
     display: flex;
-    gap: 0.35rem;
-    margin-top: 0.6rem;
+    gap: 0.4rem;
+    margin-top: 0.75rem;
     width: 100%;
     justify-content: space-between;
   }
   .btn-thumb-action {
     flex: 1;
-    font-size: 0.72rem;
-    padding: 0.35rem 0.4rem;
+    font-size: 0.75rem;
+    padding: 0.45rem 0.5rem;
     border-radius: 6px;
     border: 1px solid var(--admin-card-border);
     background: var(--admin-card-bg);
@@ -150,14 +151,26 @@ if (empty($initialImages) && !empty($existingPrimary)) {
     transition: all 0.15s ease;
   }
   .btn-thumb-action:hover {
-    background: var(--admin-hover-bg, rgba(255, 255, 255, 0.1));
+    background: var(--admin-surface-2, rgba(255, 255, 255, 0.1));
   }
   .btn-thumb-delete {
     color: #EF4444;
-    border-color: rgba(239, 68, 68, 0.3);
+    border-color: #EF4444;
+    background: transparent;
   }
   .btn-thumb-delete:hover {
-    background: rgba(239, 68, 68, 0.15);
+    background: #EF4444;
+    color: #FFFFFF;
+  }
+  [data-theme="dark"] .btn-thumb-delete {
+    background-color: #3B1717 !important;
+    color: #FEE2E2 !important;
+    border: 1px solid #7F1D1D !important;
+  }
+  [data-theme="dark"] .btn-thumb-delete:hover {
+    background-color: #DC2626 !important;
+    color: #FFFFFF !important;
+    border-color: #DC2626 !important;
   }
 </style>
 
