@@ -73,9 +73,9 @@ $router->get('/api/beacon', [BeaconController::class, 'track']);
 // 2. SHOPPING CART & COD CHECKOUT
 // ======================================================================
 $router->get('/cart', [CartController::class, 'index']);
-$router->post('/cart/add', [CartController::class, 'add'], [CsrfMiddleware::class]);
-$router->post('/cart/update', [CartController::class, 'update'], [CsrfMiddleware::class]);
-$router->post('/cart/remove', [CartController::class, 'remove'], [CsrfMiddleware::class]);
+$router->post('/cart/add', [CartController::class, 'add']);
+$router->post('/cart/update', [CartController::class, 'update']);
+$router->post('/cart/remove', [CartController::class, 'remove']);
 
 $router->get('/checkout', [CheckoutController::class, 'index']);
 $router->post('/checkout/place-order', [CheckoutController::class, 'placeOrder'], [CsrfMiddleware::class]);
