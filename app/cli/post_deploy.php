@@ -92,7 +92,7 @@ try {
     if ($db->getDriver() === 'sqlite') {
         try { $db->query("REINDEX settings"); } catch (\Throwable) {}
     }
-    $existingSiteUrl = $db->fetch("SELECT id FROM settings WHERE `key` = 'site_url' LIMIT 1");
+    $existingSiteUrl = $db->fetch("SELECT `key` FROM settings WHERE `key` = 'site_url' LIMIT 1");
     if (!$existingSiteUrl) {
         $db->query("INSERT INTO settings (`key`, value, description, group_name) VALUES ('site_url', 'https://multantech.pk', 'Canonical Website URL', 'general')");
     } else {
