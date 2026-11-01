@@ -223,6 +223,7 @@ $router->get("/{$adminBase}/sync", [AdminSyncController::class, 'index'], $admin
 $router->post("/{$adminBase}/sync/test", [AdminSyncController::class, 'test'], $adminCsrfMw);
 $router->post("/{$adminBase}/sync/trigger", [AdminSyncController::class, 'trigger'], $adminCsrfMw);
 $router->post("/{$adminBase}/sync/seed-backup", [AdminSyncController::class, 'seedFallback'], $adminCsrfMw);
+$router->post("/{$adminBase}/sync/purge-and-sync", [AdminSyncController::class, 'purgeAndSync'], $adminCsrfMw);
 
 // Settings
 $router->get("/{$adminBase}/settings", [AdminSettingsController::class, 'index'], $adminMw);

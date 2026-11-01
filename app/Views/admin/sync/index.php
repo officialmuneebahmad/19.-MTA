@@ -23,8 +23,8 @@ $adminPath = mta_admin_path();
       </form>
       <form action="<?= e($adminPath) ?>/sync/seed-backup" method="POST" style="margin: 0;">
         <?= mta_csrf_field() ?>
-        <button type="submit" class="btn btn-secondary" style="background: #14B8A6; color: #fff; border-color: #0D9488;" title="Import all 991 verified products instantly into your store">
-          📥 Populate Store (991 Products Feed)
+        <button type="submit" class="btn btn-secondary" style="background: #14B8A6; color: #fff; border-color: #0D9488;" onclick="return confirm('This will clear any old or dummy products and import fresh products directly from Computer Zone API. Proceed?');" title="Purge dummy products and sync fresh from Computer Zone API">
+          🧹 Clean & Fresh Sync (Computer Zone API)
         </button>
       </form>
     </div>

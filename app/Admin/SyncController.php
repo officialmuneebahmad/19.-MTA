@@ -72,34 +72,51 @@ class SyncController
         return $resp->redirect($adminPath . '/sync');
     }
 
-    public function seedFallback(): Response
+    public function purgeAndSync(): Response
     {
         $adminPath = mta_admin_path();
         $resp = new Response();
         @set_time_limit(300);
+        @ini_set('memory_limit', '512M');
 
         try {
-            $backupFile = MTA_ROOT . '/tools/mock_supplier/products.json';
-            if (!file_exists($backupFile)) {
-                throw new \RuntimeException('Verified catalog feed file not found at: ' . $backupFile);
-            }
+            $db = Database::getInstance();
 
+            // 1. Wipe all existing products to purge any dummy/stale items
+            $db->execute("DELETE FROM products");
+            if ($db->getDriver() === 'sqlite') {
+                try { $db->execute("DELETE FROM sqlite_sequence WHERE name='products'"); } catch (\Throwable) {}
+            }
+            try { $db->execute("UPDATE categories SET product_count = 0"); } catch (\Throwable) {}
+
+            // Flush cache immediately
+            \App\Core\Cache::flush();
+
+            // 2. Fetch fresh live feed strictly from Computer Zone API
             $syncService = new SupplierSyncService();
-            $result = $syncService->run('file://' . $backupFile);
+            $result = $syncService->run();
 
             if ($result['status'] === 'success') {
+                $db->execute("UPDATE products SET is_active = 1, is_published = 1 WHERE is_active = 1");
+                $syncService->boostConsumerPopularity();
+                \App\Core\Cache::flush();
                 Session::flash(
                     'success',
-                    "Success! {$result['feed_count']} verified products imported into store catalog! All categories, brands, and stock counts have been populated."
+                    "Success! All dummy products removed. {$result['feed_count']} genuine Computer Zone products imported directly from the live API! Storefront cache cleared."
                 );
             } else {
-                Session::flash('error', "Import error: " . ($result['error_message'] ?? 'Unknown error'));
+                Session::flash('error', "Database cleared, but live Computer Zone sync returned: " . ($result['error_message'] ?? 'Unknown error'));
             }
         } catch (\Throwable $e) {
-            Session::flash('error', 'Seed exception: ' . $e->getMessage());
+            Session::flash('error', 'Purge and sync exception: ' . $e->getMessage());
         }
 
         return $resp->redirect($adminPath . '/sync');
+    }
+
+    public function seedFallback(): Response
+    {
+        return $this->purgeAndSync();
     }
 
     public function trigger(): Response
