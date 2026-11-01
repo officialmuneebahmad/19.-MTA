@@ -150,8 +150,14 @@ class Router
         $args = [];
         foreach ($ref->getParameters() as $param) {
             $name = $param->getName();
+            $snakeName = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
+            $camelName = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $name))));
             if (isset($params[$name])) {
                 $args[] = $params[$name];
+            } elseif (isset($params[$snakeName])) {
+                $args[] = $params[$snakeName];
+            } elseif (isset($params[$camelName])) {
+                $args[] = $params[$camelName];
             } elseif ($param->getType() && $param->getType()->getName() === Request::class) {
                 $args[] = $request;
             } elseif ($param->isDefaultValueAvailable()) {

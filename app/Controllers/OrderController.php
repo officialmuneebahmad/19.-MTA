@@ -16,8 +16,9 @@ use App\Services\SeoService;
 
 class OrderController
 {
-    public function summary(string $orderNumber): Response
+    public function summary(string $order_number): Response
     {
+        $orderNumber = $order_number;
         $db = Database::getInstance();
         $order = $db->fetch(
             "SELECT * FROM orders WHERE order_number = ? LIMIT 1",
