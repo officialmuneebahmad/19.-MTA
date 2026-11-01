@@ -89,7 +89,15 @@ try {
 
 // Domain Migration: Update canonical site_url to https://multantech.pk
 try {
-    $db->query("UPDATE settings SET value = 'https://multantech.pk' WHERE `key` = 'site_url'");
+    if ($db->getDriver() === 'sqlite') {
+        try { $db->query("REINDEX settings"); } catch (\Throwable) {}
+    }
+    $existingSiteUrl = $db->fetch("SELECT id FROM settings WHERE `key` = 'site_url' LIMIT 1");
+    if (!$existingSiteUrl) {
+        $db->query("INSERT INTO settings (`key`, value, description, group_name) VALUES ('site_url', 'https://multantech.pk', 'Canonical Website URL', 'general')");
+    } else {
+        $db->query("UPDATE settings SET value = 'https://multantech.pk' WHERE `key` = 'site_url'");
+    }
     $pd_log("Domain Migration: site_url confirmed set to https://multantech.pk");
 } catch (\Throwable $e) {
     $pd_log("Domain Migration error updating site_url: " . $e->getMessage());
