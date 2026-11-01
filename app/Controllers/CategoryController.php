@@ -109,6 +109,17 @@ class CategoryController
         $metaTitle = SeoService::categoryTitle($category['name']);
         $metaDescription = !empty($category['meta_description']) ? $category['meta_description'] : SeoService::categoryMetaDescription($category['name']);
 
+        $categoryOgImage = null;
+        if (!empty($pagination['data'][0])) {
+            $categoryOgImage = mta_product_image($pagination['data'][0], 800);
+            if (str_starts_with($categoryOgImage, '/')) {
+                $categoryOgImage = mta_url($categoryOgImage);
+            }
+            if (str_ends_with(strtolower(parse_url($categoryOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+                $categoryOgImage = null;
+            }
+        }
+
         $html = View::render('storefront/category', [
             'category' => $category,
             'subcategories' => $subcategories,
@@ -119,6 +130,7 @@ class CategoryController
             'meta_description' => $metaDescription,
             'canonical_url' => mta_url('/categories/' . $category['slug']), // Sort canonicalizes to clean URL
             'noindex' => !$isIndexable,
+            'og_image' => $categoryOgImage ?? mta_url('/assets/images/og-share.jpg'),
         ]);
 
         return $resp->html($html);

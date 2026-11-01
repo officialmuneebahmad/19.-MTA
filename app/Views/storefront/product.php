@@ -31,6 +31,12 @@ $badgeText = match ($status) {
 };
 
 $imageUrl = mta_product_image($product, 800);
+if (empty($og_image)) {
+    $og_image = $imageUrl;
+    if (str_starts_with($og_image, '/')) {
+        $og_image = mta_url($og_image);
+    }
+}
 $brandName = !empty($product['brand_name']) ? $product['brand_name'] : 'Authentic Brand';
 $title = $product['title'] ?? 'Tech Accessory';
 $sku = $product['sku'] ?? ('MTA-' . $product['id']);

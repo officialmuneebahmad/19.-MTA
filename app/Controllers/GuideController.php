@@ -113,6 +113,11 @@ class GuideController
 
         $metaDesc = $guide['excerpt'] ?? substr(strip_tags($guide['content_html']), 0, 155);
 
+        $guideOgImage = null;
+        if (!empty($guide['cover_image'])) {
+            $guideOgImage = mta_url($guide['cover_image']);
+        }
+
         return $resp->html(View::render('storefront/guides/show', [
             'guide' => $guide,
             'author' => $author,
@@ -121,6 +126,8 @@ class GuideController
             'meta_description' => SeoService::metaDescription($metaDesc),
             'canonical' => mta_url('/guides/' . $guide['slug']),
             'structured_data' => $structuredData,
+            'og_image' => $guideOgImage ?? mta_url('/assets/images/og-share.jpg'),
+            'og_type' => 'article',
         ]));
     }
 

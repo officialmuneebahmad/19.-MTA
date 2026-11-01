@@ -89,6 +89,23 @@ class ProductController
         $metaDescription = SeoService::productMetaDescription($product);
         $structuredData = SeoService::productSchema($product, $images);
 
+        // Resolve High-Resolution Product Image for Open Graph & WhatsApp Sharing
+        $productOgImage = mta_product_image($product, 800);
+        if (str_starts_with($productOgImage, '/')) {
+            $productOgImage = mta_url($productOgImage);
+        }
+        // WhatsApp cannot render SVG link previews; fallback to official store share image
+        if (str_ends_with(strtolower(parse_url($productOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+            $productOgImage = mta_url('/assets/images/og-share.jpg');
+        }
+
+        $availability = match((int)($product['status'] ?? 1)) {
+            1 => 'in stock',
+            2 => 'out of stock',
+            3 => 'preorder',
+            default => 'in stock',
+        };
+
         $html = View::render('storefront/product', [
             'product' => $product,
             'images' => $images,
@@ -100,6 +117,11 @@ class ProductController
             'noindex' => !$isIndexable,
             'product_id' => $product['id'],
             'structured_data' => $structuredData,
+            'og_image' => $productOgImage,
+            'og_type' => 'product',
+            'product_price' => (float)($product['sell_price'] ?? 0),
+            'product_availability' => $availability,
+            'product_brand' => $product['brand_name'] ?? 'Multan Tech Accessories',
         ]);
 
         return $resp->html($html);

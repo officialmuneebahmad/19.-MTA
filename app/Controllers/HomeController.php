@@ -164,6 +164,8 @@ class HomeController
             'meta_title' => SeoService::title('Multan Tech Accessories — Authentic Tech & Accessories in Pakistan'),
             'meta_description' => 'Shop authentic computer and mobile accessories in Pakistan. GaN fast chargers, cables, speakers & gaming gear with Cash on Delivery across Multan & all cities.',
             'canonical_url' => mta_url(),
+            'og_image' => mta_url('/assets/images/og-share.jpg'),
+            'og_type' => 'website',
             'categories' => $categories,
             'bestSellers' => $bestSellers,
             'newArrivals' => $newArrivals,

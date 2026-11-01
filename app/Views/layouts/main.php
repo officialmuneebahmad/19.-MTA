@@ -41,19 +41,63 @@
 
   <link rel="alternate" hreflang="en-PK" href="<?= e($canonical_url ?? mta_url()) ?>">
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="<?= e($og_type ?? 'website') ?>">
+  <?php
+    $defaultOgImage = mta_url('/assets/images/og-share.jpg');
+    $currentOgImage = !empty($og_image) ? (string)$og_image : $defaultOgImage;
+    if (str_starts_with($currentOgImage, '/')) {
+        $currentOgImage = mta_url($currentOgImage);
+    }
+    // WhatsApp scraper cannot parse SVG images; fallback to official raster share image
+    if (str_ends_with(strtolower(parse_url($currentOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+        $currentOgImage = $defaultOgImage;
+    }
+    $ogExt = strtolower(pathinfo(parse_url($currentOgImage, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+    $ogMime = match($ogExt) {
+        'png' => 'image/png',
+        'webp' => 'image/webp',
+        'gif' => 'image/gif',
+        default => 'image/jpeg',
+    };
+  ?>
+  <!-- Open Graph / WhatsApp / Facebook -->
   <meta property="og:site_name" content="Multan Tech Accessories">
-  <meta property="og:title" content="<?= e($meta_title ?? 'Multan Tech Accessories') ?>">
-  <meta property="og:description" content="<?= e($meta_description ?? 'Computer and mobile accessories in Pakistan.') ?>">
+  <meta property="og:type" content="<?= e($og_type ?? 'website') ?>">
+  <meta property="og:title" content="<?= e($meta_title ?? 'Multan Tech Accessories — Authentic Tech & Accessories in Pakistan') ?>">
+  <meta property="og:description" content="<?= e($meta_description ?? 'Shop authentic computer and mobile accessories in Pakistan with Cash on Delivery across Multan & nationwide.') ?>">
   <meta property="og:url" content="<?= e($canonical_url ?? mta_url()) ?>">
-  <meta property="og:image" content="<?= e($og_image ?? mta_url('/assets/images/og-banner.webp')) ?>">
+  <meta property="og:image" content="<?= e($currentOgImage) ?>">
+  <meta property="og:image:secure_url" content="<?= e($currentOgImage) ?>">
+  <meta property="og:image:type" content="<?= e($ogMime) ?>">
+  <?php if (!empty($og_image_width)): ?>
+    <meta property="og:image:width" content="<?= (int)$og_image_width ?>">
+  <?php elseif ($currentOgImage === $defaultOgImage): ?>
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="1024">
+  <?php endif; ?>
+  <?php if (!empty($og_image_height)): ?>
+    <meta property="og:image:height" content="<?= (int)$og_image_height ?>">
+  <?php endif; ?>
+  <meta property="og:image:alt" content="<?= e($meta_title ?? 'Multan Tech Accessories') ?>">
+
+  <!-- Product Rich Snippets for WhatsApp & Social Media -->
+  <?php if (!empty($og_type) && ($og_type === 'product' || $og_type === 'og:product')): ?>
+    <?php if (isset($product_price) && (float)$product_price > 0): ?>
+      <meta property="product:price:amount" content="<?= number_format((float)$product_price, 2, '.', '') ?>">
+      <meta property="product:price:currency" content="PKR">
+    <?php endif; ?>
+    <?php if (!empty($product_availability)): ?>
+      <meta property="product:availability" content="<?= e($product_availability) ?>">
+    <?php endif; ?>
+    <?php if (!empty($product_brand)): ?>
+      <meta property="product:brand" content="<?= e($product_brand) ?>">
+    <?php endif; ?>
+  <?php endif; ?>
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : 'summary_large_image' ?>">
   <meta name="twitter:title" content="<?= e($meta_title ?? 'Multan Tech Accessories') ?>">
-  <meta name="twitter:description" content="<?= e($meta_description ?? 'Computer and mobile accessories in Pakistan.') ?>">
-  <meta name="twitter:image" content="<?= e($og_image ?? mta_url('/assets/images/og-banner.webp')) ?>">
+  <meta name="twitter:description" content="<?= e($meta_description ?? 'Shop authentic computer and mobile accessories in Pakistan.') ?>">
+  <meta name="twitter:image" content="<?= e($currentOgImage) ?>">
 
   <?php if (!empty($product_id)): ?>
     <meta name="product-id" content="<?= (int)$product_id ?>">

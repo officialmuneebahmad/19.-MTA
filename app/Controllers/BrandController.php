@@ -80,6 +80,19 @@ class BrandController
         $metaTitle = SeoService::title("{$brand['name']} Accessories in Pakistan Price & Buy Online");
         $metaDescription = "Buy original {$brand['name']} accessories in Pakistan. Authentic chargers, cables, audio and computer gear with Cash on Delivery across Multan & nationwide.";
 
+        $brandOgImage = null;
+        if (!empty($brand['logo_path'])) {
+            $brandOgImage = mta_url($brand['logo_path']);
+        } elseif (!empty($pagination['data'][0])) {
+            $brandOgImage = mta_product_image($pagination['data'][0], 800);
+            if (str_starts_with($brandOgImage, '/')) {
+                $brandOgImage = mta_url($brandOgImage);
+            }
+        }
+        if ($brandOgImage && str_ends_with(strtolower(parse_url($brandOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+            $brandOgImage = null;
+        }
+
         $html = View::render('storefront/brand', [
             'brand' => $brand,
             'products' => $pagination['data'],
@@ -89,6 +102,7 @@ class BrandController
             'meta_description' => $metaDescription,
             'canonical_url' => mta_url('/brands/' . $brand['slug']),
             'noindex' => !$isIndexable,
+            'og_image' => $brandOgImage ?? mta_url('/assets/images/og-share.jpg'),
         ]);
 
         return $resp->html($html);
