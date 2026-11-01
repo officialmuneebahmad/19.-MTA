@@ -298,33 +298,56 @@ class Database
                 } catch (\Throwable) {}
             }
 
-            // Sync Brand Logos & Featured Status
+            // Sync Brand Logos & Featured Status (All 28 Brands)
             $brandLogos = [
-                'xiaomi' => '/assets/brands/xiaomi.webp',
-                'lenovo' => '/assets/brands/lenovo.svg',
-                'logitech' => '/assets/brands/logitech.svg',
-                'hp' => '/assets/brands/hp.svg',
-                'xbox' => '/assets/brands/xbox.svg',
-                'xtrike-me' => '/assets/brands/xtrike-me.webp',
-                'remax' => '/assets/brands/remax.webp',
-                'romoss' => '/assets/brands/romoss.webp',
-                'orico' => '/assets/brands/orico.webp',
-                'ldnio' => '/assets/brands/ldnio.webp',
-                'joyroom' => '/assets/brands/joyroom.webp',
-                'western-digital' => '/assets/brands/western-digital.svg',
-                'xprinter' => '/assets/brands/xprinter.webp',
-                'digital-persona' => '/assets/brands/digital-persona.webp',
-                'alfa' => '/assets/brands/alfa.webp',
-                'marvo' => '/assets/brands/marvo.webp',
-                'boya' => '/assets/brands/boya.webp',
+                'xtrike-me' => ['name' => 'XTRIKE ME', 'logo' => '/assets/brands/xtrike-me.webp'],
+                'xiaomi' => ['name' => 'Xiaomi', 'logo' => '/assets/brands/xiaomi.webp'],
+                'alfa' => ['name' => 'Alfa Network', 'logo' => '/assets/brands/alfa.webp'],
+                'digital-persona' => ['name' => 'DigitalPersona', 'logo' => '/assets/brands/digital-persona.webp'],
+                'xprinter' => ['name' => 'Xprinter', 'logo' => '/assets/brands/xprinter.webp'],
+                'baseus' => ['name' => 'Baseus', 'logo' => '/assets/brands/baseus.svg'],
+                'anker' => ['name' => 'Anker', 'logo' => '/assets/brands/anker.svg'],
+                'ugreen' => ['name' => 'Ugreen', 'logo' => '/assets/brands/ugreen.svg'],
+                'logitech' => ['name' => 'Logitech', 'logo' => '/assets/brands/logitech.svg'],
+                'faster' => ['name' => 'Faster', 'logo' => '/assets/brands/faster.svg'],
+                'havit' => ['name' => 'Havit', 'logo' => '/assets/brands/havit.svg'],
+                'kingston' => ['name' => 'Kingston', 'logo' => '/assets/brands/kingston.svg'],
+                'sandisk' => ['name' => 'SanDisk', 'logo' => '/assets/brands/sandisk.svg'],
+                'tp-link' => ['name' => 'TP-Link', 'logo' => '/assets/brands/tp-link.svg'],
+                'remax' => ['name' => 'Remax', 'logo' => '/assets/brands/remax.webp'],
+                'joyroom' => ['name' => 'Joyroom', 'logo' => '/assets/brands/joyroom.webp'],
+                'audionic' => ['name' => 'Audionic', 'logo' => '/assets/brands/audionic.svg'],
+                'dany' => ['name' => 'Dany', 'logo' => '/assets/brands/dany.svg'],
+                'fantech' => ['name' => 'Fantech', 'logo' => '/assets/brands/fantech.svg'],
+                'redragon' => ['name' => 'Redragon', 'logo' => '/assets/brands/redragon.svg'],
+                'bloody' => ['name' => 'Bloody', 'logo' => '/assets/brands/bloody.svg'],
+                'a4tech' => ['name' => 'A4Tech', 'logo' => '/assets/brands/a4tech.svg'],
+                'ronin' => ['name' => 'Ronin', 'logo' => '/assets/brands/ronin.svg'],
+                'kisonli' => ['name' => 'Kisonli', 'logo' => '/assets/brands/kisonli.svg'],
+                'micropack' => ['name' => 'Micropack', 'logo' => '/assets/brands/micropack.svg'],
+                'hp' => ['name' => 'HP', 'logo' => '/assets/brands/hp.svg'],
+                'lenovo' => ['name' => 'Lenovo', 'logo' => '/assets/brands/lenovo.svg'],
+                'western-digital' => ['name' => 'Western Digital', 'logo' => '/assets/brands/western-digital.svg'],
             ];
 
             try {
-                $this->pdo->exec("UPDATE brands SET is_featured = 0");
-                $bStmt = $this->pdo->prepare("UPDATE brands SET logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ? WHERE slug = ?");
                 $sort = 1;
-                foreach ($brandLogos as $slug => $logoPath) {
-                    $bStmt->execute([$logoPath, ucfirst(str_replace('-', ' ', $slug)) . ' official logo', $sort++, $slug]);
+                foreach ($brandLogos as $slug => $data) {
+                    $bName = $data['name'];
+                    $logoPath = $data['logo'];
+                    $bAlt = $bName . ' official logo';
+
+                    $existing = $this->pdo->prepare("SELECT id FROM brands WHERE slug = ?");
+                    $existing->execute([$slug]);
+                    $row = $existing->fetch();
+
+                    if (!$row) {
+                        $ins = $this->pdo->prepare("INSERT INTO brands (name, slug, logo_path, logo_alt, is_featured, featured_sort, is_active) VALUES (?, ?, ?, ?, 1, ?, 1)");
+                        $ins->execute([$bName, $slug, $logoPath, $bAlt, $sort++]);
+                    } else {
+                        $upd = $this->pdo->prepare("UPDATE brands SET name = ?, logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ?, is_active = 1 WHERE slug = ?");
+                        $upd->execute([$bName, $logoPath, $bAlt, $sort++, $slug]);
+                    }
                 }
             } catch (\Throwable) {}
 

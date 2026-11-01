@@ -29,7 +29,7 @@ foreach ($cartItems as $item) {
             <?php $itemTotal = $item['sell_price'] * $item['quantity']; ?>
             <tr style="border-bottom: 1px solid var(--border);">
               <td style="padding: 1.25rem; display: flex; align-items: center; gap: 1rem;">
-                <img src="<?= e($item['primary_image_url'] ?? '/assets/images/placeholder.webp') ?>" alt="<?= e($item['title']) ?>" width="60" height="60" style="object-fit: contain; border-radius: 6px; background: var(--surface-2);">
+                <img src="<?= e(mta_product_image($item, 400)) ?>" alt="<?= e($item['title']) ?>" width="60" height="60" style="object-fit: contain; border-radius: 6px; background: var(--surface-2);" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
                 <div>
                   <a href="/products/<?= e($item['slug']) ?>" style="font-weight: 600; color: var(--text); line-height: 1.4;">
                     <?= e($item['title']) ?>
@@ -73,7 +73,7 @@ foreach ($cartItems as $item) {
         <?php $itemTotal = $item['sell_price'] * $item['quantity']; ?>
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; display: flex; flex-direction: column; gap: 0.85rem;">
           <div style="display: flex; gap: 0.85rem;">
-            <img src="<?= e($item['primary_image_url'] ?? '/assets/images/placeholder.webp') ?>" alt="<?= e($item['title']) ?>" width="64" height="64" style="object-fit: contain; border-radius: 6px; background: var(--surface-2); flex-shrink: 0;">
+            <img src="<?= e(mta_product_image($item, 400)) ?>" alt="<?= e($item['title']) ?>" width="64" height="64" style="object-fit: contain; border-radius: 6px; background: var(--surface-2); flex-shrink: 0;" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
             <div style="flex: 1; min-width: 0;">
               <a href="/products/<?= e($item['slug']) ?>" style="font-weight: 700; font-size: 0.95rem; color: var(--text); line-height: 1.35; display: block; margin-bottom: 0.25rem;">
                 <?= e($item['title']) ?>

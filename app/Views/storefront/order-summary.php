@@ -3,7 +3,7 @@
  * Multan Tech Accessories — Order Thank-You & Summary View (noindex)
  */
 $orderNumber = $order['order_number'] ?? '';
-$waMsg = "Hello Multan Tech Accessories! I have placed order *{$orderNumber}* on MultanTech.store.\nName: {$order['customer_name']}\nTotal: " . mta_money($order['total']) . " (COD)\nDelivery City: {$order['city']}\nPlease confirm and dispatch.";
+$waMsg = "Hello Multan Tech Accessories! I have placed order *{$orderNumber}* on MultanTech.pk.\nName: {$order['customer_name']}\nTotal: " . mta_money($order['total']) . " (COD)\nDelivery City: {$order['city']}\nPlease confirm and dispatch.";
 $waConfirmUrl = mta_whatsapp_url('923070655275', $waMsg);
 ?>
 <div class="container" style="padding: 3rem 1.25rem; max-width: 720px; text-align: center;">

@@ -10,7 +10,7 @@
 
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     <p style="margin-bottom: 1.25rem;">
-      This Cookie Policy explains how cookies and browser storage are utilized on <strong>MultanTech.store</strong>.
+      This Cookie Policy explains how cookies and browser storage are utilized on <strong>MultanTech.pk</strong>.
     </p>
 
     <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">1. Essential Cookies</h2>

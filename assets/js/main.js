@@ -108,7 +108,7 @@ function initSearchAutocomplete() {
           } else {
             suggestionsBox.innerHTML = items.map(item => `
               <a href="/products/${item.slug}" class="search-item">
-                <img src="${item.primary_image_url || '/assets/images/placeholder.webp'}" alt="${escapeHtml(item.title)}" class="search-item-img" width="44" height="44" loading="lazy">
+                <img src="${(item.primary_image_url && !item.primary_image_url.includes('computerzone.pk')) ? item.primary_image_url : '/assets/images/placeholder.svg'}" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';" alt="${escapeHtml(item.title)}" class="search-item-img" width="44" height="44" loading="lazy">
                 <div style="flex:1;overflow:hidden;">
                   <div class="search-item-title">${escapeHtml(item.title)}</div>
                   <div class="search-item-price">Rs. ${Number(item.sell_price).toLocaleString()}</div>

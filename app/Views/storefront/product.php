@@ -30,7 +30,7 @@ $badgeText = match ($status) {
     default => 'In Stock',
 };
 
-$imageUrl = !empty($product['image_800']) ? $product['image_800'] : (!empty($product['primary_image_url']) ? $product['primary_image_url'] : '/assets/images/placeholder.webp');
+$imageUrl = mta_product_image($product, 800);
 $brandName = !empty($product['brand_name']) ? $product['brand_name'] : 'Authentic Brand';
 $title = $product['title'] ?? 'Tech Accessory';
 $sku = $product['sku'] ?? ('MTA-' . $product['id']);
@@ -52,7 +52,7 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
     <!-- Left: Image Gallery -->
     <div class="product-gallery-wrap">
       <div class="product-gallery-card">
-        <img id="main-product-img" src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" width="600" height="600" style="max-height:480px; width:auto; margin:0 auto; object-fit:contain;" fetchpriority="high">
+        <img id="main-product-img" src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" width="600" height="600" style="max-height:480px; width:auto; margin:0 auto; object-fit:contain;" fetchpriority="high" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
         
         <?php if (!empty($images) && count($images) > 1): ?>
           <div style="display:flex; gap:0.75rem; margin-top:1.5rem; justify-content:center; overflow-x:auto;">

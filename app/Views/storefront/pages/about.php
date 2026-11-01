@@ -10,7 +10,7 @@
 
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     <p style="margin-bottom: 1.25rem;">
-      Welcome to <strong>Multan Tech Accessories</strong> (operating at <code>https://multantech.store</code>). Founded and developed by <strong>Muneeb Ahmad</strong>, our e-commerce platform provides authentic computer hardware, fast charging devices, durable cables, sound systems, and gaming accessories directly to Pakistani consumers.
+      Welcome to <strong>Multan Tech Accessories</strong> (operating at <code>https://multantech.pk</code>). Founded and developed by <strong>Muneeb Ahmad</strong>, our e-commerce platform provides authentic computer hardware, fast charging devices, durable cables, sound systems, and gaming accessories directly to Pakistani consumers.
     </p>
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Our Origin & Mission</h2>

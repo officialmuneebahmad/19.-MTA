@@ -93,13 +93,13 @@ class GuideController
                 'worksFor' => [
                     '@type' => 'Organization',
                     'name' => 'Multan Tech Accessories',
-                    'url' => 'https://multantech.store',
+                    'url' => mta_url('/'),
                 ],
             ],
             'publisher' => [
                 '@type' => 'Organization',
                 'name' => 'Multan Tech Accessories',
-                'url' => 'https://multantech.store',
+                'url' => mta_url('/'),
                 'logo' => [
                     '@type' => 'ImageObject',
                     'url' => mta_url('/assets/images/logo.webp'),

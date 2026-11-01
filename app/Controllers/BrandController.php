@@ -21,11 +21,10 @@ class BrandController
         $brands = $db->fetchAll(
             "SELECT b.*, COUNT(p.id) AS product_count 
              FROM brands b
-             INNER JOIN products p ON p.brand_id = b.id AND p.is_active = 1
-             WHERE b.is_active = 1
+             LEFT JOIN products p ON p.brand_id = b.id AND p.is_active = 1
+             WHERE b.is_active = 1 AND (b.is_featured = 1 OR p.id IS NOT NULL)
              GROUP BY b.id
-             HAVING COUNT(p.id) > 0
-             ORDER BY product_count DESC, b.name ASC"
+             ORDER BY b.featured_sort ASC, product_count DESC, b.name ASC"
         );
 
         $breadcrumbs = [

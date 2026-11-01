@@ -9,7 +9,7 @@ declare(strict_types=1);
 return [
     'app' => [
         'name' => 'Multan Tech Accessories',
-        'url' => 'https://multantech.store',
+        'url' => 'https://multantech.pk',
         'key' => 'base64:YOUR_SECRET_32_BYTE_APP_KEY_HERE',
         'env' => 'production', // 'production', 'staging', 'development'
         'debug' => false,

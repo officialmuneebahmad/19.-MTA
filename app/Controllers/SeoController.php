@@ -15,7 +15,7 @@ class SeoController
 {
     public function index(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $now = date('Y-m-d');
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -46,7 +46,7 @@ class SeoController
 
     public function products(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $db = Database::getInstance();
 
         // Critical SEO Gate: Only active, publicly accessible products
@@ -80,7 +80,7 @@ class SeoController
 
     public function categories(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $db = Database::getInstance();
 
         $categories = $db->fetchAll(
@@ -113,7 +113,7 @@ class SeoController
 
     public function brands(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $db = Database::getInstance();
 
         $brands = $db->fetchAll(
@@ -146,7 +146,7 @@ class SeoController
 
     public function guides(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $db = Database::getInstance();
 
         $posts = $db->fetchAll(
@@ -179,7 +179,7 @@ class SeoController
 
     public function pages(): Response
     {
-        $baseUrl = rtrim(mta_config('app.url', 'https://multantech.store'), '/');
+        $baseUrl = mta_canonical_base_url();
         $today = date('Y-m-d');
 
         $staticPages = [

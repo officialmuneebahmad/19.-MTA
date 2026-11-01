@@ -22,7 +22,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.10.31-v2.5.0-admin-ui');
+    define('MTA_BUILD_VERSION', '2026.11.01-v2.6.0-pk-migration');
 }
 
 // ----------------------------------------------------------------------
@@ -95,14 +95,57 @@ function mta_money(float|int|string|null $amount): string {
 }
 
 // ----------------------------------------------------------------------
-// URL Helper
+// Canonical Domain & URL Helpers
 // ----------------------------------------------------------------------
+function mta_canonical_base_url(): string {
+    // 1. Explicit production/staging URL override from config if not localhost
+    $configured = mta_config('app.url');
+    if (!empty($configured) && !str_contains($configured, '127.0.0.1') && !str_contains($configured, 'localhost') && !str_contains($configured, 'multantech.store')) {
+        return rtrim((string)$configured, '/');
+    }
+    // 2. Database setting if updated to .pk
+    $dbUrl = mta_setting('site_url');
+    if (!empty($dbUrl) && !str_contains($dbUrl, 'multantech.store')) {
+        return rtrim((string)$dbUrl, '/');
+    }
+    // 3. Primary Canonical Website Domain
+    return 'https://multantech.pk';
+}
+
 function mta_url(string $path = ''): string {
-    $base = rtrim((string)mta_config('app.url', 'https://multantech.store'), '/');
+    $base = mta_canonical_base_url();
     if ($path === '' || $path === '/') {
         return $base;
     }
     return $base . '/' . ltrim($path, '/');
+}
+
+/**
+ * Robust Product Image Resolver with Guaranteed Fallback (Zero Broken Images)
+ */
+function mta_product_image(?array $product, int $size = 400): string {
+    if (!$product) {
+        return '/assets/images/placeholder.svg';
+    }
+    // 1. Derivative WebP if generated locally
+    $key = 'image_' . $size;
+    if (!empty($product[$key]) && !str_contains((string)$product[$key], 'computerzone.pk')) {
+        return (string)$product[$key];
+    }
+    if (!empty($product['image_400']) && !str_contains((string)$product['image_400'], 'computerzone.pk')) {
+        return (string)$product['image_400'];
+    }
+    // 2. Remote supplier image (only if NOT dead cdn.computerzone.pk host)
+    if (!empty($product['primary_image_url']) && !str_contains((string)$product['primary_image_url'], 'computerzone.pk')) {
+        return (string)$product['primary_image_url'];
+    }
+    // 3. Category-specific vector illustration
+    $catSlug = $product['category_slug'] ?? '';
+    if (!empty($catSlug) && file_exists(MTA_ROOT . '/assets/images/products/' . $catSlug . '.svg')) {
+        return '/assets/images/products/' . $catSlug . '.svg';
+    }
+    // 4. Guaranteed crisp vector placeholder
+    return '/assets/images/placeholder.svg';
 }
 
 function mta_admin_path(string $path = ''): string {

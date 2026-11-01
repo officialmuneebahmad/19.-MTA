@@ -10,7 +10,7 @@
 
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     <p style="margin-bottom: 1.25rem;">
-      Last Updated: October 2026. This Privacy Policy outlines how <strong>Multan Tech Accessories</strong> collects, uses, and safeguards customer data on <code>https://multantech.store</code>.
+      Last Updated: October 2026. This Privacy Policy outlines how <strong>Multan Tech Accessories</strong> collects, uses, and safeguards customer data on <code>https://multantech.pk</code>.
     </p>
 
     <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">1. Information We Collect</h2>

@@ -278,6 +278,33 @@
     </a>
   </div>
 
+  <!-- Mobile Bottom Navigation Bar (< 768px) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+    <a href="/" class="mobile-nav-item <?= ($_SERVER['REQUEST_URI'] ?? '/') === '/' ? 'active' : '' ?>">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </a>
+    <a href="/categories" class="mobile-nav-item <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/categories') ? 'active' : '' ?>">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span>Categories</span>
+    </a>
+    <a href="/brands" class="mobile-nav-item <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/brands') ? 'active' : '' ?>">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+      <span>Brands</span>
+    </a>
+    <a href="/cart" class="mobile-nav-item <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/cart') ? 'active' : '' ?>">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+      <span>Cart</span>
+      <?php if ($cartCount > 0): ?>
+        <span class="mobile-nav-badge" id="bottom-nav-cart-count"><?= $cartCount ?></span>
+      <?php endif; ?>
+    </a>
+    <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories! I want to inquire about a product.')) ?>" target="_blank" rel="noopener noreferrer" class="mobile-nav-item" style="color:var(--whatsapp);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+      <span>WhatsApp</span>
+    </a>
+  </nav>
+
   <!-- Mobile Off-Canvas Drawer (Side Menu) -->
   <div class="mobile-drawer-backdrop" id="mobile-drawer-backdrop"></div>
   <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">

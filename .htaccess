@@ -1,6 +1,6 @@
 # ============================================================
 # Multan Tech Accessories — Production Apache Configuration
-# https://multantech.store
+# https://multantech.pk
 # ============================================================
 
 # Disable Directory Browsing (commented out for shared host compatibility)
@@ -33,14 +33,30 @@ AddDefaultCharset UTF-8
     RewriteRule ^app/ - [F,L]
     RewriteRule ^storage/ - [F,L]
 
-    # Force HTTPS and non-www (Reverse Proxy, Cloudflare & Host Safe)
+    # ------------------------------------------------------------
+    # 1. Canonical Domain Migration: multantech.store -> multantech.pk
+    # Redirect all traffic from old domain (HTTP/HTTPS, www/non-www)
+    # directly to https://multantech.pk preserving URI path and query.
+    # ------------------------------------------------------------
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+    RewriteRule ^(.*)$ https://multantech.pk/$1 [R=301,L]
+
+    # ------------------------------------------------------------
+    # 2. Canonical Hostname: www.multantech.pk -> https://multantech.pk
+    # Strip www on new primary domain.
+    # ------------------------------------------------------------
+    RewriteCond %{HTTP_HOST} ^www\.multantech\.pk$ [NC]
+    RewriteRule ^(.*)$ https://multantech.pk/$1 [R=301,L]
+
+    # ------------------------------------------------------------
+    # 3. Canonical HTTPS Enforcement for multantech.pk
+    # Enforces HTTPS (Reverse-Proxy, Cloudflare & StackCDN safe)
+    # ------------------------------------------------------------
+    RewriteCond %{HTTP_HOST} ^multantech\.pk$ [NC]
     RewriteCond %{HTTPS} !on
     RewriteCond %{HTTP:X-Forwarded-Proto} !https
     RewriteCond %{HTTP:CF-Visitor} !'"scheme":"https"'
-    RewriteRule ^(.*)$ https://multantech.store/$1 [L,R=301]
-
-    RewriteCond %{HTTP_HOST} ^www\.multantech\.store$ [NC]
-    RewriteRule ^(.*)$ https://multantech.store/$1 [L,R=301]
+    RewriteRule ^(.*)$ https://multantech.pk/$1 [R=301,L]
 
     # Strip Trailing Slashes (except directories)
     RewriteCond %{REQUEST_FILENAME} !-d

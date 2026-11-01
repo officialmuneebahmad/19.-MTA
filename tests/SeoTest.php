@@ -51,18 +51,24 @@ class SeoTest
 
     private function testSitemapXmlGeneration(): void
     {
-        echo "Testing Sitemaps: Index XML & sub-sitemaps output valid XML... ";
+        echo "Testing Sitemaps: Index XML & sub-sitemaps output valid XML with canonical .pk domain... ";
         $controller = new SeoController();
         
         $indexResp = $controller->index();
         assert($indexResp->getStatusCode() === 200);
         assert(str_contains($indexResp->getBody(), '<sitemapindex'));
-        assert(str_contains($indexResp->getBody(), 'sitemap-products-1.xml'));
+        assert(str_contains($indexResp->getBody(), 'https://multantech.pk/sitemap-products-1.xml'));
+        assert(str_contains($indexResp->getBody(), 'https://multantech.pk/sitemap-categories.xml'));
+        assert(str_contains($indexResp->getBody(), 'https://multantech.pk/sitemap-brands.xml'));
+        assert(str_contains($indexResp->getBody(), 'https://multantech.pk/sitemap-guides.xml'));
+        assert(str_contains($indexResp->getBody(), 'https://multantech.pk/sitemap-pages.xml'));
+        assert(!str_contains($indexResp->getBody(), 'multantech.store'), "Sitemap index must not contain .store references");
 
         $catResp = $controller->categories();
         assert($catResp->getStatusCode() === 200);
         assert(str_contains($catResp->getBody(), '<urlset'));
-        assert(str_contains($catResp->getBody(), '<loc>'));
+        assert(str_contains($catResp->getBody(), 'https://multantech.pk/categories/'));
+        assert(!str_contains($catResp->getBody(), 'multantech.store'), "Category sitemap must not contain .store references");
 
         echo "PASSED\n";
     }

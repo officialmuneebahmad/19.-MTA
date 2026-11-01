@@ -1,6 +1,6 @@
 <?php
 /**
- * Multan Tech Accessories (https://multantech.store)
+ * Multan Tech Accessories (https://multantech.pk)
  * High-Performance Production Front Controller
  * Founded & Developed by Muneeb Ahmad
  */

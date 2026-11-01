@@ -21,7 +21,7 @@ $badgeText = match ($status) {
     default => 'In Stock',
 };
 
-$imageUrl = !empty($product['image_400']) ? $product['image_400'] : (!empty($product['primary_image_url']) ? $product['primary_image_url'] : '/assets/images/placeholder.webp');
+$imageUrl = mta_product_image($product, 400);
 $productUrl = '/products/' . e($product['slug'] ?? '');
 $cleanProductUrl = mta_url('/products/' . ($product['slug'] ?? ''));
 $brandName = !empty($product['brand_name']) ? $product['brand_name'] : (!empty($product['brand_title']) ? $product['brand_title'] : 'Tech Gear');
@@ -38,7 +38,7 @@ $showWaOnCards = (mta_setting('show_wa_on_product_cards', '0') === '1');
       <span class="badge <?= $badgeClass ?>"><?= $badgeText ?></span>
     </div>
     <a href="<?= $productUrl ?>" tabindex="-1" aria-hidden="true">
-      <img src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" class="product-img" loading="lazy" width="300" height="300">
+      <img src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" class="product-img" loading="lazy" width="300" height="300" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
     </a>
   </div>
 

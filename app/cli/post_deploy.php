@@ -87,39 +87,68 @@ try {
     $pd_log("Task 1 error setting require_2fa: " . $e->getMessage());
 }
 
-// Task 3: Sync Verified Brand Logos
+// Domain Migration: Update canonical site_url to https://multantech.pk
+try {
+    $db->query("UPDATE settings SET value = 'https://multantech.pk' WHERE `key` = 'site_url'");
+    $pd_log("Domain Migration: site_url confirmed set to https://multantech.pk");
+} catch (\Throwable $e) {
+    $pd_log("Domain Migration error updating site_url: " . $e->getMessage());
+}
+
+// Task 3: Sync Verified Brand Logos (including the 5 uploaded assets)
 $verifiedLogos = [
-    'xiaomi' => '/assets/brands/xiaomi.webp',
-    'lenovo' => '/assets/brands/lenovo.svg',
-    'logitech' => '/assets/brands/logitech.svg',
-    'hp' => '/assets/brands/hp.svg',
-    'xbox' => '/assets/brands/xbox.svg',
-    'xtrike-me' => '/assets/brands/xtrike-me.webp',
-    'remax' => '/assets/brands/remax.webp',
-    'romoss' => '/assets/brands/romoss.webp',
-    'orico' => '/assets/brands/orico.webp',
-    'ldnio' => '/assets/brands/ldnio.webp',
-    'joyroom' => '/assets/brands/joyroom.webp',
-    'western-digital' => '/assets/brands/western-digital.svg',
-    'xprinter' => '/assets/brands/xprinter.webp',
-    'digital-persona' => '/assets/brands/digital-persona.webp',
-    'alfa' => '/assets/brands/alfa.webp',
-    'marvo' => '/assets/brands/marvo.webp',
-    'boya' => '/assets/brands/boya.webp',
+    // 5 requested brands from uploaded assets (white background)
+    'xtrike-me' => ['name' => 'XTRIKE ME', 'logo' => '/assets/brands/xtrike-me.webp'],
+    'xiaomi' => ['name' => 'Xiaomi', 'logo' => '/assets/brands/xiaomi.webp'],
+    'alfa' => ['name' => 'Alfa Network', 'logo' => '/assets/brands/alfa.webp'],
+    'digital-persona' => ['name' => 'DigitalPersona', 'logo' => '/assets/brands/digital-persona.webp'],
+    'xprinter' => ['name' => 'Xprinter', 'logo' => '/assets/brands/xprinter.webp'],
+    // Verified catalog brands
+    'baseus' => ['name' => 'Baseus', 'logo' => '/assets/brands/baseus.svg'],
+    'anker' => ['name' => 'Anker', 'logo' => '/assets/brands/anker.svg'],
+    'ugreen' => ['name' => 'Ugreen', 'logo' => '/assets/brands/ugreen.svg'],
+    'logitech' => ['name' => 'Logitech', 'logo' => '/assets/brands/logitech.svg'],
+    'faster' => ['name' => 'Faster', 'logo' => '/assets/brands/faster.svg'],
+    'havit' => ['name' => 'Havit', 'logo' => '/assets/brands/havit.svg'],
+    'kingston' => ['name' => 'Kingston', 'logo' => '/assets/brands/kingston.svg'],
+    'sandisk' => ['name' => 'SanDisk', 'logo' => '/assets/brands/sandisk.svg'],
+    'tp-link' => ['name' => 'TP-Link', 'logo' => '/assets/brands/tp-link.svg'],
+    'remax' => ['name' => 'Remax', 'logo' => '/assets/brands/remax.webp'],
+    'joyroom' => ['name' => 'Joyroom', 'logo' => '/assets/brands/joyroom.webp'],
+    'audionic' => ['name' => 'Audionic', 'logo' => '/assets/brands/audionic.svg'],
+    'dany' => ['name' => 'Dany', 'logo' => '/assets/brands/dany.svg'],
+    'fantech' => ['name' => 'Fantech', 'logo' => '/assets/brands/fantech.svg'],
+    'redragon' => ['name' => 'Redragon', 'logo' => '/assets/brands/redragon.svg'],
+    'bloody' => ['name' => 'Bloody', 'logo' => '/assets/brands/bloody.svg'],
+    'a4tech' => ['name' => 'A4Tech', 'logo' => '/assets/brands/a4tech.svg'],
+    'ronin' => ['name' => 'Ronin', 'logo' => '/assets/brands/ronin.svg'],
+    'kisonli' => ['name' => 'Kisonli', 'logo' => '/assets/brands/kisonli.svg'],
+    'micropack' => ['name' => 'Micropack', 'logo' => '/assets/brands/micropack.svg'],
+    'hp' => ['name' => 'HP', 'logo' => '/assets/brands/hp.svg'],
+    'lenovo' => ['name' => 'Lenovo', 'logo' => '/assets/brands/lenovo.svg'],
+    'western-digital' => ['name' => 'Western Digital', 'logo' => '/assets/brands/western-digital.svg'],
 ];
 
 try {
     $db->query("UPDATE brands SET is_featured = 0");
     $bSort = 1;
-    foreach ($verifiedLogos as $bSlug => $bLogo) {
-        $db->query("UPDATE brands SET logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ? WHERE slug = ?", [
-            $bLogo,
-            ucwords(str_replace('-', ' ', $bSlug)) . ' official logo',
-            $bSort++,
-            $bSlug
-        ]);
+    foreach ($verifiedLogos as $bSlug => $bData) {
+        $bName = $bData['name'];
+        $bLogo = $bData['logo'];
+        $existing = $db->fetch("SELECT id FROM brands WHERE slug = ?", [$bSlug]);
+        if (!$existing) {
+            $db->query(
+                "INSERT INTO brands (name, slug, logo_path, logo_alt, is_featured, featured_sort, is_active) VALUES (?, ?, ?, ?, 1, ?, 1)",
+                [$bName, $bSlug, $bLogo, $bName . ' official logo', $bSort++]
+            );
+        } else {
+            $db->query(
+                "UPDATE brands SET name = ?, logo_path = ?, logo_alt = ?, is_featured = 1, featured_sort = ?, is_active = 1 WHERE slug = ?",
+                [$bName, $bLogo, $bName . ' official logo', $bSort++, $bSlug]
+            );
+        }
     }
-    $pd_log("Task 3: Synced 17 verified brand logos in database.");
+    $pd_log("Task 3: Synced " . count($verifiedLogos) . " verified brand logos in database.");
 } catch (\Throwable $e) {
     $pd_log("Task 3 error updating brand logos: " . $e->getMessage());
 }

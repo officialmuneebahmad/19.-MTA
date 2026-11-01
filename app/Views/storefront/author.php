@@ -15,7 +15,7 @@
       <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-strong); letter-spacing: 0.5px;">Founder & Full-Stack Developer</span>
       <h1 style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0.75rem;">Muneeb Ahmad</h1>
       <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem;">
-        Founder, lead architect, and developer of <strong>Multan Tech Accessories</strong> (MultanTech.store). Based in Multan, Punjab, Pakistan, Muneeb is dedicated to making authentic computer hardware, fast charging gear, and durable mobile accessories accessible and transparent for Pakistani consumers.
+        Founder, lead architect, and developer of <strong>Multan Tech Accessories</strong> (MultanTech.pk). Based in Multan, Punjab, Pakistan, Muneeb is dedicated to making authentic computer hardware, fast charging gear, and durable mobile accessories accessible and transparent for Pakistani consumers.
       </p>
       <div style="font-size: 0.85rem; color: var(--text); line-height: 1.6;">
         <div><strong>Store Headquarters:</strong> Al-Quresh Phase 3, Sher Shah Road, Multan, Pakistan</div>

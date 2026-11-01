@@ -10,7 +10,7 @@
 
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     <p style="margin-bottom: 1.25rem;">
-      By accessing or placing an order through <strong>MultanTech.store</strong>, you agree to comply with the following operating terms and business practices.
+      By accessing or placing an order through <strong>MultanTech.pk</strong>, you agree to comply with the following operating terms and business practices.
     </p>
 
     <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">1. Ordering & Order Confirmation</h2>

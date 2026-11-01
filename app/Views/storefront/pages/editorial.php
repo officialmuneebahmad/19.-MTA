@@ -11,7 +11,7 @@
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     
     <p style="margin-bottom: 1.25rem;">
-      Transparency is fundamental to our business philosophy. This document explains how product information, technical specifications, and retail pricing are updated on <strong>MultanTech.store</strong>.
+      Transparency is fundamental to our business philosophy. This document explains how product information, technical specifications, and retail pricing are updated on <strong>MultanTech.pk</strong>.
     </p>
 
     <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">1. Catalog & Stock Synchronization</h2>
