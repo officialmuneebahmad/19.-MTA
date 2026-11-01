@@ -103,6 +103,26 @@ try {
     $pd_log("Domain Migration error updating site_url: " . $e->getMessage());
 }
 
+// Supplier API Settings Migration: ensure registered token and raw header format
+try {
+    $supplierSettings = [
+        'supplier_token' => ['f1f3b0294c3f7c2328e41d42e59d2877', 'Supplier API Access Token', 'supplier'],
+        'supplier_api_url' => ['https://api.computerzone.pk/products', 'Supplier API Endpoint URL', 'supplier'],
+        'supplier_auth_header_format' => ['raw', 'Supplier Auth Header Format (raw/bearer)', 'supplier'],
+    ];
+    foreach ($supplierSettings as $sKey => [$sVal, $sDesc, $sGroup]) {
+        $existing = $db->fetch("SELECT `key` FROM settings WHERE `key` = ? LIMIT 1", [$sKey]);
+        if (!$existing) {
+            $db->execute("INSERT INTO settings (`key`, value, description, group_name) VALUES (?, ?, ?, ?)", [$sKey, $sVal, $sDesc, $sGroup]);
+        } else {
+            $db->execute("UPDATE settings SET value = ? WHERE `key` = ?", [$sVal, $sKey]);
+        }
+    }
+    $pd_log("Supplier API: Settings confirmed set to registered token f1f3b029...2877.");
+} catch (\Throwable $e) {
+    $pd_log("Supplier API settings error: " . $e->getMessage());
+}
+
 // Domain Migration: Ensure robots.txt points to https://multantech.pk/sitemap.xml
 try {
     $robotsPath = dirname($appDir) . '/robots.txt';
