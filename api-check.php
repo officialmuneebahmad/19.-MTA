@@ -157,6 +157,43 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         $rows = $db->fetchAll("SELECT `key`, `value` FROM settings WHERE `key` LIKE 'supplier%' OR `key` = 'site_url'");
         echo json_encode($rows, JSON_PRETTY_PRINT);
         exit;
+    } elseif ($_POST['action'] === 'test_order_insert_json') {
+        header('Content-Type: application/json');
+        try {
+            $db->beginTransaction();
+            $cols = $db->fetchAll("PRAGMA table_info(orders)");
+            $db->execute(
+                "INSERT INTO orders (
+                    order_number, customer_name, customer_phone, city, shipping_address, customer_notes,
+                    subtotal, delivery_charge, discount, total, payment_method, status,
+                    is_second_order, ip_address, user_agent, created_at
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0.00, ?, 'cod', 'pending', ?, ?, ?, ?)",
+                [
+                    'TEST-' . time(),
+                    'Test Diagnostics',
+                    '03001234567',
+                    'Multan',
+                    'Test Address Diagnostics',
+                    null,
+                    1000.0,
+                    100.0,
+                    1100.0,
+                    0,
+                    '127.0.0.1',
+                    'Test UA',
+                    date('Y-m-d H:i:s'),
+                ]
+            );
+            $insertedId = (int)$db->lastInsertId();
+            $db->rollBack();
+            echo json_encode(['success' => true, 'inserted_id' => $insertedId, 'columns' => $cols], JSON_PRETTY_PRINT);
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            echo json_encode(['success' => false, 'error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], JSON_PRETTY_PRINT);
+        }
+        exit;
     }
 }
 
