@@ -95,6 +95,21 @@ try {
     $pd_log("Domain Migration error updating site_url: " . $e->getMessage());
 }
 
+// Domain Migration: Ensure robots.txt points to https://multantech.pk/sitemap.xml
+try {
+    $robotsPath = dirname($appDir) . '/robots.txt';
+    if (file_exists($robotsPath)) {
+        $robotsContent = file_get_contents($robotsPath);
+        if (str_contains($robotsContent, 'multantech.store')) {
+            $updatedRobots = str_replace('https://multantech.store/sitemap.xml', 'https://multantech.pk/sitemap.xml', $robotsContent);
+            file_put_contents($robotsPath, $updatedRobots);
+            $pd_log("Domain Migration: robots.txt updated to https://multantech.pk/sitemap.xml");
+        }
+    }
+} catch (\Throwable $e) {
+    $pd_log("Domain Migration error checking robots.txt: " . $e->getMessage());
+}
+
 // Task 3: Sync Verified Brand Logos (including the 5 uploaded assets)
 $verifiedLogos = [
     // 5 requested brands from uploaded assets (white background)
