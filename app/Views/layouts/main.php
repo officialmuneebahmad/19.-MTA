@@ -103,23 +103,6 @@
 </head>
 <body>
 
-  <!-- Admin Storefront Toolbar (Shown ONLY to logged-in administrator, never cached in full-page cache) -->
-  <?php if (\App\Core\Session::isAdmin()): ?>
-    <div style="background:#0F172A; color:#F8FAFC; padding:0.5rem 1rem; font-size:0.8rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:9999; border-bottom:1px solid #334155; font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
-      <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
-        <span style="background:#FF6B2C; color:#FFFFFF; font-weight:800; font-size:0.7rem; padding:0.15rem 0.5rem; border-radius:4px; text-transform:uppercase;">Admin</span>
-        <span>Logged in as <strong><?= e(\App\Core\Session::get('admin_user')['email'] ?? 'Administrator') ?></strong></span>
-        <?php if (!empty($product['id'])): ?>
-          <a href="<?= e(mta_admin_path('/products/' . (int)$product['id'] . '/edit')) ?>" target="_blank" rel="noopener noreferrer" style="color:#38BDF8; font-weight:600; text-decoration:underline;">
-            Edit this product in Admin &rarr;
-          </a>
-        <?php endif; ?>
-      </div>
-      <a href="<?= e(mta_admin_path()) ?>" target="_blank" rel="noopener noreferrer" style="background:#1E293B; color:#F8FAFC; padding:0.3rem 0.75rem; border-radius:6px; font-weight:600; border:1px solid #475569; text-decoration:none;">
-        Open Admin Console (New Tab) &rarr;
-      </a>
-    </div>
-  <?php endif; ?>
 
   <!-- Top Announcement Strip (Exact default text, Marquee) -->
   <div class="announcement-bar" role="region" aria-label="Store Announcement">

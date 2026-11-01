@@ -147,6 +147,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             $message = "Error running git pull: " . $e->getMessage();
             $messageType = 'error';
         }
+    } elseif ($_POST['action'] === 'test_connection_json') {
+        header('Content-Type: application/json');
+        $syncService = new SupplierSyncService();
+        echo json_encode($syncService->testConnection(), JSON_PRETTY_PRINT);
+        exit;
+    } elseif ($_POST['action'] === 'get_settings_json') {
+        header('Content-Type: application/json');
+        $rows = $db->fetchAll("SELECT `key`, `value` FROM settings WHERE `key` LIKE 'supplier%' OR `key` = 'site_url'");
+        echo json_encode($rows, JSON_PRETTY_PRINT);
+        exit;
     }
 }
 
