@@ -114,11 +114,25 @@ class ProductController
 
         $categories = $db->fetchAll("SELECT id, name FROM categories ORDER BY name ASC");
         $brands = $db->fetchAll("SELECT id, name FROM brands ORDER BY name ASC");
+        $productImages = $db->fetchAll(
+            "SELECT * FROM product_images WHERE product_id = ? ORDER BY is_primary DESC, sort_order ASC, id ASC",
+            [$id]
+        );
+        if (empty($productImages) && !empty($product['primary_image_url'])) {
+            $productImages = [
+                [
+                    'url' => $product['primary_image_url'],
+                    'is_primary' => 1,
+                    'alt_text' => $product['title'],
+                ]
+            ];
+        }
 
         $content = View::render('admin/products/edit', [
             'product' => $product,
             'categories' => $categories,
             'brands' => $brands,
+            'productImages' => $productImages,
         ]);
 
         return $resp->html(View::render('layouts/admin', [
@@ -155,6 +169,14 @@ class ProductController
         $metaTitle = trim((string)$request->post('meta_title', ''));
         $metaDesc = trim((string)$request->post('meta_description', ''));
         $descHtml = trim((string)$request->post('description_html', ''));
+        $primaryImageUrl = trim((string)$request->post('primary_image_url', $product['primary_image_url'] ?? ''));
+        $galleryImagesRaw = $request->post('gallery_images', []);
+        $galleryImages = is_array($galleryImagesRaw) ? $galleryImagesRaw : [];
+
+        // If gallery has images but primary is empty, use first
+        if (empty($primaryImageUrl) && !empty($galleryImages)) {
+            $primaryImageUrl = trim((string)$galleryImages[0]);
+        }
 
         // If override is set, auto-snap to next value ending in 99
         $notice = "Product #{$id} updated successfully.";
@@ -170,7 +192,8 @@ class ProductController
             "UPDATE products SET 
                 title = ?, category_id = ?, brand_id = ?, sell_price = ?, price_override = ?,
                 stock_status = ?, content_state = ?, is_active = ?, pinned = ?,
-                meta_title = ?, meta_description = ?, description_html = ?, updated_at = ?
+                meta_title = ?, meta_description = ?, description_html = ?,
+                primary_image_url = ?, updated_at = ?
              WHERE id = ?",
             [
                 $title,
@@ -185,10 +208,51 @@ class ProductController
                 $metaTitle ?: null,
                 $metaDesc ?: null,
                 $descHtml ?: null,
+                $primaryImageUrl ?: null,
                 date('Y-m-d H:i:s'),
                 $id,
             ]
         );
+
+        // Sync product_images gallery
+        try {
+            $db->execute("DELETE FROM product_images WHERE product_id = ?", [$id]);
+            
+            $allImages = [];
+            if (!empty($primaryImageUrl)) {
+                $allImages[] = $primaryImageUrl;
+            }
+            foreach ($galleryImages as $gUrl) {
+                $gUrl = trim((string)$gUrl);
+                if (!empty($gUrl) && !in_array($gUrl, $allImages, true)) {
+                    $allImages[] = $gUrl;
+                }
+            }
+
+            $sortOrder = 0;
+            foreach ($allImages as $imgUrl) {
+                $isPrimary = ($imgUrl === $primaryImageUrl) ? 1 : 0;
+                $db->execute(
+                    "INSERT INTO product_images (product_id, url, alt_text, sort_order, is_primary, created_at)
+                     VALUES (?, ?, ?, ?, ?, ?)",
+                    [
+                        $id,
+                        $imgUrl,
+                        $title,
+                        $sortOrder++,
+                        $isPrimary,
+                        date('Y-m-d H:i:s'),
+                    ]
+                );
+            }
+        } catch (\Throwable $imgErr) {
+            error_log("Failed to sync product_images: " . $imgErr->getMessage());
+        }
+
+        // Flush full-page cache
+        try {
+            \App\Core\Cache::flush();
+        } catch (\Throwable) {}
 
         Session::flash('success', "Product #{$id} updated successfully.");
         return $resp->redirect($adminPath . '/products');

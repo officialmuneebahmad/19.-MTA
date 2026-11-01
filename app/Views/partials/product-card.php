@@ -38,7 +38,7 @@ $showWaOnCards = (mta_setting('show_wa_on_product_cards', '0') === '1');
       <span class="badge <?= $badgeClass ?>"><?= $badgeText ?></span>
     </div>
     <a href="<?= $productUrl ?>" tabindex="-1" aria-hidden="true">
-      <img src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" class="product-img" loading="lazy" width="300" height="300" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
+      <img src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" class="product-img" loading="lazy" width="300" height="300" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
     </a>
   </div>
 

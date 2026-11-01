@@ -161,17 +161,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         header('Content-Type: application/json');
         try {
             $db->beginTransaction();
-            $cols = $db->fetchAll("PRAGMA table_info(orders)");
+            $colsOrders = $db->fetchAll("PRAGMA table_info(orders)");
+            $colsItems = $db->fetchAll("PRAGMA table_info(order_items)");
             $db->execute(
                 "INSERT INTO orders (
-                    order_number, customer_name, customer_phone, city, shipping_address, customer_notes,
+                    order_number, customer_name, customer_phone, customer_email, city, shipping_address, customer_notes,
                     subtotal, delivery_charge, discount, total, payment_method, status,
                     is_second_order, ip_address, user_agent, created_at
-                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0.00, ?, 'cod', 'pending', ?, ?, ?, ?)",
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0.00, ?, 'cod', 'pending', ?, ?, ?, ?)",
                 [
                     'TEST-' . time(),
                     'Test Diagnostics',
                     '03001234567',
+                    'test@example.com',
                     'Multan',
                     'Test Address Diagnostics',
                     null,
@@ -185,8 +187,23 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
                 ]
             );
             $insertedId = (int)$db->lastInsertId();
+
+            $db->execute(
+                "INSERT INTO order_items (
+                    order_id, product_id, product_title, product_sku, unit_price, quantity, total_price
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [
+                    $insertedId,
+                    1,
+                    'Test Product Title',
+                    'SKU-TEST',
+                    1000.0,
+                    1,
+                    1000.0,
+                ]
+            );
             $db->rollBack();
-            echo json_encode(['success' => true, 'inserted_id' => $insertedId, 'columns' => $cols], JSON_PRETTY_PRINT);
+            echo json_encode(['success' => true, 'inserted_id' => $insertedId, 'columns_orders' => $colsOrders, 'columns_items' => $colsItems], JSON_PRETTY_PRINT);
         } catch (\Throwable $e) {
             if ($db->inTransaction()) {
                 $db->rollBack();

@@ -129,15 +129,19 @@ function mta_product_image(?array $product, int $size = 400): string {
     }
     // 1. Derivative WebP if generated locally
     $key = 'image_' . $size;
-    if (!empty($product[$key]) && !str_contains((string)$product[$key], 'computerzone.pk')) {
+    if (!empty($product[$key])) {
         return (string)$product[$key];
     }
-    if (!empty($product['image_400']) && !str_contains((string)$product['image_400'], 'computerzone.pk')) {
+    if (!empty($product['image_400'])) {
         return (string)$product['image_400'];
     }
-    // 2. Remote supplier image (only if NOT dead cdn.computerzone.pk host)
-    if (!empty($product['primary_image_url']) && !str_contains((string)$product['primary_image_url'], 'computerzone.pk')) {
-        return (string)$product['primary_image_url'];
+    // 2. Cloudinary or live supplier image (rewrite dead cdn subdomain to store subdomain)
+    if (!empty($product['primary_image_url'])) {
+        $url = trim((string)$product['primary_image_url']);
+        if (str_contains($url, 'cdn.computerzone.pk/products/')) {
+            $url = str_replace('cdn.computerzone.pk/products/', 'store.computerzone.pk/images/pro_images/', $url);
+        }
+        return $url;
     }
     // 3. Category-specific vector illustration
     $catSlug = $product['category_slug'] ?? '';

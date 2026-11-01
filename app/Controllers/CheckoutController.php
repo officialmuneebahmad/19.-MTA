@@ -119,6 +119,7 @@ class CheckoutController
         // 3. Form fields
         $customerName = trim((string)$request->post('customer_name', ''));
         $rawPhone = trim((string)$request->post('customer_phone', ''));
+        $customerEmail = trim((string)$request->post('customer_email', ''));
         $city = trim((string)$request->post('city', 'Multan'));
         $address = trim((string)$request->post('shipping_address', ''));
         $notes = trim((string)$request->post('order_notes', ''));
@@ -194,14 +195,15 @@ class CheckoutController
         try {
             $db->execute(
                 "INSERT INTO orders (
-                    order_number, customer_name, customer_phone, city, shipping_address, customer_notes,
+                    order_number, customer_name, customer_phone, customer_email, city, shipping_address, customer_notes,
                     subtotal, delivery_charge, discount, total, payment_method, status,
-                    is_second_order, ip_address, user_agent, created_at
-                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0.00, ?, 'cod', 'pending', ?, ?, ?, ?)",
+                    is_second_order, ip_address, user_agent, advance_amount, cod_due, created_at
+                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0.00, ?, 'cod', 'pending', ?, ?, ?, 0.00, ?, ?)",
                 [
                     $orderNumber,
                     $customerName,
                     $phoneData['local'],
+                    $customerEmail ?: null,
                     $city,
                     $address,
                     $notes ?: null,
@@ -210,7 +212,8 @@ class CheckoutController
                     $grandTotal,
                     $delivery['is_second_order'] ? 1 : 0,
                     $clientIp,
-                    substr($request->header('User-Agent') ?? '', 0, 500),
+                    substr($request->userAgent() ?: '', 0, 500),
+                    $grandTotal,
                     date('Y-m-d H:i:s'),
                 ]
             );
@@ -236,8 +239,11 @@ class CheckoutController
 
             $db->commit();
         } catch (\Throwable $e) {
-            $db->rollBack();
-            $session->setFlash('error', 'We encountered an issue processing your order. Please try again.');
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            error_log("Order checkout failed: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+            $session->setFlash('error', 'We encountered an issue processing your order: ' . $e->getMessage() . '. Please try again.');
             return $resp->redirect('/checkout');
         }
 

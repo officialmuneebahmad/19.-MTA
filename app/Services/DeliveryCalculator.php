@@ -47,8 +47,13 @@ class DeliveryCalculator
             }
         }
 
-        // Rule 1: Free above threshold
-        if ($subtotal >= $freeThreshold && $subtotal > 0) {
+        // Rule 1: Free above threshold (if enabled / threshold > 0)
+        $freeThresholdSetting = mta_setting('delivery_free_threshold');
+        $freeThreshold = ($freeThresholdSetting !== null && $freeThresholdSetting !== '')
+            ? (float)$freeThresholdSetting
+            : (float)mta_config('delivery.free_threshold', 5000);
+
+        if ($freeThreshold > 0 && $subtotal >= $freeThreshold && $subtotal > 0) {
             return [
                 'charge' => 0.00,
                 'reason' => 'Free delivery on orders above ' . mta_money($freeThreshold),

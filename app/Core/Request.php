@@ -126,6 +126,12 @@ class Request
         return $this->server['HTTP_USER_AGENT'] ?? '';
     }
 
+    public function header(string $key, mixed $default = null): mixed
+    {
+        $normalized = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+        return $this->server[$normalized] ?? $this->server[$key] ?? $default;
+    }
+
     public function isAjax(): bool
     {
         return (isset($this->server['HTTP_X_REQUESTED_WITH']) && strtolower($this->server['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')

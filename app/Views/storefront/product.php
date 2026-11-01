@@ -52,13 +52,13 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
     <!-- Left: Image Gallery -->
     <div class="product-gallery-wrap">
       <div class="product-gallery-card">
-        <img id="main-product-img" src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" width="600" height="600" style="max-height:480px; width:auto; margin:0 auto; object-fit:contain;" fetchpriority="high" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
+        <img id="main-product-img" src="<?= e($imageUrl) ?>" alt="<?= e($title) ?>" width="600" height="600" style="max-height:480px; width:auto; margin:0 auto; object-fit:contain;" fetchpriority="high" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';">
         
         <?php if (!empty($images) && count($images) > 1): ?>
           <div style="display:flex; gap:0.75rem; margin-top:1.5rem; justify-content:center; overflow-x:auto;">
             <?php foreach ($images as $img): ?>
               <button type="button" onclick="document.getElementById('main-product-img').src='<?= e($img['url']) ?>'" style="width:60px; height:60px; border-radius:12px; border:1px solid var(--border); overflow:hidden; padding:4px; background:var(--surface-2); cursor:pointer;">
-                <img src="<?= e($img['url']) ?>" alt="Thumbnail" width="60" height="60" style="object-fit:cover; width:100%; height:100%;">
+                <img src="<?= e($img['url']) ?>" alt="Thumbnail" width="60" height="60" referrerpolicy="no-referrer" style="object-fit:cover; width:100%; height:100%;">
               </button>
             <?php endforeach; ?>
           </div>
