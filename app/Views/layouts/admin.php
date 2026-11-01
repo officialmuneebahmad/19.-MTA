@@ -47,7 +47,12 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
   <link rel="stylesheet" href="/assets/css/admin.css?v=<?= e($buildVersion) ?>">
 
   <script>
-    // Immediate early theme application to prevent FOUC
+    // Universal Double-Confirmation Helper ("Ask Twice" rule)
+    window.mtaConfirmTwice = function(msg1, msg2) {
+      var m1 = msg1 || 'Are you sure you want to delete this item? This action cannot be undone.';
+      var m2 = msg2 || '⚠️ FINAL CONFIRMATION: Are you ABSOLUTELY sure? Please confirm a second time.';
+      return window.confirm(m1) && window.confirm(m2);
+    };
     try {
       var saved = localStorage.getItem('mta_admin_theme');
       var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -241,6 +246,11 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
           <button type="button" id="quick-export-btn" class="btn-topbar-action" title="Export Store Data (JSON)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
             <span class="btn-text">Export JSON</span>
+          </button>
+
+          <!-- Universal Page Refresh -->
+          <button type="button" id="topbar-refresh-btn" class="theme-toggle-btn" aria-label="Refresh Page Data" title="Refresh Page Data" onclick="this.classList.add('spinning'); window.location.reload();">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
           </button>
 
           <!-- Day / Night Mode Toggle -->

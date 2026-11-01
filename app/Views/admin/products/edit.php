@@ -171,11 +171,14 @@ if (empty($initialImages) && !empty($existingPrimary)) {
         SKU: <strong style="color: var(--admin-text);"><?= e($product['sku']) ?></strong> &bull; Status: <span style="text-transform: capitalize; color: var(--status-green-text);"><?= str_replace('_', ' ', e($product['stock_status'])) ?></span>
       </div>
     </div>
-    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
       <a href="/products/<?= e($product['slug']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.35rem;">
         <span>View Live Page</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
       </a>
+      <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Product Details">
+        🔄 Refresh
+      </button>
       <a href="<?= e($adminPath) ?>/products" class="btn btn-secondary btn-sm">
         &larr; Back to Catalog
       </a>

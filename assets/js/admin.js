@@ -192,6 +192,18 @@
   };
 
   // ---------------------------------------------------------------------------
+  // 6. Double Confirmation Dialog ("Ask Twice")
+  // ---------------------------------------------------------------------------
+  window.mtaConfirmTwice = function (message1, message2) {
+    var msg1 = message1 || 'Are you sure you want to delete this item? This action cannot be undone.';
+    var msg2 = message2 || '⚠️ FINAL CONFIRMATION: Are you ABSOLUTELY sure? Please confirm a second time.';
+    if (window.confirm(msg1)) {
+      return window.confirm(msg2);
+    }
+    return false;
+  };
+
+  // ---------------------------------------------------------------------------
   // Boot Controller
   // ---------------------------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {

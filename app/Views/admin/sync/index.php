@@ -7,7 +7,12 @@ $adminPath = mta_admin_path();
 <!-- Status Card -->
 <div class="admin-card">
   <div class="admin-card-header" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-    <div class="admin-card-title">Live Feed Health & Synchronization Control</div>
+    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+      <div class="admin-card-title">Live Feed Health & Synchronization Control</div>
+      <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Live Sync Status">
+        🔄 Refresh
+      </button>
+    </div>
     <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
       <form action="<?= e($adminPath) ?>/sync/test" method="POST" style="margin: 0;">
         <?= mta_csrf_field() ?>
@@ -23,44 +28,44 @@ $adminPath = mta_admin_path();
       </form>
       <form action="<?= e($adminPath) ?>/sync/seed-backup" method="POST" style="margin: 0;">
         <?= mta_csrf_field() ?>
-        <button type="submit" class="btn btn-secondary" style="background: #14B8A6; color: #fff; border-color: #0D9488;" onclick="return confirm('This will clear any old or dummy products and import fresh products directly from Computer Zone API. Proceed?');" title="Purge dummy products and sync fresh from Computer Zone API">
+        <button type="submit" class="btn btn-secondary" style="background: #14B8A6; color: #fff; border-color: #0D9488;" onclick="return mtaConfirmTwice('This will clear any old products and import fresh products directly from Computer Zone API. Proceed?', '⚠️ FINAL CONFIRMATION: Are you sure you want to run a complete fresh sync?');" title="Purge dummy products and sync fresh from Computer Zone API">
           🧹 Clean & Fresh Sync (Computer Zone API)
         </button>
       </form>
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 1.5rem;">
-    <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
-      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Catalog Total</div>
-      <div style="font-size: 1.85rem; font-weight: 800; color: #141413;"><?= $catalogCount ?></div>
-      <div style="font-size: 0.75rem; color: #0E7064;">Target: 991 products</div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div style="background: var(--admin-surface-2, #343432); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-card-border);">
+      <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700;">Catalog Total</div>
+      <div style="font-size: 1.85rem; font-weight: 800; color: var(--admin-text); margin-top: 0.25rem;"><?= $catalogCount ?></div>
+      <div style="font-size: 0.75rem; color: #0E7064; margin-top: 0.25rem;">Target: 991 products</div>
     </div>
 
-    <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
-      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Feed Last Received</div>
-      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064;"><?= (int)($lastSync['feed_count'] ?? $lastSync['products_received'] ?? 0) ?></div>
-      <div style="font-size: 0.75rem; color: #777;">All records in single feed</div>
+    <div style="background: var(--admin-surface-2, #343432); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-card-border);">
+      <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700;">Feed Last Received</div>
+      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064; margin-top: 0.25rem;"><?= (int)($lastSync['feed_count'] ?? $lastSync['products_received'] ?? 0) ?></div>
+      <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;">All records in single feed</div>
     </div>
 
-    <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
-      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">Last Run Status</div>
-      <div style="font-size: 1.4rem; font-weight: 800; color: <?= ($lastSync['status'] ?? '') === 'success' ? '#0E7064' : '#DC2626' ?>;">
+    <div style="background: var(--admin-surface-2, #343432); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-card-border);">
+      <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700;">Last Run Status</div>
+      <div style="font-size: 1.4rem; font-weight: 800; color: <?= ($lastSync['status'] ?? '') === 'success' ? '#0E7064' : '#DC2626' ?>; margin-top: 0.25rem;">
         <?= strtoupper((string)($lastSync['status'] ?? 'NONE')) ?>
       </div>
-      <div style="font-size: 0.75rem; color: #777;"><?= !empty($lastSync['finished_at']) ? e($lastSync['finished_at']) : 'Never completed' ?></div>
+      <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;"><?= !empty($lastSync['finished_at']) ? e($lastSync['finished_at']) : 'Never completed' ?></div>
     </div>
 
-    <div style="background: #F9F9F7; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
-      <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">50% Drop Guard</div>
-      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064;">ACTIVE</div>
-      <div style="font-size: 0.75rem; color: #777;">Safety lock against truncations</div>
+    <div style="background: var(--admin-surface-2, #343432); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-card-border);">
+      <div style="font-size: 0.8rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700;">50% Drop Guard</div>
+      <div style="font-size: 1.85rem; font-weight: 800; color: #0E7064; margin-top: 0.25rem;">ACTIVE</div>
+      <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;">Safety lock against truncations</div>
     </div>
   </div>
 
   <?php $errMsg = $lastSync['error_message'] ?? $lastSync['error_log'] ?? null; ?>
   <?php if (!empty($errMsg)): ?>
-    <div style="background: #FDE8E8; border: 1px solid #F8B4B4; padding: 1rem; border-radius: 6px; font-size: 0.85rem; color: #9B1C1C; margin-top: 1rem;">
+    <div style="background: var(--status-rose-bg); border: 1px solid var(--status-rose-border); padding: 1rem 1.25rem; border-radius: 8px; font-size: 0.85rem; color: var(--status-rose-text); margin-top: 1rem;">
       <strong>Last Sync Error / Warning:</strong><br>
       <?= nl2br(e($errMsg)) ?>
     </div>
@@ -73,6 +78,7 @@ $adminPath = mta_admin_path();
     <div class="admin-card-title">Recent Sync Run History</div>
   </div>
 
+  <div class="admin-table-responsive">
   <table class="admin-table">
     <thead>
       <tr>
@@ -131,4 +137,5 @@ $adminPath = mta_admin_path();
       <?php endif; ?>
     </tbody>
   </table>
+  </div>
 </div>

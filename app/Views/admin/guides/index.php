@@ -41,7 +41,7 @@ $adminPath = mta_admin_path();
             </td>
             <td style="display: flex; gap: 0.5rem; align-items: center;">
               <a href="<?= e($adminPath) ?>/guides/<?= (int)$g['id'] ?>/edit" class="btn btn-secondary btn-sm">Edit</a>
-              <form action="<?= e($adminPath) ?>/guides/<?= (int)$g['id'] ?>/delete" method="POST" onsubmit="return confirm('Delete this guide?');">
+              <form action="<?= e($adminPath) ?>/guides/<?= (int)$g['id'] ?>/delete" method="POST" onsubmit="return mtaConfirmTwice('Are you sure you want to delete this guide?', '⚠️ FINAL CONFIRMATION: Permanently delete this buying guide?');">
                 <?= mta_csrf_field() ?>
                 <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">Delete</button>
               </form>

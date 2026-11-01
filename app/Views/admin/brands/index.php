@@ -11,7 +11,10 @@ $adminPath = mta_admin_path();
     <h2 class="admin-page-title">Brand Logos & Featured Brands</h2>
     <p class="admin-page-subtitle">Upload official brand logos, manage featured homepage brands, and inspect missing logos</p>
   </div>
-  <div style="display:flex; gap:0.75rem;">
+  <div style="display:flex; gap:0.75rem; flex-wrap: wrap; align-items: center;">
+    <button type="button" onclick="window.location.reload();" class="btn btn-secondary" title="Refresh Brand Logos">
+      🔄 Refresh
+    </button>
     <a href="/brands" target="_blank" class="btn btn-secondary" style="gap:6px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
       <span>View Storefront Brands Directory</span>
@@ -20,7 +23,7 @@ $adminPath = mta_admin_path();
 </div>
 
 <!-- Stats Row -->
-<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
   <div class="admin-card" style="padding: 1.25rem;">
     <div style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--admin-text-muted);">Active Brands</div>
     <div style="font-size: 1.85rem; font-weight: 800; color: var(--admin-text); margin-top: 0.35rem;"><?= count($brands) ?></div>

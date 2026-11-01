@@ -62,11 +62,12 @@ $adminPath = mta_admin_path();
   
   <!-- Column 1: Add WhatsApp Order Manual Form -->
   <div class="admin-panel">
-    <div class="panel-header">
+    <div class="panel-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
       <div class="panel-title-wrap">
         <h4 class="panel-title">Add WhatsApp Direct Order</h4>
         <span class="panel-badge" style="background:var(--mta-teal-light); color:var(--mta-teal);">Chat Booking</span>
       </div>
+      <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh WhatsApp Data">🔄 Refresh</button>
     </div>
 
     <form action="<?= e($adminPath) ?>/whatsapp-orders/create" method="POST" style="padding: 1.25rem;">

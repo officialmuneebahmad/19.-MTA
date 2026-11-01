@@ -33,9 +33,15 @@ $waConfirmUrl = mta_whatsapp_url('923070655275', $waMsg);
 
   <!-- Order Receipt Card -->
   <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; text-align: left; margin-bottom: 2rem;">
-    <h3 style="font-size: 1.15rem; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1rem;">
-      Order Breakdown
-    </h3>
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0;">
+        Order Breakdown
+      </h3>
+      <a href="/order/invoice/<?= e($orderNumber) ?>" target="_blank" class="btn btn-sm btn-outline" style="border: 1px solid var(--accent); color: var(--accent); font-weight: 700; padding: 0.35rem 0.85rem; font-size: 0.825rem; border-radius: 6px; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        View Official Invoice
+      </a>
+    </div>
 
     <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.25rem;">
       <?php foreach ($items as $item): ?>
@@ -67,7 +73,11 @@ $waConfirmUrl = mta_whatsapp_url('923070655275', $waMsg);
     </div>
   </div>
 
-  <div style="display: flex; justify-content: center; gap: 1rem;">
+  <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    <a href="/order/invoice/<?= e($orderNumber) ?>" target="_blank" class="btn btn-secondary" style="background: var(--surface); border: 2px solid var(--accent); color: var(--accent); font-weight: 700; display: inline-flex; align-items: center; gap: 0.5rem;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      Get Invoice / Print
+    </a>
     <a href="/" class="btn btn-primary">Return to Homepage</a>
     <a href="/track-order?order_number=<?= e($orderNumber) ?>" class="btn btn-secondary">Track This Order</a>
   </div>

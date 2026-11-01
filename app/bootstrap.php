@@ -22,7 +22,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.01-v2.6.0-pk-migration');
+    define('MTA_BUILD_VERSION', '2026.11.01-v2.7.0-invoice-admin-enhancements');
 }
 
 // ----------------------------------------------------------------------

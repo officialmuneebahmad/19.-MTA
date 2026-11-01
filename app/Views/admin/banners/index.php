@@ -41,7 +41,7 @@ $adminPath = mta_admin_path();
                 </span>
               </td>
               <td>
-                <form action="<?= e($adminPath) ?>/banners/<?= (int)$b['id'] ?>/delete" method="POST" onsubmit="return confirm('Delete this banner slide?');">
+                <form action="<?= e($adminPath) ?>/banners/<?= (int)$b['id'] ?>/delete" method="POST" onsubmit="return mtaConfirmTwice('Are you sure you want to delete this banner?', '⚠️ FINAL CONFIRMATION: Permanently delete this banner slide?');">
                   <?= mta_csrf_field() ?>
                   <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">
                     Delete

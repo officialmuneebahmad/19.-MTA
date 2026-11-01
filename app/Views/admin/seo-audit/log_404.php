@@ -8,7 +8,7 @@ $adminPath = mta_admin_path();
   <div class="admin-card-header">
     <div class="admin-card-title">404 Error Log (<?= count($logs) ?> entries)</div>
     <div style="display: flex; gap: 0.5rem;">
-      <form action="<?= e($adminPath) ?>/seo-audit/log-404/clear" method="POST" onsubmit="return confirm('Clear 404 error log?');">
+      <form action="<?= e($adminPath) ?>/seo-audit/log-404/clear" method="POST" onsubmit="return mtaConfirmTwice('Clear the entire 404 error log?', '⚠️ FINAL CONFIRMATION: Are you sure you want to permanently clear all 404 log entries?');">
         <?= mta_csrf_field() ?>
         <button type="submit" class="btn btn-secondary btn-sm">Clear Log</button>
       </form>

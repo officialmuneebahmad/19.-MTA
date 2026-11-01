@@ -6,8 +6,13 @@ $adminPath = mta_admin_path();
 ?>
 <div class="admin-card">
   <div class="admin-card-header">
-    <div class="admin-card-title">Products (<?= (int)$pagination['total'] ?> items)</div>
-    <div style="display: flex; gap: 0.5rem;">
+    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+      <div class="admin-card-title">Products (<?= (int)$pagination['total'] ?> items)</div>
+      <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Products List">
+        🔄 Refresh
+      </button>
+    </div>
+    <div style="display: flex; gap: 0.5rem; align-items: center;">
       <a href="<?= e($adminPath) ?>/import" class="btn btn-secondary btn-sm">📥 Multi-Source Import</a>
     </div>
   </div>
@@ -52,6 +57,7 @@ $adminPath = mta_admin_path();
   </form>
 
   <!-- Products Table -->
+  <div class="admin-table-responsive">
   <table class="admin-table">
     <thead>
       <tr>
@@ -63,7 +69,7 @@ $adminPath = mta_admin_path();
         <th>Stock</th>
         <th>SEO Gate</th>
         <th>Quick Actions</th>
-        <th>Edit</th>
+        <th style="text-align: right;">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -71,7 +77,7 @@ $adminPath = mta_admin_path();
         <?php foreach ($products as $p): ?>
           <tr>
             <td>
-              <img src="<?= e($p['primary_image_url'] ?? '/assets/images/placeholder.webp') ?>" alt="" width="40" height="40" style="object-fit: contain; border-radius: 4px; background: #eee;">
+              <img src="<?= e($p['primary_image_url'] ?? '/assets/images/placeholder.webp') ?>" alt="" width="40" height="40" style="object-fit: contain; border-radius: 4px; background: var(--admin-surface-2);">
             </td>
             <td>
               <div style="font-weight: 600; line-height: 1.3;">
@@ -137,10 +143,14 @@ $adminPath = mta_admin_path();
                 </button>
               </form>
             </td>
-            <td>
-              <a href="<?= e($adminPath) ?>/products/<?= (int)$p['id'] ?>/edit" class="btn btn-secondary btn-sm">
+            <td style="text-align: right; white-space: nowrap;">
+              <a href="<?= e($adminPath) ?>/products/<?= (int)$p['id'] ?>/edit" class="btn btn-secondary btn-sm" title="Edit Product">
                 Edit
               </a>
+              <form action="<?= e($adminPath) ?>/products/<?= (int)$p['id'] ?>/delete" method="POST" style="display:inline-block; margin-left:0.25rem;" onsubmit="return mtaConfirmTwice('Are you sure you want to delete \'<?= e(addslashes($p['title'])) ?>\'?', '⚠️ FINAL CONFIRMATION: Permanently delete this product from the database?');">
+                <?= mta_csrf_field() ?>
+                <button type="submit" class="btn btn-danger btn-sm" style="background:#DC2626; color:#fff; padding: 0.35rem 0.6rem;" title="Delete Product Permanently">🗑️</button>
+              </form>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -153,6 +163,7 @@ $adminPath = mta_admin_path();
       <?php endif; ?>
     </tbody>
   </table>
+  </div>
 
   <!-- Pagination -->
   <?php if ($pagination['total_pages'] > 1): ?>

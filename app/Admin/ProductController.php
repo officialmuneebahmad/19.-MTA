@@ -299,4 +299,41 @@ class ProductController
         Session::flash('success', $msg);
         return $resp->redirect($adminPath . '/products');
     }
+
+    public function destroy(int $id, Request $request): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        $db = Database::getInstance();
+
+        $product = $db->fetch("SELECT id, title FROM products WHERE id = ? LIMIT 1", [$id]);
+        if (!$product) {
+            Session::flash('error', 'Product not found.');
+            return $resp->redirect($adminPath . '/products');
+        }
+
+        try {
+            $db->beginTransaction();
+            $db->execute("DELETE FROM product_images WHERE product_id = ?", [$id]);
+            $db->execute("DELETE FROM products WHERE id = ?", [$id]);
+            $db->commit();
+
+            try {
+                \App\Core\Cache::flush();
+            } catch (\Throwable) {}
+
+            \App\Services\AuditLogger::log('delete_product', 'product', (string)$id, [
+                'title' => $product['title']
+            ]);
+
+            Session::flash('success', "Product '{$product['title']}' was permanently deleted.");
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            Session::flash('error', "Could not delete product: " . $e->getMessage());
+        }
+
+        return $resp->redirect($adminPath . '/products');
+    }
 }

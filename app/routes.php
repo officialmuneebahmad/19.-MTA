@@ -81,6 +81,7 @@ $router->get('/checkout', [CheckoutController::class, 'index']);
 $router->post('/checkout/place-order', [CheckoutController::class, 'placeOrder'], [CsrfMiddleware::class]);
 
 $router->get('/order/summary/{order_number}', [OrderController::class, 'summary']);
+$router->get('/order/invoice/{order_number}', [OrderController::class, 'invoice']);
 $router->get('/track-order', [OrderController::class, 'track']);
 
 // ======================================================================
@@ -159,6 +160,7 @@ $router->get("/{$adminBase}", [AdminDashboardController::class, 'index'], $admin
 $router->get("/{$adminBase}/products", [AdminProductController::class, 'index'], $adminMw);
 $router->get("/{$adminBase}/products/{id}/edit", [AdminProductController::class, 'edit'], $adminMw);
 $router->post("/{$adminBase}/products/{id}", [AdminProductController::class, 'update'], $adminCsrfMw);
+$router->post("/{$adminBase}/products/{id}/delete", [AdminProductController::class, 'destroy'], $adminCsrfMw);
 $router->post("/{$adminBase}/products/quick-override", [AdminProductController::class, 'quickOverride'], $adminCsrfMw);
 
 // Multi-Source Import
@@ -180,8 +182,11 @@ $router->post("/{$adminBase}/brands/{id}", [AdminBrandController::class, 'update
 // Orders
 $router->get("/{$adminBase}/orders", [AdminOrderController::class, 'index'], $adminMw);
 $router->get("/{$adminBase}/orders/{id}", [AdminOrderController::class, 'show'], $adminMw);
+$router->get("/{$adminBase}/orders/{id}/invoice", [AdminOrderController::class, 'invoice'], $adminMw);
 $router->post("/{$adminBase}/orders/{id}", [AdminOrderController::class, 'update'], $adminCsrfMw);
 $router->post("/{$adminBase}/orders/{id}/verify-advance", [AdminOrderController::class, 'verifyAdvance'], $adminCsrfMw);
+$router->post("/{$adminBase}/orders/{id}/delete", [AdminOrderController::class, 'destroy'], $adminCsrfMw);
+$router->post("/{$adminBase}/orders/bulk-delete", [AdminOrderController::class, 'bulkDelete'], $adminCsrfMw);
 
 // WhatsApp Orders & Inquiries
 $router->get("/{$adminBase}/whatsapp-orders", [AdminWhatsAppOrderController::class, 'index'], $adminMw);

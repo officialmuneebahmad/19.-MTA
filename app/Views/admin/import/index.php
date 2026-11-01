@@ -25,7 +25,7 @@ $adminPath = mta_admin_path();
         <input type="file" id="csv_file" name="csv_file" accept=".csv" required class="form-control">
       </div>
 
-      <div style="background: #F9F9F7; border: 1px dashed var(--admin-border); padding: 1rem; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.8rem; color: #555;">
+      <div style="background: var(--admin-surface-2, #343432); border: 1px dashed var(--admin-card-border); padding: 1rem; border-radius: 6px; margin-bottom: 1.25rem; font-size: 0.8rem; color: var(--admin-text-muted);">
         <strong>Sample Header Line:</strong><br>
         <code>title,price,sku,image_url,description</code>
       </div>

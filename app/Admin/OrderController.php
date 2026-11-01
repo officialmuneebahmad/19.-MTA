@@ -98,6 +98,101 @@ class OrderController
         ]));
     }
 
+    public function invoice(int $id): Response
+    {
+        $db = Database::getInstance();
+        $order = $db->fetch("SELECT * FROM orders WHERE id = ? LIMIT 1", [$id]);
+
+        $resp = new Response();
+        if (!$order) {
+            Session::flash('error', 'Order not found.');
+            return $resp->redirect(mta_admin_path('orders'));
+        }
+
+        $items = $db->fetchAll("SELECT * FROM order_items WHERE order_id = ?", [$id]);
+
+        return $resp->html(View::render('storefront/invoice', [
+            'order' => $order,
+            'items' => $items,
+            'meta_title' => "Invoice #INV-{$order['order_number']} — Multan Tech Accessories",
+            'noindex' => true,
+        ]));
+    }
+
+    public function destroy(int $id, Request $request): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        $db = Database::getInstance();
+
+        $order = $db->fetch("SELECT id, order_number FROM orders WHERE id = ? LIMIT 1", [$id]);
+        if (!$order) {
+            Session::flash('error', 'Order not found.');
+            return $resp->redirect($adminPath . '/orders');
+        }
+
+        try {
+            $db->beginTransaction();
+            $db->execute("DELETE FROM order_items WHERE order_id = ?", [$id]);
+            $db->execute("DELETE FROM orders WHERE id = ?", [$id]);
+            $db->commit();
+
+            \App\Services\AuditLogger::log('delete_order', 'order', (string)$id, [
+                'order_number' => $order['order_number']
+            ]);
+
+            Session::flash('success', "Order #{$order['order_number']} has been permanently deleted.");
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            Session::flash('error', "Could not delete order: " . $e->getMessage());
+        }
+
+        return $resp->redirect($adminPath . '/orders');
+    }
+
+    public function bulkDelete(Request $request): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        $db = Database::getInstance();
+
+        $orderIds = $request->post('order_ids', []);
+        if (empty($orderIds) || !is_array($orderIds)) {
+            Session::flash('error', 'No orders were selected for deletion.');
+            return $resp->redirect($adminPath . '/orders');
+        }
+
+        $validIds = array_filter(array_map('intval', $orderIds), fn($id) => $id > 0);
+        if (empty($validIds)) {
+            Session::flash('error', 'Invalid order selection.');
+            return $resp->redirect($adminPath . '/orders');
+        }
+
+        try {
+            $db->beginTransaction();
+            $placeholders = implode(',', array_fill(0, count($validIds), '?'));
+            $db->execute("DELETE FROM order_items WHERE order_id IN ($placeholders)", $validIds);
+            $db->execute("DELETE FROM orders WHERE id IN ($placeholders)", $validIds);
+            $db->commit();
+
+            $count = count($validIds);
+            \App\Services\AuditLogger::log('bulk_delete_orders', 'orders', implode(',', $validIds), [
+                'count' => $count
+            ]);
+
+            Session::flash('success', "Successfully deleted {$count} selected order(s).");
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+            Session::flash('error', "Could not delete selected orders: " . $e->getMessage());
+        }
+
+        return $resp->redirect($adminPath . '/orders');
+    }
+
     public function update(int $id, Request $request): Response
     {
         $adminPath = mta_admin_path();

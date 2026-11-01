@@ -50,6 +50,38 @@ class OrderController
         ]));
     }
 
+    public function invoice(string $order_number): Response
+    {
+        $db = Database::getInstance();
+        $order = $db->fetch(
+            "SELECT * FROM orders WHERE order_number = ? LIMIT 1",
+            [$order_number]
+        );
+
+        $resp = new Response();
+
+        if (!$order) {
+            $resp->status(404);
+            return $resp->html(View::render('storefront/errors/404', [
+                'meta_title' => 'Invoice Not Found',
+                'meta_description' => 'The requested order could not be located.',
+                'noindex' => true,
+            ]), 404);
+        }
+
+        $items = $db->fetchAll(
+            "SELECT * FROM order_items WHERE order_id = ?",
+            [(int)$order['id']]
+        );
+
+        return $resp->html(View::render('storefront/invoice', [
+            'order' => $order,
+            'items' => $items,
+            'meta_title' => "Invoice #INV-{$order_number} — Multan Tech Accessories",
+            'noindex' => true,
+        ]));
+    }
+
     public function track(Request $request): Response
     {
         $orderNumber = trim((string)$request->get('order_number', ''));

@@ -30,7 +30,7 @@ $adminPath = mta_admin_path();
               <td><code><?= e($r['target_url']) ?></code></td>
               <td><strong><?= (int)$r['hits'] ?></strong></td>
               <td>
-                <form action="<?= e($adminPath) ?>/seo-audit/redirects/<?= (int)$r['id'] ?>/delete" method="POST" onsubmit="return confirm('Delete redirect?');">
+                <form action="<?= e($adminPath) ?>/seo-audit/redirects/<?= (int)$r['id'] ?>/delete" method="POST" onsubmit="return mtaConfirmTwice('Delete redirect rule?', '⚠️ FINAL CONFIRMATION: Permanently remove this redirect?');">
                   <?= mta_csrf_field() ?>
                   <button type="submit" class="btn btn-danger btn-sm" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">Delete</button>
                 </form>

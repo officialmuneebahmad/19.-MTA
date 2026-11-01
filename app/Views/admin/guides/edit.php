@@ -51,7 +51,7 @@ $actionUrl = $isEdit ? "{$adminPath}/guides/{$guide['id']}" : "{$adminPath}/guid
 
       <!-- Publishing Sidebar -->
       <div>
-        <div style="background: #F9F9F7; border: 1px solid var(--admin-border); border-radius: 8px; padding: 1.25rem;">
+        <div style="background: var(--admin-surface-2, #343432); border: 1px solid var(--admin-card-border); border-radius: 8px; padding: 1.25rem;">
           <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem;">Publishing Settings</h3>
 
           <div class="form-group">

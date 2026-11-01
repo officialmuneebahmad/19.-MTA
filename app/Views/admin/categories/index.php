@@ -4,15 +4,19 @@
  */
 $adminPath = mta_admin_path();
 ?>
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+<div class="admin-grid-2col">
 
   <!-- Categories Table -->
   <div class="admin-card">
     <div class="admin-card-header">
-      <div class="admin-card-title">Site Categories</div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <div class="admin-card-title">Site Categories</div>
+        <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Categories">🔄 Refresh</button>
+      </div>
       <a href="<?= e($adminPath) ?>/categories/mappings" class="btn btn-secondary btn-sm">🔗 View Supplier Mappings</a>
     </div>
 
+    <div class="admin-table-responsive">
     <table class="admin-table">
       <thead>
         <tr>
@@ -34,7 +38,7 @@ $adminPath = mta_admin_path();
               </a>
             </td>
             <td><code><?= e($cat['slug']) ?></code></td>
-            <td style="color: #666;"><?= e($cat['parent_name'] ?? 'Root') ?></td>
+            <td style="color: var(--admin-text-muted);"><?= e($cat['parent_name'] ?? 'Root') ?></td>
             <td><strong><?= (int)$cat['product_count'] ?></strong></td>
             <td><?= (int)$cat['sort_order'] ?></td>
             <td>
@@ -46,6 +50,7 @@ $adminPath = mta_admin_path();
         <?php endforeach; ?>
       </tbody>
     </table>
+    </div>
   </div>
 
   <!-- Create Category Form -->

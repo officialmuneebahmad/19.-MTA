@@ -14,7 +14,10 @@
   /* Day Theme Palette */
   --admin-bg: #FAF9F5;
   --admin-card: #FFFFFF;
+  --admin-card-bg: #FFFFFF;
   --admin-card-border: #E8E6DC;
+  --admin-border: #E8E6DC;
+  --admin-surface: #FFFFFF;
   --admin-surface-2: #F0EEE6;
   --admin-surface-muted: #F5F3ED;
 
@@ -78,9 +81,12 @@
   /* Night Theme Palette (Zero Dark Blue) */
   --admin-bg: #262624;
   --admin-card: #30302E;
+  --admin-card-bg: #30302E;
   --admin-card-border: #4A4944;
-  --admin-surface-2: #3A3A37;
-  --admin-surface-muted: #2A2A28;
+  --admin-border: #4A4944;
+  --admin-surface: #30302E;
+  --admin-surface-2: #343432;
+  --admin-surface-muted: #282826;
 
   --admin-sidebar: #222220;
   --admin-sidebar-border: #3A3A37;
@@ -1396,6 +1402,28 @@ button {
   border-radius: var(--radius-sm);
 }
 
+.btn-danger {
+  background-color: #DC2626;
+  border-color: #DC2626;
+  color: #FFFFFF;
+}
+
+.btn-danger:hover {
+  background-color: #B91C1C;
+  border-color: #B91C1C;
+}
+
+.btn-success {
+  background-color: #16A34A;
+  border-color: #16A34A;
+  color: #FFFFFF;
+}
+
+.btn-success:hover {
+  background-color: #15803D;
+  border-color: #15803D;
+}
+
 /* Badges */
 .badge {
   display: inline-flex;
@@ -1409,13 +1437,77 @@ button {
 }
 
 .badge-amber { background: var(--status-amber-bg); color: var(--status-amber-text); border: 1px solid var(--status-amber-border); }
+.badge-warning { background: var(--status-amber-bg); color: var(--status-amber-text); border: 1px solid var(--status-amber-border); }
 .badge-sky { background: var(--status-sky-bg); color: var(--status-sky-text); border: 1px solid var(--status-sky-border); }
+.badge-info { background: var(--status-sky-bg); color: var(--status-sky-text); border: 1px solid var(--status-sky-border); }
 .badge-violet { background: var(--status-violet-bg); color: var(--status-violet-text); border: 1px solid var(--status-violet-border); }
 .badge-green { background: var(--status-green-bg); color: var(--status-green-text); border: 1px solid var(--status-green-border); }
-.badge-rose { background: var(--status-rose-bg); color: var(--status-rose-text); border: 1px solid var(--status-rose-border); }
-.badge-teal { background: var(--mta-teal-light); color: var(--mta-teal-hover); border: 1px solid var(--mta-teal); }
 .badge-success { background: var(--status-green-bg); color: var(--status-green-text); border: 1px solid var(--status-green-border); }
+.badge-rose { background: var(--status-rose-bg); color: var(--status-rose-text); border: 1px solid var(--status-rose-border); }
+.badge-danger { background: var(--status-rose-bg); color: var(--status-rose-text); border: 1px solid var(--status-rose-border); }
+.badge-teal { background: var(--mta-teal-light); color: var(--mta-teal-hover); border: 1px solid var(--mta-teal); }
 .badge-neutral { background: var(--admin-surface-muted); color: var(--admin-text-muted); border: 1px solid var(--admin-card-border); }
+
+/* Standardized Admin Cards & Layouts with Generous Spacing */
+.admin-card {
+  background-color: var(--admin-card);
+  border: 1px solid var(--admin-card-border);
+  border-radius: var(--radius-2xl);
+  padding: 1.75rem 2rem;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 2rem;
+}
+
+.admin-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--admin-card-border);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.admin-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--admin-text);
+  line-height: 1.25;
+}
+
+.admin-order-grid,
+.admin-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 992px) {
+  .admin-order-grid,
+  .admin-grid-2col {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.admin-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--admin-card-border);
+  border-radius: var(--radius-md);
+}
+
+@keyframes spinRefresh {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinning svg {
+  animation: spinRefresh 0.7s linear infinite;
+}
 
 /* Forms & Inputs */
 .form-control,

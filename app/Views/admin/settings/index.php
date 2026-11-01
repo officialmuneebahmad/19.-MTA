@@ -16,7 +16,10 @@ $adminPath = mta_admin_path();
     </p>
   </div>
 
-  <div style="display: flex; gap: 0.75rem;">
+  <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+    <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Settings Page">
+      🔄 Refresh
+    </button>
     <form action="<?= e($adminPath) ?>/settings/cache-clear" method="POST" style="display: inline;">
       <?= mta_csrf_field() ?>
       <button type="submit" class="btn btn-secondary btn-sm" data-confirm="Flush entire full-page cache?">
