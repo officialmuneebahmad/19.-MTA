@@ -22,8 +22,8 @@ class View
             $layout = null;
         }
 
-        // Admin templates (views and auth) must never be wrapped in the storefront layout
-        if ($layout === 'layouts/main' && str_starts_with($cleanTemplate, 'admin/')) {
+        // Admin templates (views and auth) and standalone invoices must never be wrapped in the storefront layout
+        if ($layout === 'layouts/main' && (str_starts_with($cleanTemplate, 'admin/') || str_ends_with($cleanTemplate, 'invoice'))) {
             $layout = null;
         }
 

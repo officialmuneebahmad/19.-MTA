@@ -79,7 +79,7 @@ class OrderController
             'items' => $items,
             'meta_title' => "Invoice #INV-{$order_number} — Multan Tech Accessories",
             'noindex' => true,
-        ]));
+        ], null));
     }
 
     public function track(Request $request): Response
