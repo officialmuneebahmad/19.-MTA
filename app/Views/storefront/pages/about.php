@@ -6,7 +6,7 @@
 <div class="container" style="padding: 2rem 1.25rem; max-width: 850px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <h1 style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 1.5rem;">About Multan Tech Accessories</h1>
+  <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 1.5rem;">About Multan Tech Accessories</h1>
 
   <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
     <p style="margin-bottom: 1.25rem;">
@@ -34,7 +34,7 @@
       <li><strong>Cash on Delivery:</strong> No advance payments required for standard orders across Pakistan. Pay only when your package arrives.</li>
       <li><strong>Delivery Benefits:</strong> Free delivery on all orders above Rs. 5,000, and 100% free delivery on your second order.</li>
       <li><strong>Multan Local Rates:</strong> Customers in Multan receive our lowest local delivery charge (Rs. 100) or can opt for direct store pickup.</li>
-      <li><strong>7-Day Checking Warranty:</strong> Defective items are replaced promptly without hassle.</li>
+      <li><strong>3-Day Checking Warranty:</strong> Defective items are replaced promptly without hassle.</li>
     </ul>
   </div>
 </div>

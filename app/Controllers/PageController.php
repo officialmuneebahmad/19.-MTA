@@ -127,8 +127,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/returns', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('7-Day Checking Warranty & Returns'),
-            'meta_description' => 'Our 7-day checking warranty and hassle-free returns policy for tech accessories at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('3-Day Checking Warranty & Returns'),
+            'meta_description' => 'Our 3-day checking warranty and hassle-free returns policy for tech accessories at Multan Tech Accessories.',
             'canonical' => mta_url('/returns-and-refunds'),
         ]));
     }

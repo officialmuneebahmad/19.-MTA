@@ -7,15 +7,15 @@
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
   <div style="margin: 1.5rem 0 2.5rem;">
-    <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;">Tech Buying Guides & Advice</h1>
+    <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;">Tech Buying Guides & Advice</h1>
     <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
       Practical, honest hardware advice written for Pakistani tech enthusiasts, mobile users, and office professionals.
     </p>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;" class="guides-grid">
+  <div class="guides-grid">
     <?php foreach ($guides as $guide): ?>
-      <article style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; display: flex; flex-direction: column;">
+      <article class="guide-directory-card">
         <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; margin-bottom: 0.5rem;">
           Buying Guide
         </span>

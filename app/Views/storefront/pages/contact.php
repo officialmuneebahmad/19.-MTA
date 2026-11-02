@@ -7,16 +7,16 @@
 <div class="container" style="padding: 2rem 1.25rem; max-width: 950px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <h1 style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 0.5rem;">Contact Us</h1>
+  <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 0.5rem;">Contact Us</h1>
   <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 2rem;">
     Have a question about product compatibility or placing a bulk order? Reach out directly to our Multan store.
   </p>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;" class="contact-grid">
+  <div class="contact-grid">
     
     <!-- Left: Store Contact Information -->
     <div>
-      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem;">
+      <div class="contact-card" style="margin-bottom: 1.5rem;">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem;">Store Details</h2>
         
         <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; line-height: 1.6;">
@@ -78,7 +78,7 @@
 
     <!-- Right: Message Form -->
     <div>
-      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem;">
+      <div class="contact-card">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem;">Send a Message</h2>
 
         <form action="/contact/send" method="POST">

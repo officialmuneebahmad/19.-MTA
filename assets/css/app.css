@@ -1443,6 +1443,198 @@ select option {
   gap: 0.4rem;
 }
 
+/* -------------------------------------------------------------
+ * Domain Migration Announcement Banner (Below Carousel)
+ * ------------------------------------------------------------- */
+.domain-migration-banner {
+  background: linear-gradient(135deg, rgba(255, 98, 35, 0.08) 0%, rgba(255, 98, 35, 0.02) 100%);
+  border: 1px solid rgba(255, 98, 35, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.75rem;
+  margin: 1.5rem 0 2rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(255, 98, 35, 0.06);
+}
+
+.domain-migration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.725rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 98, 35, 0.14);
+  color: var(--accent-strong);
+  margin-bottom: 0.65rem;
+}
+
+.domain-migration-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: domainPulse 2s infinite;
+}
+
+@keyframes domainPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.domain-migration-headline {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.45rem;
+  font-family: var(--font-heading);
+}
+
+.domain-old-name {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.domain-migration-arrow {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+.domain-new-name {
+  color: #FFFFFF;
+  background: var(--accent-strong);
+  padding: 0.2rem 0.75rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(255, 98, 35, 0.35);
+  letter-spacing: -0.01em;
+}
+
+.domain-migration-callout {
+  margin: 0.4rem 0 0.5rem;
+}
+
+.domain-migration-highlight-text {
+  font-size: 1.1rem;
+  color: var(--accent-strong);
+  letter-spacing: -0.01em;
+  background: rgba(255, 98, 35, 0.1);
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.domain-migration-sub {
+  font-size: 0.925rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.domain-migration-sub strong {
+  color: var(--text);
+}
+
+/* -------------------------------------------------------------
+ * Responsive Directory Grids (Categories, Contact, Guides)
+ * ------------------------------------------------------------- */
+.categories-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.category-directory-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.category-directory-card:hover {
+  border-color: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.contact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+}
+
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.guide-directory-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.guide-directory-card:hover {
+  border-color: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
+.sitemap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.home-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.home-guide-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.home-guide-card:hover {
+  border-color: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
 /* Desktop Theme Toggle */
 .desktop-theme-btn {
   display: flex;
@@ -1540,6 +1732,71 @@ select option {
   .checkout-summary-card {
     position: static !important;
     top: auto !important;
+  }
+
+  /* Domain Migration Banner Mobile */
+  .domain-migration-banner {
+    padding: 1.15rem 1rem !important;
+    margin: 1rem 0 1.5rem 0 !important;
+  }
+  .domain-migration-headline {
+    font-size: 1.1rem !important;
+    gap: 0.45rem !important;
+  }
+  .domain-migration-highlight-text {
+    font-size: 0.95rem !important;
+  }
+  .domain-migration-sub {
+    font-size: 0.85rem !important;
+  }
+
+  /* All Tech Categories Directory Mobile */
+  .categories-directory-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .category-directory-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Contact Us Page Mobile */
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .contact-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Tech Guides Directory Mobile */
+  .guides-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .guide-directory-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Sitemap Mobile */
+  .sitemap-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Homepage Guides Mobile */
+  .home-guides-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .home-guide-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  /* Page Titles Responsive Scaling */
+  h1.page-title,
+  .page-title {
+    font-size: 1.65rem !important;
+    line-height: 1.25 !important;
   }
 }
 

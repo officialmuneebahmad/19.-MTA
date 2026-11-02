@@ -46,6 +46,25 @@
 
 <div class="container">
 
+  <!-- Domain Migration Highlight Announcement -->
+  <aside class="domain-migration-banner" aria-label="Official Domain Migration Announcement">
+    <div class="domain-migration-badge">
+      <span class="domain-migration-pulse" aria-hidden="true"></span>
+      <span>Official Store Announcement</span>
+    </div>
+    <div class="domain-migration-headline">
+      <span class="domain-old-name">multantech.store</span>
+      <span class="domain-migration-arrow" aria-hidden="true">&rarr;</span>
+      <span class="domain-new-name">multantech.pk</span>
+    </div>
+    <div class="domain-migration-callout">
+      <strong class="domain-migration-highlight-text">multantech.store is now multantech.pk.</strong>
+    </div>
+    <p class="domain-migration-sub">
+      We have officially moved to Pakistan’s national domain (<strong>.pk</strong>). All products, customer orders, warranty protections, and WhatsApp support continue seamlessly at <strong>multantech.pk</strong>.
+    </p>
+  </aside>
+
   <!-- 2. Shop-by-Category Tiles -->
   <section class="section" aria-labelledby="cat-heading">
     <div class="section-header">
@@ -172,9 +191,9 @@
         <a href="/guides" class="section-link">View All Guides &rarr;</a>
       </div>
 
-      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1.5rem;">
+      <div class="home-guides-grid">
         <?php foreach ($latestGuides as $guide): ?>
-          <article style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:1.5rem; display:flex; flex-direction:column;">
+          <article class="home-guide-card">
             <span style="font-size:0.75rem; font-weight:700; color:var(--accent-strong); text-transform:uppercase; margin-bottom:0.5rem;">Buying Guide</span>
             <h3 style="font-size:1.1rem; margin-bottom:0.5rem; line-height:1.35;">
               <a href="/guides/<?= e($guide['slug']) ?>"><?= e($guide['title']) ?></a>

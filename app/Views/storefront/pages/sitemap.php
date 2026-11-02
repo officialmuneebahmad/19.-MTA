@@ -7,12 +7,12 @@
 <div class="container" style="padding: 2rem 1.25rem; max-width: 900px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <h1 style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 1rem;">Multan Tech Accessories &mdash; HTML Sitemap</h1>
+  <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 1rem;">Multan Tech Accessories &mdash; HTML Sitemap</h1>
   <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 2.5rem;">
     Direct navigational directory for search engines and shoppers.
   </p>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem;" class="sitemap-grid">
+  <div class="sitemap-grid">
     
     <!-- Main Store & Categories -->
     <div>
@@ -43,7 +43,7 @@
         <li><a href="/about">About Store</a></li>
         <li><a href="/contact">Contact & Store Location</a></li>
         <li><a href="/shipping-and-delivery">Shipping & Delivery Rules</a></li>
-        <li><a href="/returns-and-refunds">7-Day Checking Warranty & Returns</a></li>
+        <li><a href="/returns-and-refunds">3-Day Checking Warranty & Returns</a></li>
         <li><a href="/editorial-and-pricing-policy">Editorial & Pricing Policy</a></li>
         <li><a href="/track-order">Order Tracking</a></li>
         <li><a href="/faq">Frequently Asked Questions</a></li>
