@@ -254,24 +254,48 @@ class OrderController
 
         $advance = max(0, (float)$request->post('advance_amount', 0));
         $ref = trim((string)$request->post('advance_reference', ''));
+
+        if ($ref === '') {
+            Session::flash('error', 'Reference / TID is mandatory. Advance payment cannot be verified without a valid Reference or Transaction ID (TID).');
+            return $resp->redirect($adminPath . '/orders/' . $id);
+        }
+
+        if ($advance <= 0) {
+            Session::flash('error', 'Advance amount must be greater than Rs. 0.');
+            return $resp->redirect($adminPath . '/orders/' . $id);
+        }
+
         $total = (float)$order['total'];
         $codDue = max(0.0, $total - $advance);
 
         $notes = trim((string)($order['customer_notes'] ?? ''));
-        if ($ref !== '') {
-            $notes .= ($notes ? "\n" : '') . "[Advance Verified: Rs. " . number_format($advance) . " via Ref/TID: " . $ref . " on " . date('Y-m-d H:i') . "]";
-        }
+        $notes .= ($notes ? "\n" : '') . "[Advance Verified: Rs. " . number_format($advance) . " via Ref/TID: " . $ref . " on " . date('Y-m-d H:i') . "]";
 
-        $db->execute(
-            "UPDATE orders SET 
-                advance_amount = ?, 
-                advance_verified_at = CURRENT_TIMESTAMP, 
-                cod_due = ?, 
-                customer_notes = ?,
-                updated_at = CURRENT_TIMESTAMP 
-             WHERE id = ?",
-            [$advance, $codDue, $notes, $id]
-        );
+        try {
+            $db->execute(
+                "UPDATE orders SET 
+                    advance_amount = ?, 
+                    advance_reference = ?,
+                    advance_verified_at = CURRENT_TIMESTAMP, 
+                    cod_due = ?, 
+                    customer_notes = ?,
+                    updated_at = CURRENT_TIMESTAMP 
+                 WHERE id = ?",
+                [$advance, $ref, $codDue, $notes, $id]
+            );
+        } catch (\Throwable $e) {
+            // Fallback for database schema resilience
+            $db->execute(
+                "UPDATE orders SET 
+                    advance_amount = ?, 
+                    advance_verified_at = CURRENT_TIMESTAMP, 
+                    cod_due = ?, 
+                    customer_notes = ?,
+                    updated_at = CURRENT_TIMESTAMP 
+                 WHERE id = ?",
+                [$advance, $codDue, $notes, $id]
+            );
+        }
 
         \App\Services\AuditLogger::log('verify_advance', 'order', (string)$id, [
             'order_number' => $order['order_number'],
@@ -280,7 +304,7 @@ class OrderController
             'cod_due' => $codDue,
         ]);
 
-        Session::flash('success', "Advance of Rs. " . number_format($advance) . " verified. Outstanding COD is now Rs. " . number_format($codDue) . ".");
+        Session::flash('success', "Advance of Rs. " . number_format($advance) . " verified (Ref/TID: " . $ref . "). Outstanding COD is now Rs. " . number_format($codDue) . ".");
         return $resp->redirect($adminPath . '/orders/' . $id);
     }
 }

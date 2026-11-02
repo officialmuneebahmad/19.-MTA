@@ -135,8 +135,11 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
           <span style="text-align: right;">- <?= mta_money($order['advance_amount'] ?? 0) ?></span>
         </div>
         <?php if (!empty($order['advance_verified_at'])): ?>
-          <div style="font-size: 0.75rem; color: var(--mta-teal); text-align: right; margin-top: -0.2rem;">
+          <div style="font-size: 0.75rem; color: var(--mta-teal); text-align: right; margin-top: -0.2rem; line-height: 1.4;">
             &check; Verified on <?= date('d M Y, h:i A', strtotime($order['advance_verified_at'])) ?>
+            <?php if (!empty($order['advance_reference'])): ?>
+              <br><span style="color: var(--admin-text-muted);">TID: <strong style="color: var(--mta-teal);"><?= e($order['advance_reference']) ?></strong></span>
+            <?php endif; ?>
           </div>
         <?php endif; ?>
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.15rem; color: var(--mta-orange); border-top: 2px dashed var(--mta-orange); padding-top: 0.65rem; margin-top: 0.35rem;">
@@ -159,15 +162,31 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
           <?php endif; ?>
         </div>
 
+        <?php if (!empty($order['advance_verified_at'])): ?>
+          <div style="background: var(--admin-surface-muted, #282826); border: 1px solid var(--admin-card-border); border-radius: 8px; padding: 0.75rem 0.85rem; margin-bottom: 1.15rem; font-size: 0.85rem; line-height: 1.5;">
+            <div style="color: var(--mta-teal); font-weight: 700;">
+              &check; Verified on <?= date('d M Y, h:i A', strtotime($order['advance_verified_at'])) ?>
+            </div>
+            <?php if (!empty($order['advance_reference'])): ?>
+              <div style="color: var(--admin-text); margin-top: 0.25rem;">
+                <span style="color: var(--admin-text-muted);">Ref / TID:</span> <code style="color: var(--mta-orange); font-weight: 700;"><?= e($order['advance_reference']) ?></code>
+              </div>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+
         <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/verify-advance" method="POST">
           <?= mta_csrf_field() ?>
           <div class="form-group" style="margin-bottom: 1rem;">
-            <label class="form-label">Advance Amount (PKR)</label>
-            <input type="number" name="advance_amount" value="<?= (float)($order['advance_amount'] ?? 0) > 0 ? (int)$order['advance_amount'] : 500 ?>" min="0" step="1" required class="form-control">
+            <label class="form-label">Advance Amount (PKR) <span style="color: var(--mta-red, #EF4444);">*</span></label>
+            <input type="number" name="advance_amount" value="<?= (float)($order['advance_amount'] ?? 0) > 0 ? (int)$order['advance_amount'] : 500 ?>" min="1" step="1" required class="form-control">
           </div>
           <div class="form-group" style="margin-bottom: 1.25rem;">
-            <label class="form-label">Reference / TID (JazzCash / EasyPaisa / Bank)</label>
-            <input type="text" name="advance_reference" placeholder="e.g. TID 04928174928" class="form-control">
+            <label class="form-label">Reference / TID (JazzCash / EasyPaisa / Bank) <span style="color: var(--mta-red, #EF4444); font-weight: 700;">* Mandatory</span></label>
+            <input type="text" name="advance_reference" value="<?= e($order['advance_reference'] ?? '') ?>" placeholder="e.g. TID 04928174928" required class="form-control">
+            <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.35rem;">
+              Reference / TID is mandatory to verify advance payment.
+            </div>
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>

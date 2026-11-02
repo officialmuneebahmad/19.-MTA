@@ -546,7 +546,7 @@ $status = strtoupper($order['status'] ?? 'PENDING');
         </div>
         <?php if ($advance > 0): ?>
           <div class="summary-row" style="color: #128C7E;">
-            <span>Advance Deposit Paid:</span>
+            <span>Advance Deposit Paid<?= !empty($order['advance_reference']) ? ' (TID: ' . e($order['advance_reference']) . ')' : '' ?>:</span>
             <strong>- <?= mta_money($advance) ?></strong>
           </div>
         <?php endif; ?>

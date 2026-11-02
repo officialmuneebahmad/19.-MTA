@@ -105,6 +105,26 @@ try {
     $pd_log("Domain Migration error updating site_url: " . $e->getMessage());
 }
 
+// Schema Migration: Ensure advance_reference column exists on orders table
+try {
+    $ordersCols = $db->fetchAll("PRAGMA table_info(orders)");
+    $hasAdvanceRef = false;
+    foreach ($ordersCols as $col) {
+        if (($col['name'] ?? '') === 'advance_reference') {
+            $hasAdvanceRef = true;
+            break;
+        }
+    }
+    if (!$hasAdvanceRef) {
+        $db->query("ALTER TABLE orders ADD COLUMN advance_reference TEXT");
+        $pd_log("Schema Migration: Added advance_reference column to orders table.");
+    } else {
+        $pd_log("Schema Migration: orders.advance_reference column already present.");
+    }
+} catch (\Throwable $e) {
+    $pd_log("Schema Migration error checking advance_reference: " . $e->getMessage());
+}
+
 // Supplier API Settings Migration: ensure registered token and raw header format
 try {
     $supplierSettings = [

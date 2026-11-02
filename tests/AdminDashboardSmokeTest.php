@@ -221,6 +221,30 @@ assert_test(
     "Orders Show View: Uses .customer-info-box, .order-items-table, and .admin-order-col-main"
 );
 
+// Advance Payment Validation & Schema Test
+$orderControllerSrc = file_get_contents(MTA_ROOT . '/app/Admin/OrderController.php');
+assert_test(
+    str_contains($orderControllerSrc, 'Reference / TID is mandatory') && str_contains($orderControllerSrc, '$ref === \'\''),
+    "Advance Payment Security: Controller strictly mandates non-empty Reference / TID before verifying advance"
+);
+assert_test(
+    str_contains($ordersShowView, 'name="advance_reference"') && str_contains($ordersShowView, 'required'),
+    "Advance Payment UI: Reference / TID input marked required in orders/show view"
+);
+
+$dbCols = \App\Core\Database::getInstance()->fetchAll("PRAGMA table_info(orders)");
+$hasRefCol = false;
+foreach ($dbCols as $col) {
+    if (($col['name'] ?? '') === 'advance_reference') {
+        $hasRefCol = true;
+        break;
+    }
+}
+assert_test(
+    $hasRefCol,
+    "Database Schema: orders.advance_reference column present in database"
+);
+
 // -----------------------------------------------------------------------------
 // Summary
 // -----------------------------------------------------------------------------
