@@ -25,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.02-v3.6.0-customer-orders-responsive');
+    define('MTA_BUILD_VERSION', '2026.11.02-v3.6.1-customer-orders-grid-fix');
 }
 
 // ----------------------------------------------------------------------

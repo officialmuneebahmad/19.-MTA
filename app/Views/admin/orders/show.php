@@ -35,7 +35,7 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
   <div class="admin-order-grid">
     
     <!-- Left: Customer Details & Ordered Products -->
-    <div>
+    <div class="admin-order-col-main">
       <!-- Customer Information Card (Dark-Mode Safe & Responsive) -->
       <div class="customer-info-box">
         <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1.15rem; color: var(--admin-text); display: flex; align-items: center; gap: 0.5rem;">
@@ -118,36 +118,36 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
 
       <!-- Order Summary Totals -->
       <div class="order-totals-card">
-        <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
           <span style="color: var(--admin-text-muted);">Subtotal:</span>
-          <span style="color: var(--admin-text); font-weight: 600;"><?= mta_money($order['subtotal']) ?></span>
+          <span style="color: var(--admin-text); font-weight: 600; text-align: right;"><?= mta_money($order['subtotal']) ?></span>
         </div>
-        <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
           <span style="color: var(--admin-text-muted);">Delivery Charge:</span>
-          <span style="color: var(--admin-text); font-weight: 600;"><?= (float)$order['delivery_charge'] <= 0 ? 'FREE' : mta_money($order['delivery_charge']) ?></span>
+          <span style="color: var(--admin-text); font-weight: 600; text-align: right;"><?= (float)$order['delivery_charge'] <= 0 ? 'FREE' : mta_money($order['delivery_charge']) ?></span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; color: var(--admin-text); border-top: 1px solid var(--admin-card-border); padding-top: 0.65rem; margin-top: 0.35rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.05rem; color: var(--admin-text); border-top: 1px solid var(--admin-card-border); padding-top: 0.65rem; margin-top: 0.35rem;">
           <span>Order Grand Total:</span>
-          <span style="color: var(--admin-text);"><?= mta_money($order['total']) ?></span>
+          <span style="color: var(--admin-text); text-align: right;"><?= mta_money($order['total']) ?></span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 0.95rem; color: var(--mta-teal);">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.95rem; color: var(--mta-teal);">
           <span>Advance Paid:</span>
-          <span>- <?= mta_money($order['advance_amount'] ?? 0) ?></span>
+          <span style="text-align: right;">- <?= mta_money($order['advance_amount'] ?? 0) ?></span>
         </div>
         <?php if (!empty($order['advance_verified_at'])): ?>
           <div style="font-size: 0.75rem; color: var(--mta-teal); text-align: right; margin-top: -0.2rem;">
             &check; Verified on <?= date('d M Y, h:i A', strtotime($order['advance_verified_at'])) ?>
           </div>
         <?php endif; ?>
-        <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 1.2rem; color: var(--mta-orange); border-top: 2px dashed var(--mta-orange); padding-top: 0.65rem; margin-top: 0.35rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.15rem; color: var(--mta-orange); border-top: 2px dashed var(--mta-orange); padding-top: 0.65rem; margin-top: 0.35rem;">
           <span>Outstanding COD:</span>
-          <span><?= mta_money($order['cod_due'] ?? max(0, $order['total'] - ($order['advance_amount'] ?? 0))) ?></span>
+          <span style="text-align: right;"><?= mta_money($order['cod_due'] ?? max(0, $order['total'] - ($order['advance_amount'] ?? 0))) ?></span>
         </div>
       </div>
     </div>
 
     <!-- Right: Status & Courier Controls + Advance Verification -->
-    <div>
+    <div class="admin-order-col-side">
       <!-- Advance Verification Form Card -->
       <div class="admin-panel-card order-advance-card">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.5rem; flex-wrap: wrap;">

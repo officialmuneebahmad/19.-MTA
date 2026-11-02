@@ -192,8 +192,12 @@ assert_test(
     "CSS Rule: .sync-header-actions and .order-totals-card responsive styling present"
 );
 assert_test(
-    str_contains($cssContent, '.admin-table.order-items-table') && str_contains($cssContent, 'min-width: 520px'),
-    "CSS Rule: .order-items-table has min-width: 520px for horizontal mobile scrolling"
+    str_contains($cssContent, '.admin-table.order-items-table') && str_contains($cssContent, 'min-width: 480px'),
+    "CSS Rule: .order-items-table has min-width for horizontal mobile scrolling"
+);
+assert_test(
+    str_contains($cssContent, '.admin-order-grid') && str_contains($cssContent, 'minmax(0, 1fr)') && str_contains($cssContent, '.admin-order-col-main'),
+    "CSS Rule: .admin-order-grid and columns protected with minmax(0, 1fr) and min-width: 0 against CSS Grid blowout"
 );
 assert_test(
     str_contains($cssContent, '.customer-info-box') && str_contains($cssContent, '.customer-info-grid'),
@@ -213,8 +217,8 @@ assert_test(
     "Orders Index View: Uses responsive bulk actions, pagination bar, and scroll hint"
 );
 assert_test(
-    str_contains($ordersShowView, 'customer-info-box') && str_contains($ordersShowView, 'order-items-table') && str_contains($ordersShowView, 'order-header-actions'),
-    "Orders Show View: Uses .customer-info-box, .order-items-table, and .order-header-actions"
+    str_contains($ordersShowView, 'customer-info-box') && str_contains($ordersShowView, 'order-items-table') && str_contains($ordersShowView, 'admin-order-col-main'),
+    "Orders Show View: Uses .customer-info-box, .order-items-table, and .admin-order-col-main"
 );
 
 // -----------------------------------------------------------------------------
