@@ -20,6 +20,13 @@ if (!hash_equals($expectedToken, (string)$token)) {
     exit;
 }
 
+// Set execution limits for full catalog re-pricing
+@set_time_limit(180);
+@ini_set('memory_limit', '256M');
+
+// Execute CLI post-deploy script and capture return
+$result = require __DIR__ . '/app/cli/post_deploy.php';
+
 // Optional Test Session Provisioning for Verification & Browser Agent
 if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
     require_once __DIR__ . '/app/bootstrap.php';
@@ -38,13 +45,6 @@ if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
         exit;
     }
 }
-
-// Set execution limits for full catalog re-pricing
-@set_time_limit(180);
-@ini_set('memory_limit', '256M');
-
-// Execute CLI post-deploy script and capture return
-$result = require __DIR__ . '/app/cli/post_deploy.php';
 
 // In web server context, reset OPcache
 if (function_exists('opcache_reset')) {
