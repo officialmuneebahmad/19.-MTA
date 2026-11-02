@@ -22,11 +22,11 @@ $adminPath = mta_admin_path();
 
   <!-- Search & Filter Bar -->
   <form action="<?= e($adminPath) ?>/orders" method="GET" class="admin-filter-form">
-    <div style="flex: 2; min-width: 240px;">
+    <div class="filter-search-wrap">
       <input type="text" name="q" value="<?= e($search) ?>" placeholder="Search by Order #, Customer Name, or Phone..." class="form-control">
     </div>
 
-    <div style="flex: 1; min-width: 160px;">
+    <div class="filter-status-wrap">
       <select name="status" class="form-control">
         <option value="">All Statuses</option>
         <option value="pending" <?= $status === 'pending' ? 'selected' : '' ?>>Pending</option>
@@ -37,19 +37,19 @@ $adminPath = mta_admin_path();
       </select>
     </div>
 
-    <div class="filter-actions" style="display: flex; gap: 0.5rem;">
+    <div class="filter-actions">
       <button type="submit" class="btn btn-primary btn-sm">Filter</button>
       <a href="<?= e($adminPath) ?>/orders" class="btn btn-secondary btn-sm">Reset</a>
     </div>
   </form>
 
   <!-- Bulk Actions Bar (Appears when >= 1 checkbox is selected) -->
-  <div id="bulkActionsBar" style="display: none; align-items: center; justify-content: space-between; background: var(--admin-surface-2, #343432); border: 1px solid var(--admin-card-border); padding: 0.85rem 1.25rem; border-radius: 10px; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
-    <div style="display: flex; align-items: center; gap: 0.75rem;">
+  <div id="bulkActionsBar" class="bulk-actions-bar">
+    <div class="bulk-actions-info">
       <span style="font-size: 1.1rem;">☑️</span>
       <strong id="selectedCountText" style="font-size: 0.95rem; color: var(--admin-text);">0 orders selected</strong>
     </div>
-    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+    <div class="bulk-actions-buttons">
       <button type="button" id="btnBulkDelete" class="btn btn-danger btn-sm">
         🗑️ Delete Selected Orders
       </button>
@@ -155,11 +155,11 @@ $adminPath = mta_admin_path();
 
   <!-- Pagination -->
   <?php if ($pagination['total_pages'] > 1): ?>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; font-size: 0.9rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="admin-pagination-bar">
       <div style="color: var(--admin-text-muted);">
         Page <?= (int)$pagination['page'] ?> of <?= (int)$pagination['total_pages'] ?> (Total <?= (int)$pagination['total'] ?> orders)
       </div>
-      <div style="display: flex; gap: 0.5rem;">
+      <div class="pagination-controls">
         <?php if ($pagination['page'] > 1): ?>
           <a href="<?= e($adminPath) ?>/orders?page=<?= $pagination['page'] - 1 ?>&q=<?= urlencode($search) ?>&status=<?= urlencode($status) ?>" class="btn btn-secondary btn-sm">&larr; Prev</a>
         <?php endif; ?>

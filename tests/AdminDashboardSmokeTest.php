@@ -191,6 +191,31 @@ assert_test(
     str_contains($cssContent, '.sync-header-actions') && str_contains($cssContent, '.order-totals-card'),
     "CSS Rule: .sync-header-actions and .order-totals-card responsive styling present"
 );
+assert_test(
+    str_contains($cssContent, '.admin-table.order-items-table') && str_contains($cssContent, 'min-width: 520px'),
+    "CSS Rule: .order-items-table has min-width: 520px for horizontal mobile scrolling"
+);
+assert_test(
+    str_contains($cssContent, '.customer-info-box') && str_contains($cssContent, '.customer-info-grid'),
+    "CSS Rule: .customer-info-box and .customer-info-grid defined for responsive layout"
+);
+assert_test(
+    str_contains($cssContent, '.order-header-actions') && str_contains($cssContent, '.bulk-actions-bar') && str_contains($cssContent, '.admin-pagination-bar'),
+    "CSS Rule: .order-header-actions, .bulk-actions-bar, and .admin-pagination-bar defined"
+);
+
+// Order Views Inspection
+$ordersIndexView = file_get_contents(MTA_ROOT . '/app/Views/admin/orders/index.php');
+$ordersShowView = file_get_contents(MTA_ROOT . '/app/Views/admin/orders/show.php');
+
+assert_test(
+    str_contains($ordersIndexView, 'bulk-actions-bar') && str_contains($ordersIndexView, 'admin-pagination-bar') && str_contains($ordersIndexView, 'table-scroll-hint'),
+    "Orders Index View: Uses responsive bulk actions, pagination bar, and scroll hint"
+);
+assert_test(
+    str_contains($ordersShowView, 'customer-info-box') && str_contains($ordersShowView, 'order-items-table') && str_contains($ordersShowView, 'order-header-actions'),
+    "Orders Show View: Uses .customer-info-box, .order-items-table, and .order-header-actions"
+);
 
 // -----------------------------------------------------------------------------
 // Summary

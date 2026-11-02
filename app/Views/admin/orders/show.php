@@ -10,20 +10,20 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
 ?>
 <div class="admin-card">
   <div class="admin-card-header">
-    <div>
+    <div class="order-header-info">
       <div class="admin-card-title">Order #<?= e($orderNumber) ?></div>
-      <div style="font-size: 0.85rem; color: var(--admin-text-muted); margin-top: 0.35rem;">
+      <div class="order-header-meta" style="font-size: 0.85rem; color: var(--admin-text-muted); margin-top: 0.35rem;">
         Placed on <?= date('d M Y, h:i:s A', strtotime($order['created_at'])) ?> &bull; IP: <code><?= e($order['ip_address'] ?? 'N/A') ?></code>
       </div>
     </div>
-    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+    <div class="order-header-actions">
       <a href="<?= e($adminPath) ?>/orders" class="btn btn-secondary btn-sm">&larr; Back to Orders</a>
       <button type="button" onclick="window.location.reload();" class="btn btn-secondary btn-sm" title="Refresh Order Details">🔄 Refresh</button>
-      <a href="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/invoice" target="_blank" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.4rem; border-color: var(--mta-teal); color: var(--mta-teal);" title="View & Print Official Customer Invoice">
+      <a href="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/invoice" target="_blank" class="btn btn-secondary btn-sm btn-order-invoice" title="View & Print Official Customer Invoice">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Get Invoice</span>
       </a>
-      <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/delete" method="POST" style="display:inline;" onsubmit="return mtaConfirmTwice('Are you sure you want to delete Order #<?= e($orderNumber) ?>? This action cannot be undone.', '⚠️ FINAL CONFIRMATION: This will permanently delete Order #<?= e($orderNumber) ?> and all its items. Proceed?');">
+      <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>/delete" method="POST" class="order-delete-form" onsubmit="return mtaConfirmTwice('Are you sure you want to delete Order #<?= e($orderNumber) ?>? This action cannot be undone.', '⚠️ FINAL CONFIRMATION: This will permanently delete Order #<?= e($orderNumber) ?> and all its items. Proceed?');">
         <?= mta_csrf_field() ?>
         <button type="submit" class="btn btn-danger btn-sm" title="Delete this order permanently">
           🗑️ Delete
@@ -36,77 +36,80 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
     
     <!-- Left: Customer Details & Ordered Products -->
     <div>
-      <!-- Customer Information Card (Dark-Mode Safe) -->
-      <div style="background: var(--admin-surface-2, #343432); border: 1px solid var(--admin-card-border); border-radius: 12px; padding: 1.75rem; margin-bottom: 2rem; color: var(--admin-text);">
-        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: var(--admin-text); display: flex; align-items: center; gap: 0.5rem;">
+      <!-- Customer Information Card (Dark-Mode Safe & Responsive) -->
+      <div class="customer-info-box">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1.15rem; color: var(--admin-text); display: flex; align-items: center; gap: 0.5rem;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           Customer Details
         </h3>
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.925rem; line-height: 1.6;">
-          <div>
-            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700; display: block;">Customer Name</span>
-            <strong style="color: var(--admin-text); font-size: 1rem;"><?= e($order['customer_name']) ?></strong>
+        <div class="customer-info-grid">
+          <div class="customer-info-item">
+            <span class="info-label">Customer Name</span>
+            <strong class="info-val" style="font-size: 1rem;"><?= e($order['customer_name']) ?></strong>
           </div>
-          <div>
-            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700; display: block;">Mobile Phone</span>
-            <a href="tel:<?= e($order['customer_phone']) ?>" style="color: var(--mta-orange); font-weight: 700; text-decoration: underline;">
+          <div class="customer-info-item">
+            <span class="info-label">Mobile Phone</span>
+            <a href="tel:<?= e($order['customer_phone']) ?>" class="info-val" style="color: var(--mta-orange); text-decoration: underline;">
               <?= e($order['customer_phone']) ?>
             </a>
           </div>
-          <div>
-            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700; display: block;">Destination City</span>
-            <strong style="color: var(--admin-text);"><?= e($order['city']) ?></strong>
+          <div class="customer-info-item">
+            <span class="info-label">Destination City</span>
+            <strong class="info-val"><?= e($order['city']) ?></strong>
           </div>
           <?php if (!empty($order['customer_email'])): ?>
-            <div>
-              <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700; display: block;">Email Address</span>
-              <span style="color: var(--admin-text);"><?= e($order['customer_email']) ?></span>
+            <div class="customer-info-item">
+              <span class="info-label">Email Address</span>
+              <span class="info-val"><?= e($order['customer_email']) ?></span>
             </div>
           <?php endif; ?>
         </div>
 
-        <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--admin-card-border);">
-          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--admin-text-muted); font-weight: 700; display: block;">Delivery Address</span>
-          <div style="color: var(--admin-text); margin-top: 0.25rem; font-size: 0.95rem; line-height: 1.5;"><?= nl2br(e($order['shipping_address'])) ?></div>
+        <div class="customer-address-box">
+          <span class="info-label">Delivery Address</span>
+          <div style="color: var(--admin-text); margin-top: 0.25rem; font-size: 0.95rem; line-height: 1.5; word-break: break-word;"><?= nl2br(e($order['shipping_address'])) ?></div>
         </div>
 
         <?php if (!empty($order['customer_notes'])): ?>
-          <div style="margin-top: 1rem; background: var(--admin-surface-muted, #282826); padding: 0.85rem 1.15rem; border-radius: 8px; border: 1px solid var(--admin-card-border); color: var(--admin-text); font-size: 0.9rem;">
+          <div class="customer-notes-box">
             <strong style="color: var(--admin-text-muted); font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 0.25rem;">Customer Order Notes:</strong>
             <?= nl2br(e($order['customer_notes'])) ?>
           </div>
         <?php endif; ?>
 
         <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-          <a href="<?= e($waCustomerUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm" style="background: #128C7E; border-color: #128C7E; color: #fff;">
+          <a href="<?= e($waCustomerUrl) ?>" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm btn-customer-wa" style="background: #128C7E; border-color: #128C7E; color: #fff;">
             💬 Open Customer Chat on WhatsApp &rarr;
           </a>
         </div>
       </div>
 
-      <!-- Items Table -->
-      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--admin-text);">Ordered Products</h3>
+      <!-- Items Table with Mobile X-Axis Scroll -->
+      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--admin-text);">Ordered Products</h3>
+      <div class="table-scroll-hint mobile-only">
+        <span>&larr; Swipe horizontally to view product prices & line totals &rarr;</span>
+      </div>
       <div class="admin-table-responsive">
-        <table class="admin-table">
+        <table class="admin-table order-items-table">
           <thead>
             <tr>
               <th>Product Title & SKU</th>
-              <th>Unit Price</th>
-              <th style="text-align: center;">Qty</th>
-              <th style="text-align: right;">Total</th>
+              <th style="white-space: nowrap;">Unit Price</th>
+              <th style="text-align: center; white-space: nowrap;">Qty</th>
+              <th style="text-align: right; white-space: nowrap;">Total</th>
             </tr>
           </thead>
           <tbody>
             <?php foreach ($items as $item): ?>
               <tr>
                 <td>
-                  <div style="font-weight: 600; color: var(--admin-text);"><?= e($item['product_title']) ?></div>
-                  <div style="font-size: 0.75rem; color: var(--admin-text-muted); font-family: monospace; margin-top: 0.2rem;">SKU: <?= e($item['product_sku'] ?? 'N/A') ?></div>
+                  <div style="font-weight: 600; color: var(--admin-text); line-height: 1.35;"><?= e($item['product_title']) ?></div>
+                  <div style="font-size: 0.75rem; color: var(--admin-text-muted); font-family: monospace; margin-top: 0.25rem;">SKU: <?= e($item['product_sku'] ?? 'N/A') ?></div>
                 </td>
-                <td style="color: var(--admin-text);"><?= mta_money($item['unit_price']) ?></td>
-                <td style="text-align: center; color: var(--admin-text);"><?= (int)$item['quantity'] ?></td>
-                <td style="text-align: right; font-weight: 700; color: var(--admin-text);"><?= mta_money($item['total_price']) ?></td>
+                <td style="color: var(--admin-text); white-space: nowrap;"><?= mta_money($item['unit_price']) ?></td>
+                <td style="text-align: center; color: var(--admin-text); white-space: nowrap;"><?= (int)$item['quantity'] ?></td>
+                <td style="text-align: right; font-weight: 700; color: var(--admin-text); white-space: nowrap;"><?= mta_money($item['total_price']) ?></td>
               </tr>
             <?php endforeach; ?>
           </tbody>
@@ -146,8 +149,8 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
     <!-- Right: Status & Courier Controls + Advance Verification -->
     <div>
       <!-- Advance Verification Form Card -->
-      <div style="background: var(--admin-card); border: 1px solid var(--admin-card-border); border-left: 4px solid var(--mta-teal); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <div class="admin-panel-card order-advance-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.5rem; flex-wrap: wrap;">
           <h3 style="font-size: 1rem; font-weight: 700; color: var(--admin-text); margin: 0;">Advance Payment</h3>
           <?php if (!empty($order['advance_verified_at'])): ?>
             <span class="badge badge-success">Verified</span>
@@ -174,7 +177,7 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
       </div>
 
       <!-- Dispatch & Courier Controls Card -->
-      <div style="background: var(--admin-card); border: 1px solid var(--admin-card-border); border-radius: 12px; padding: 1.5rem;">
+      <div class="admin-panel-card order-dispatch-card">
         <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--admin-text);">Dispatch & Courier Controls</h3>
 
         <form action="<?= e($adminPath) ?>/orders/<?= (int)$order['id'] ?>" method="POST">
