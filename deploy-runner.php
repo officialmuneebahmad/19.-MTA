@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+date_default_timezone_set('Asia/Karachi');
+
 $token = $_GET['token'] ?? $_POST['token'] ?? '';
 $expectedToken = 'mta_deploy_2026_secret_9872';
 

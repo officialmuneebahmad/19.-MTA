@@ -1099,6 +1099,14 @@ button {
   grid-template-columns: 1.45fr 1fr;
   gap: 1.25rem;
   margin-bottom: 1.75rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dashboard-two-cols > .admin-panel {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .admin-panel {
@@ -1159,6 +1167,16 @@ button {
 
 .admin-table.orders-table {
   min-width: 1080px !important; /* Preserves clean layout across 11 columns */
+}
+
+.admin-table.dashboard-orders-table {
+  min-width: 640px !important; /* Clean layout for 6-column dashboard recent orders */
+}
+
+.top-products-scroll-wrap {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .admin-table th {
@@ -2031,6 +2049,74 @@ pre,
 }
 
 @media (max-width: 767.98px) {
+  .dashboard-two-cols {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .dashboard-two-cols > .admin-panel {
+    padding: 1.15rem 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .dashboard-two-cols .admin-table-responsive {
+    margin-bottom: 0.5rem;
+  }
+
+  .top-products-scroll-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mta-orange-btn, #FF6223) var(--admin-surface-muted, #2a2a28);
+  }
+
+  .top-products-scroll-wrap::-webkit-scrollbar {
+    height: 8px !important;
+    display: block !important;
+    -webkit-appearance: none;
+  }
+
+  .top-products-scroll-wrap::-webkit-scrollbar-track {
+    background: var(--admin-surface-muted, #242422) !important;
+    border-radius: 4px;
+  }
+
+  .top-products-scroll-wrap::-webkit-scrollbar-thumb {
+    background: var(--mta-orange-btn, #FF6223) !important;
+    border-radius: 4px;
+    border: 1px solid var(--admin-card-border, #333330);
+  }
+
+  .top-products-scroll-wrap::-webkit-scrollbar-thumb:hover {
+    background: #ff7d47 !important;
+  }
+
+  .top-products-scroll-wrap .top-products-list {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 0.85rem !important;
+    width: max-content !important;
+    min-width: 100% !important;
+  }
+
+  .top-products-scroll-wrap .top-product-item {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    box-sizing: border-box !important;
+  }
+
   .kpi-grid {
     grid-template-columns: 1fr;
   }

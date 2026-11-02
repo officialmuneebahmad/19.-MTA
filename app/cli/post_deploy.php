@@ -14,6 +14,8 @@
 
 declare(strict_types=1);
 
+date_default_timezone_set('Asia/Karachi');
+
 if (!defined('MTA_START')) {
     define('MTA_START', microtime(true));
 }

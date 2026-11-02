@@ -53,7 +53,7 @@ $adminPath = mta_admin_path();
       <div style="font-size: 1.4rem; font-weight: 800; color: <?= ($lastSync['status'] ?? '') === 'success' ? '#0E7064' : '#DC2626' ?>; margin-top: 0.25rem;">
         <?= strtoupper((string)($lastSync['status'] ?? 'NONE')) ?>
       </div>
-      <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;"><?= !empty($lastSync['finished_at']) ? e($lastSync['finished_at']) : 'Never completed' ?></div>
+      <div style="font-size: 0.75rem; color: var(--admin-text-muted); margin-top: 0.25rem;"><?= !empty($lastSync['finished_at']) ? date('d M Y, h:i:s A', strtotime($lastSync['finished_at'])) . ' PKT' : 'Never completed' ?></div>
     </div>
 
     <div style="background: var(--admin-surface-2, #343432); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-card-border);">
@@ -105,7 +105,7 @@ $adminPath = mta_admin_path();
           <tr>
             <td><code>#<?= (int)$r['id'] ?></code></td>
             <td style="font-size: 0.825rem; color: #666;">
-              <?= date('d M Y, h:i:s A', strtotime($r['started_at'])) ?>
+              <?= date('d M Y, h:i:s A', strtotime($r['started_at'])) ?> PKT
             </td>
             <td>
               <span class="badge <?= $r['status'] === 'success' ? 'badge-success' : 'badge-danger' ?>">

@@ -6,6 +6,9 @@
 
 declare(strict_types=1);
 
+// Set default timezone for entire application to Pakistan Standard Time (PKT, UTC+5)
+date_default_timezone_set('Asia/Karachi');
+
 if (!defined('MTA_START')) {
     define('MTA_START', microtime(true));
 }
@@ -22,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.02-v3.1.0-og-previews-mobile-admin-tables');
+    define('MTA_BUILD_VERSION', '2026.11.02-v3.2.0-mobile-dashboard-xscroll-pkt-timezone');
 }
 
 // ----------------------------------------------------------------------

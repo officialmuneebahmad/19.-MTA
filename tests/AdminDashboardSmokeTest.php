@@ -135,6 +135,31 @@ assert_test(
     "Dashboard UI: Reconciliation card present"
 );
 
+assert_test(
+    date_default_timezone_get() === 'Asia/Karachi',
+    "Timezone: Default timezone strictly set to Asia/Karachi (PKT UTC+5)"
+);
+assert_test(
+    str_contains($html, 'dashboard-orders-table'),
+    "Dashboard UI: Recent orders table has dedicated .dashboard-orders-table class"
+);
+assert_test(
+    str_contains($html, 'top-products-scroll-wrap'),
+    "Dashboard UI: Product performance wrapped in .top-products-scroll-wrap for mobile x-axis scrolling"
+);
+assert_test(
+    str_contains($html, 'table-scroll-hint'),
+    "Dashboard UI: Table horizontal scroll hints present for mobile viewports"
+);
+assert_test(
+    str_contains($cssContent, '.top-products-scroll-wrap'),
+    "CSS Rule: .top-products-scroll-wrap defined with touch scroll and custom scrollbar"
+);
+assert_test(
+    str_contains($cssContent, '.dashboard-orders-table'),
+    "CSS Rule: .dashboard-orders-table defined for optimal 6-column width"
+);
+
 // -----------------------------------------------------------------------------
 // Summary
 // -----------------------------------------------------------------------------

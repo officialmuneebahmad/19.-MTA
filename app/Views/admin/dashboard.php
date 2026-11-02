@@ -199,8 +199,11 @@ $adminPath = mta_admin_path();
       <a href="<?= e($adminPath) ?>/orders" class="panel-link">Manage All &rarr;</a>
     </div>
 
+    <div class="table-scroll-hint">
+      <span>&larr; Swipe horizontally to view all orders &rarr;</span>
+    </div>
     <div class="admin-table-responsive">
-      <table class="admin-table orders-table">
+      <table class="admin-table dashboard-orders-table">
         <thead>
           <tr>
             <th>Order #</th>
@@ -273,59 +276,73 @@ $adminPath = mta_admin_path();
       <a href="<?= e($adminPath) ?>/products" class="panel-link">Catalog &rarr;</a>
     </div>
 
-    <div class="top-products-list">
-      <?php if (!empty($topSold)): ?>
-        <?php foreach ($topSold as $idx => $prod): ?>
-          <div class="top-product-item">
-            <div class="top-product-rank"><?= $idx + 1 ?></div>
-            <img src="<?= e($prod['image_400'] ?: ($prod['primary_image_url'] ?: '/assets/images/placeholder.svg')) ?>" alt="" class="top-product-img" loading="lazy" width="48" height="48">
-            <div class="top-product-info">
-              <a href="/products/<?= e($prod['slug']) ?>" target="_blank" rel="noopener noreferrer" class="top-product-name" title="<?= e($prod['title']) ?>">
-                <?= e($prod['title']) ?>
-              </a>
-              <div class="top-product-meta">
-                <span class="top-product-price"><?= mta_money($prod['sell_price']) ?></span>
-                <span class="sep">&bull;</span>
-                <span class="top-product-sold"><strong><?= (int)$prod['units_sold'] ?></strong> sold (<?= mta_money($prod['total_revenue']) ?>)</span>
+    <?php if (!empty($topSold)): ?>
+      <div class="table-scroll-hint">
+        <span>&larr; Swipe horizontally to view top products &rarr;</span>
+      </div>
+      <div class="top-products-scroll-wrap">
+        <div class="top-products-list">
+          <?php foreach ($topSold as $idx => $prod): ?>
+            <div class="top-product-item">
+              <div class="top-product-rank"><?= $idx + 1 ?></div>
+              <img src="<?= e($prod['image_400'] ?: ($prod['primary_image_url'] ?: '/assets/images/placeholder.svg')) ?>" alt="" class="top-product-img" loading="lazy" width="48" height="48">
+              <div class="top-product-info">
+                <a href="/products/<?= e($prod['slug']) ?>" target="_blank" rel="noopener noreferrer" class="top-product-name" title="<?= e($prod['title']) ?>">
+                  <?= e($prod['title']) ?>
+                </a>
+                <div class="top-product-meta">
+                  <span class="top-product-price"><?= mta_money($prod['sell_price']) ?></span>
+                  <span class="sep">&bull;</span>
+                  <span class="top-product-sold"><strong><?= (int)$prod['units_sold'] ?></strong> sold (<?= mta_money($prod['total_revenue']) ?>)</span>
+                </div>
               </div>
+              <a href="<?= e($adminPath) ?>/products/<?= (int)$prod['id'] ?>/edit" class="btn-action-icon" title="Edit in Admin">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </a>
             </div>
-            <a href="<?= e($adminPath) ?>/products/<?= (int)$prod['id'] ?>/edit" class="btn-action-icon" title="Edit in Admin">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </a>
-          </div>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <!-- Clean Empty State for Sales (Never label unsold items as top selling) -->
-        <div class="empty-sales-state">
-          <div class="empty-sales-title">No verified sales yet</div>
-          <p class="empty-sales-desc">Products will appear here ranked by revenue and units once customer orders are completed.</p>
+          <?php endforeach; ?>
         </div>
+      </div>
+    <?php else: ?>
+      <!-- Clean Empty State for Sales (Never label unsold items as top selling) -->
+      <div class="empty-sales-state">
+        <div class="empty-sales-title">No verified sales yet</div>
+        <p class="empty-sales-desc">Products will appear here ranked by revenue and units once customer orders are completed.</p>
+      </div>
 
+      <?php if (!empty($mostPopular)): ?>
         <!-- Fallback List: Most Popular by Engagement & Page Views -->
         <div class="engagement-section-title">
           <span>Most Viewed Products (Catalog Engagement)</span>
         </div>
-        <?php foreach ($mostPopular as $idx => $prod): ?>
-          <div class="top-product-item">
-            <div class="top-product-rank"><?= $idx + 1 ?></div>
-            <img src="<?= e($prod['image_400'] ?: ($prod['primary_image_url'] ?: '/assets/images/placeholder.svg')) ?>" alt="" class="top-product-img" loading="lazy" width="48" height="48">
-            <div class="top-product-info">
-              <a href="/products/<?= e($prod['slug']) ?>" target="_blank" rel="noopener noreferrer" class="top-product-name" title="<?= e($prod['title']) ?>">
-                <?= e($prod['title']) ?>
-              </a>
-              <div class="top-product-meta">
-                <span class="top-product-price"><?= mta_money($prod['sell_price']) ?></span>
-                <span class="sep">&bull;</span>
-                <span class="badge badge-sky" style="font-size:0.65rem;">Score: <?= (int)$prod['popularity_score'] ?> views</span>
+        <div class="table-scroll-hint">
+          <span>&larr; Swipe horizontally to view products &rarr;</span>
+        </div>
+        <div class="top-products-scroll-wrap">
+          <div class="top-products-list">
+            <?php foreach ($mostPopular as $idx => $prod): ?>
+              <div class="top-product-item">
+                <div class="top-product-rank"><?= $idx + 1 ?></div>
+                <img src="<?= e($prod['image_400'] ?: ($prod['primary_image_url'] ?: '/assets/images/placeholder.svg')) ?>" alt="" class="top-product-img" loading="lazy" width="48" height="48">
+                <div class="top-product-info">
+                  <a href="/products/<?= e($prod['slug']) ?>" target="_blank" rel="noopener noreferrer" class="top-product-name" title="<?= e($prod['title']) ?>">
+                    <?= e($prod['title']) ?>
+                  </a>
+                  <div class="top-product-meta">
+                    <span class="top-product-price"><?= mta_money($prod['sell_price']) ?></span>
+                    <span class="sep">&bull;</span>
+                    <span class="badge badge-sky" style="font-size:0.65rem;">Score: <?= (int)$prod['popularity_score'] ?> views</span>
+                  </div>
+                </div>
+                <a href="<?= e($adminPath) ?>/products/<?= (int)$prod['id'] ?>/edit" class="btn-action-icon" title="Edit in Admin">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </a>
               </div>
-            </div>
-            <a href="<?= e($adminPath) ?>/products/<?= (int)$prod['id'] ?>/edit" class="btn-action-icon" title="Edit in Admin">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-            </a>
+            <?php endforeach; ?>
           </div>
-        <?php endforeach; ?>
+        </div>
       <?php endif; ?>
-    </div>
+    <?php endif; ?>
   </div>
 
 </div>
@@ -386,7 +403,7 @@ $adminPath = mta_admin_path();
     <div class="sync-telemetry-body">
       <div class="sync-info-row">
         <span>Last Sync:</span>
-        <strong><?= !empty($catalogHealth['last_sync']['finished_at']) ? date('d M Y, h:i A', strtotime($catalogHealth['last_sync']['finished_at'])) : 'Never' ?></strong>
+        <strong><?= !empty($catalogHealth['last_sync']['finished_at']) ? date('d M Y, h:i A', strtotime($catalogHealth['last_sync']['finished_at'])) . ' PKT' : 'Never' ?></strong>
       </div>
       <div class="sync-info-row">
         <span>Result:</span>

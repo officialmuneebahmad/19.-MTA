@@ -49,11 +49,14 @@ class Database
             ];
 
             if (defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
-                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES {$charset} COLLATE {$charset}_unicode_ci";
+                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES {$charset} COLLATE {$charset}_unicode_ci, time_zone = '+05:00'";
             }
 
             $this->pdo = new PDO($dsn, $user, $pass, $options);
             $this->driver = 'mysql';
+            try {
+                $this->pdo->exec("SET time_zone = '+05:00'");
+            } catch (\Throwable) {}
             $this->ensureSchemaIntegrity();
         } catch (\Throwable $e) {
             // If MySQL is down, extension is missing, or in local development without MySQL server, fallback to SQLite

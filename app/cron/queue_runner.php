@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+date_default_timezone_set('Asia/Karachi');
+
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
     die("Access denied. CLI only.\n");
