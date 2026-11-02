@@ -13,7 +13,7 @@ $adminPath = mta_admin_path();
         🔄 Refresh
       </button>
     </div>
-    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+    <div class="sync-header-actions">
       <form action="<?= e($adminPath) ?>/sync/test" method="POST" style="margin: 0;">
         <?= mta_csrf_field() ?>
         <button type="submit" class="btn btn-secondary" title="Test Computer Zone API handshake and outbound IP">

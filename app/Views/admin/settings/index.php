@@ -54,15 +54,13 @@ $adminPath = mta_admin_path();
         All selling prices on product cards, detail pages, cart, checkout, schema JSON-LD, and WhatsApp messages are computed using these exact formula tiers. All prices automatically end in <strong>99</strong> or <strong>999</strong>.
       </p>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem;">
-        <div class="form-group">
-          <label class="form-label">Tier Threshold (PKR)</label>
-          <input type="number" name="pricing_threshold" value="<?= (int)($settings['pricing_threshold'] ?? 2000) ?>" class="form-control" required>
-          <div class="form-help">Split point between Tier 1 and Tier 2 (default 2,000)</div>
-        </div>
+      <div class="form-group" style="max-width: 360px; margin-bottom: 1.5rem;">
+        <label class="form-label">Tier Threshold (PKR)</label>
+        <input type="number" name="pricing_threshold" value="<?= (int)($settings['pricing_threshold'] ?? 2000) ?>" class="form-control" required>
+        <div class="form-help">Split point between Tier 1 and Tier 2 (default 2,000)</div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+      <div class="settings-grid-2col">
         <!-- Tier 1 -->
         <div style="background:var(--admin-surface-muted); padding:1.25rem; border-radius:var(--radius-md); border:1px solid var(--admin-card-border);">
           <div style="font-weight:700; color:var(--admin-text); margin-bottom:0.75rem; font-size:0.95rem;">
@@ -120,7 +118,7 @@ $adminPath = mta_admin_path();
       </div>
     </div>
     <div style="padding: 1.5rem;">
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;">
+      <div class="settings-grid-3col">
         <div class="form-group">
           <label class="form-label">Free Delivery Threshold (PKR)</label>
           <input type="number" name="delivery_free_threshold" value="<?= (int)($settings['delivery_free_threshold'] ?? 5000) ?>" class="form-control" required>
@@ -150,7 +148,7 @@ $adminPath = mta_admin_path();
       </div>
     </div>
     <div style="padding: 1.5rem;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem;">
+      <div class="settings-grid-2col">
         <div class="form-group">
           <label class="form-label">Store Brand Name</label>
           <input type="text" name="site_name" value="<?= e($settings['site_name'] ?? 'Multan Tech Accessories') ?>" class="form-control">
@@ -162,7 +160,7 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem;">
+      <div class="settings-grid-2col">
         <div class="form-group">
           <label class="form-label">Customer Support Phone</label>
           <input type="text" name="store_phone" value="<?= e($settings['store_phone'] ?? '0307-0655275') ?>" class="form-control">
@@ -174,7 +172,7 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem;">
+      <div class="settings-grid-2col">
         <div class="form-group">
           <label class="form-label">Facebook Page URL</label>
           <input type="url" name="social_facebook" value="<?= e($settings['social_facebook'] ?? 'https://www.facebook.com/profile.php?id=61590214397707') ?>" class="form-control">
@@ -210,7 +208,7 @@ $adminPath = mta_admin_path();
       </div>
     </div>
     <div style="padding: 1.5rem;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+      <div class="settings-grid-2col">
         <div class="form-group">
           <label class="form-label">Require Advance Payment for Dispatch</label>
           <select name="advance_payment_required" class="form-control">
@@ -235,7 +233,7 @@ $adminPath = mta_admin_path();
       </div>
     </div>
     <div style="padding: 1.5rem;">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1rem;">
+      <div class="settings-grid-2col">
         <div class="form-group">
           <label class="form-label">Google AdSense Publisher ID</label>
           <input type="text" name="adsense_client_id" value="<?= e($settings['adsense_client_id'] ?? '') ?>" placeholder="ca-pub-XXXXXXXXXXXXXXXX" class="form-control">
@@ -247,7 +245,7 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+      <div class="settings-grid-4col">
         <div class="form-group">
           <label class="form-label">SMTP Host</label>
           <input type="text" name="smtp_host" value="<?= e($settings['smtp_host'] ?? 'mail.multantech.store') ?>" class="form-control">
@@ -272,7 +270,7 @@ $adminPath = mta_admin_path();
   </div>
 
   <div style="margin-bottom: 3rem;">
-    <button type="submit" class="btn btn-primary" style="height: 48px; padding: 0 2rem; font-size: 1rem;">
+    <button type="submit" class="btn btn-primary" style="min-height: 48px; padding: 0 2rem; font-size: 1rem; width: 100%; max-width: 320px; justify-content: center;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
       <span>Save All Store Settings</span>
     </button>

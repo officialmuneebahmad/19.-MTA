@@ -8,7 +8,7 @@ $adminPath = mta_admin_path();
 <div class="admin-card">
   <div class="admin-card-header">
     <div class="admin-card-title">SEO Content Gate Progression</div>
-    <div style="display: flex; gap: 0.5rem;">
+    <div class="card-header-actions">
       <form action="<?= e($adminPath) ?>/queue/bulk-enqueue" method="POST" style="display:inline;">
         <?= mta_csrf_field() ?>
         <button type="submit" class="btn btn-secondary btn-sm">⚡ Queue 200 Raw Products for AI</button>
@@ -20,7 +20,7 @@ $adminPath = mta_admin_path();
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; text-align: center;">
+  <div class="queue-progression-grid">
     <div style="background: #FAF9F6; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--admin-border);">
       <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700;">1. Supplier Raw (Noindex)</div>
       <div style="font-size: 1.75rem; font-weight: 800; color: #666;"><?= (int)($stats['raw_count'] ?? 0) ?></div>
@@ -69,12 +69,14 @@ $adminPath = mta_admin_path();
             </td>
             <td><?= mta_money($d['sell_price']) ?></td>
             <td><span class="badge badge-warning">AI Draft</span></td>
-            <td style="display: flex; gap: 0.5rem;">
-              <form action="<?= e($adminPath) ?>/queue/approve/<?= (int)$d['id'] ?>" method="POST">
-                <?= mta_csrf_field() ?>
-                <button type="submit" class="btn btn-success btn-sm">Approve & Index</button>
-              </form>
-              <a href="<?= e($adminPath) ?>/products/<?= (int)$d['id'] ?>/edit" class="btn btn-secondary btn-sm">Edit Content</a>
+            <td style="white-space: nowrap;">
+              <div style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
+                <form action="<?= e($adminPath) ?>/queue/approve/<?= (int)$d['id'] ?>" method="POST" style="margin: 0;">
+                  <?= mta_csrf_field() ?>
+                  <button type="submit" class="btn btn-success btn-sm">Approve &amp; Index</button>
+                </form>
+                <a href="<?= e($adminPath) ?>/products/<?= (int)$d['id'] ?>/edit" class="btn btn-secondary btn-sm">Edit Content</a>
+              </div>
             </td>
           </tr>
         <?php endforeach; ?>

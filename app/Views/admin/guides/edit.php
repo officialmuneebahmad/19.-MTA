@@ -15,7 +15,7 @@ $actionUrl = $isEdit ? "{$adminPath}/guides/{$guide['id']}" : "{$adminPath}/guid
   <form action="<?= e($actionUrl) ?>" method="POST">
     <?= mta_csrf_field() ?>
 
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+    <div class="admin-grid-2col">
       
       <!-- Main Content -->
       <div>

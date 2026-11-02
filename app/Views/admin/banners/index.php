@@ -84,7 +84,7 @@ $adminPath = mta_admin_path();
 
       <div class="form-group">
         <label for="subtitle">Subtitle / Promotion Text</label>
-        <textarea id="subtitle" name="subtitle" rows="2" class="form-control" placeholder="Authentic 65W and 100W laptop chargers with 7-day checking warranty across Pakistan."></textarea>
+        <textarea id="subtitle" name="subtitle" rows="2" class="form-control" placeholder="Authentic 65W and 100W laptop chargers with 3-day checking warranty across Pakistan."></textarea>
       </div>
 
       <div class="form-group">

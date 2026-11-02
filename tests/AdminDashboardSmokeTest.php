@@ -171,6 +171,26 @@ assert_test(
     str_contains($cssContent, 'calc(6.5rem + env(safe-area-inset-bottom, 0px))'),
     "CSS Rule: .sidebar-footer mobile padding-bottom extended for complete scroll clearance"
 );
+assert_test(
+    str_contains($cssContent, '.admin-grid-2col-equal'),
+    "CSS Rule: .admin-grid-2col-equal defined for balanced 2-column mobile stacking"
+);
+assert_test(
+    str_contains($cssContent, '.form-row-2col'),
+    "CSS Rule: .form-row-2col defined for responsive mobile input stacking"
+);
+assert_test(
+    str_contains($cssContent, '.settings-grid-2col') && str_contains($cssContent, '.settings-grid-3col') && str_contains($cssContent, '.settings-grid-4col'),
+    "CSS Rule: .settings-grid-2col, .settings-grid-3col, .settings-grid-4col defined for mobile responsive settings"
+);
+assert_test(
+    str_contains($cssContent, '.seo-audit-grid') && str_contains($cssContent, '.queue-progression-grid') && str_contains($cssContent, '.export-format-grid'),
+    "CSS Rule: .seo-audit-grid, .queue-progression-grid, .export-format-grid defined for responsive cards"
+);
+assert_test(
+    str_contains($cssContent, '.sync-header-actions') && str_contains($cssContent, '.order-totals-card'),
+    "CSS Rule: .sync-header-actions and .order-totals-card responsive styling present"
+);
 
 // -----------------------------------------------------------------------------
 // Summary

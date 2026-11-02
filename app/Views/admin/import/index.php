@@ -4,7 +4,7 @@
  */
 $adminPath = mta_admin_path();
 ?>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+<div class="admin-grid-2col-equal">
 
   <!-- 1. CSV Batch Import -->
   <div class="admin-card">
@@ -55,7 +55,7 @@ $adminPath = mta_admin_path();
         <input type="url" id="target_url" name="target_url" required placeholder="https://example.com/product/..." class="form-control">
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label for="fallback_price">Selling Price (PKR)</label>
           <input type="number" id="fallback_price" name="fallback_price" value="1500" class="form-control">

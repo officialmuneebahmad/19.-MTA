@@ -100,7 +100,7 @@ $adminPath = mta_admin_path();
 
       <div class="form-group" style="margin-bottom: 1.5rem;">
         <label class="form-label">Output File Format *</label>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.35rem;">
+        <div class="export-format-grid">
           <label style="display: flex; align-items: center; gap: 0.65rem; padding: 0.85rem 1rem; border: 1px solid var(--admin-card-border); border-radius: var(--radius-md); cursor: pointer; background: var(--admin-surface-muted);">
             <input type="radio" name="format" value="json" checked style="accent-color: var(--mta-orange);">
             <div>

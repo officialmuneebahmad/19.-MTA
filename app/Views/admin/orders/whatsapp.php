@@ -73,7 +73,7 @@ $adminPath = mta_admin_path();
     <form action="<?= e($adminPath) ?>/whatsapp-orders/create" method="POST" style="padding: 1.25rem;">
       <?= mta_csrf_field() ?>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label class="form-label">Customer Full Name *</label>
           <input type="text" name="customer_name" required placeholder="e.g. Usama Khan" class="form-control">
@@ -85,7 +85,7 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label class="form-label">Destination City *</label>
           <select name="city" id="wa-order-city" class="form-control" required>
@@ -117,7 +117,7 @@ $adminPath = mta_admin_path();
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-row-2col">
         <div class="form-group">
           <label class="form-label">Order Quantity</label>
           <input type="number" name="quantity" id="wa-order-qty" value="1" min="1" max="100" class="form-control">

@@ -4,7 +4,7 @@
  */
 $adminPath = mta_admin_path();
 ?>
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+<div class="seo-audit-grid">
 
   <div class="admin-card" style="margin-bottom: 0;">
     <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700; margin-bottom: 0.35rem;">
@@ -60,29 +60,31 @@ $adminPath = mta_admin_path();
       <a href="<?= e($adminPath) ?>/categories/mappings" class="btn btn-secondary btn-sm">Auto-Map via Supplier Categories &rarr;</a>
     </div>
 
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>SKU</th>
-          <th>Price</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($uncategorizedProducts as $p): ?>
+    <div class="admin-table-responsive">
+      <table class="admin-table">
+        <thead>
           <tr>
-            <td style="font-weight: 600;"><?= e($p['title']) ?></td>
-            <td><code><?= e($p['sku']) ?></code></td>
-            <td><?= mta_money($p['sell_price']) ?></td>
-            <td>
-              <a href="<?= e($adminPath) ?>/products/<?= (int)$p['id'] ?>/edit" class="btn btn-secondary btn-sm">
-                Assign Category &rarr;
-              </a>
-            </td>
+            <th>Title</th>
+            <th>SKU</th>
+            <th>Price</th>
+            <th>Action</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <?php foreach ($uncategorizedProducts as $p): ?>
+            <tr>
+              <td style="font-weight: 600;"><?= e($p['title']) ?></td>
+              <td><code><?= e($p['sku']) ?></code></td>
+              <td><?= mta_money($p['sell_price']) ?></td>
+              <td>
+                <a href="<?= e($adminPath) ?>/products/<?= (int)$p['id'] ?>/edit" class="btn btn-secondary btn-sm">
+                  Assign Category &rarr;
+                </a>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
   </div>
 <?php endif; ?>

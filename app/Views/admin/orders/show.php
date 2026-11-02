@@ -114,7 +114,7 @@ $waCustomerUrl = mta_whatsapp_url($order['customer_phone'], $waMsg);
       </div>
 
       <!-- Order Summary Totals -->
-      <div style="margin-top: 2rem; border: 1px solid var(--admin-card-border); background: var(--admin-surface-2, #343432); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; max-width: 360px; margin-left: auto; font-size: 0.95rem;">
+      <div class="order-totals-card">
         <div style="display: flex; justify-content: space-between;">
           <span style="color: var(--admin-text-muted);">Subtotal:</span>
           <span style="color: var(--admin-text); font-weight: 600;"><?= mta_money($order['subtotal']) ?></span>
