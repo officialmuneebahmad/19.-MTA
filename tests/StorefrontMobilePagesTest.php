@@ -62,6 +62,13 @@ check(str_contains($appCss, '.categories-directory-grid'), "CSS: .categories-dir
 check(str_contains($appCss, '.contact-grid'), "CSS: .contact-grid defined with mobile 1fr");
 check(str_contains($appCss, '.guides-grid'), "CSS: .guides-grid defined with mobile 1fr");
 
+// 6. Mobile Off-Canvas Drawer Scroll Clearance
+$mainLayout = file_get_contents(MTA_ROOT . '/app/Views/layouts/main.php');
+check(str_contains($mainLayout, 'class="drawer-nav-spacer"'), "Layout: Drawer includes .drawer-nav-spacer after secondary links");
+check(str_contains($appCss, '.drawer-nav-spacer'), "CSS: .drawer-nav-spacer defined with bottom clearance");
+check(str_contains($appCss, 'calc(7.5rem + env(safe-area-inset-bottom, 0px))'), "CSS: .drawer-body has extended padding-bottom for scroll clearance");
+check(str_contains($appCss, 'z-index: 1001'), "CSS: .mobile-drawer elevated to z-index 1001 above bottom navigation");
+
 echo "\nTOTAL: " . ($pass + $fail) . " | PASSED: {$pass} | FAILED: {$fail}\n";
 
 if ($fail > 0) {

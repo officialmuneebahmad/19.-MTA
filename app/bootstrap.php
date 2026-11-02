@@ -25,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.02-v3.3.0-mobile-store-pages-warranty-domain-notice');
+    define('MTA_BUILD_VERSION', '2026.11.02-v3.4.0-mobile-sidebars-scroll-clearance');
 }
 
 // ----------------------------------------------------------------------

@@ -368,6 +368,10 @@ button {
   background-color: var(--admin-sidebar);
 }
 
+.sidebar-signout-spacer {
+  display: none !important;
+}
+
 .sidebar-user-card {
   display: flex;
   align-items: center;
@@ -1986,12 +1990,34 @@ pre,
     top: 0;
     left: 0;
     height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     transform: translateX(-100%);
     box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
   }
 
   .admin-sidebar.open {
     transform: translateX(0);
+  }
+
+  .sidebar-nav {
+    flex: none !important;
+    overflow-y: visible !important;
+  }
+
+  .sidebar-footer {
+    flex-shrink: 0 !important;
+    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .sidebar-signout-spacer {
+    display: block !important;
+    height: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: 100%;
+    pointer-events: none;
   }
 
   .sidebar-collapse-btn {

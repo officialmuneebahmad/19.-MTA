@@ -429,6 +429,8 @@
         <a href="/track-order" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Track Your Order</a>
         <a href="/contact" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">Contact &amp; Store Location</a>
         <a href="/about" style="color:var(--text); font-weight:600; font-size:0.925rem; padding:0.35rem 0.25rem;">About Store</a>
+        <!-- Extended Clearance Spacer for Mobile Bottom Nav and OS Navigation -->
+        <div class="drawer-nav-spacer" style="height: calc(85px + env(safe-area-inset-bottom, 0px)); width: 100%; pointer-events: none;" aria-hidden="true"></div>
       </div>
     </div>
   </div>

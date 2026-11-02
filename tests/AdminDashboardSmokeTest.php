@@ -159,6 +159,18 @@ assert_test(
     str_contains($cssContent, '.dashboard-orders-table'),
     "CSS Rule: .dashboard-orders-table defined for optimal 6-column width"
 );
+assert_test(
+    str_contains($html, 'sidebar-signout-spacer'),
+    "Admin UI: Sidebar footer includes .sidebar-signout-spacer for mobile OS bar clearance"
+);
+assert_test(
+    str_contains($cssContent, '.sidebar-signout-spacer'),
+    "CSS Rule: .sidebar-signout-spacer defined in desktop and mobile media query"
+);
+assert_test(
+    str_contains($cssContent, 'calc(6.5rem + env(safe-area-inset-bottom, 0px))'),
+    "CSS Rule: .sidebar-footer mobile padding-bottom extended for complete scroll clearance"
+);
 
 // -----------------------------------------------------------------------------
 // Summary

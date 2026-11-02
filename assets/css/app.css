@@ -1313,7 +1313,7 @@ select option {
   position: fixed;
   inset: 0;
   background-color: rgba(20, 20, 19, 0.6);
-  z-index: 98;
+  z-index: 1000;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -1329,11 +1329,13 @@ select option {
   top: 0;
   left: 0;
   bottom: 0;
+  height: 100vh;
+  height: 100dvh;
   width: 300px;
   max-width: 85vw;
   background-color: var(--surface);
   border-right: 1px solid var(--border);
-  z-index: 99;
+  z-index: 1001;
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -1350,12 +1352,21 @@ select option {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .drawer-body {
-  padding: 1rem;
+  padding: 1rem 1rem calc(7.5rem + env(safe-area-inset-bottom, 0px)) 1rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
   flex: 1;
+}
+
+.drawer-nav-spacer {
+  display: block;
+  height: calc(85px + env(safe-area-inset-bottom, 0px));
+  width: 100%;
 }
 
 /* Category Tiles in Mobile Drawer */

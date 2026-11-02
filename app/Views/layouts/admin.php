@@ -227,6 +227,8 @@ $buildVersion = defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : time();
             <span>Sign Out</span>
           </button>
         </form>
+        <!-- Mobile Bottom Clearance Spacer (OS Navigation Bar / Gesture Bar Clearance) -->
+        <div class="sidebar-signout-spacer" aria-hidden="true"></div>
       </div>
 
     </aside>
