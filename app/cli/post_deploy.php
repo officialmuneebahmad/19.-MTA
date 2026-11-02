@@ -64,17 +64,21 @@ try {
     $pd_log("Task 0 error checking admin user: " . $e->getMessage());
 }
 
-// Invalidate all active sessions
-$sessionDir = MTA_STORAGE . '/sessions';
-$sessionsPurged = 0;
-if (is_dir($sessionDir)) {
-    foreach (glob($sessionDir . '/*') as $sf) {
-        if (is_file($sf) && @unlink($sf)) {
-            $sessionsPurged++;
+// Invalidate sessions only if explicitly requested (preserves active admin sessions on deploy)
+if (!empty($_GET['purge_sessions']) || !empty($_POST['purge_sessions'])) {
+    $sessionDir = MTA_STORAGE . '/sessions';
+    $sessionsPurged = 0;
+    if (is_dir($sessionDir)) {
+        foreach (glob($sessionDir . '/*') as $sf) {
+            if (is_file($sf) && @unlink($sf)) {
+                $sessionsPurged++;
+            }
         }
     }
+    $pd_log("Task 0: Explicit session purge complete. {$sessionsPurged} active session files purged.");
+} else {
+    $pd_log("Task 0: Active sessions preserved across deployment.");
 }
-$pd_log("Task 0: Invalidation complete. {$sessionsPurged} active session files purged.");
 
 // Task 1: Ensure require_2fa setting is 0 (2FA disabled by default)
 try {

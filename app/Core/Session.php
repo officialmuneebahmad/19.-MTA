@@ -58,20 +58,20 @@ class Session
         }
         self::$started = true;
 
-        // Admin Session Expiration Guard: Idle 30m, Absolute 8h
+        // Admin Session Expiration Guard: Idle 4 hours, Absolute 24 hours
         if (!empty($_SESSION['admin_user'])) {
             $now = time();
             $lastActive = (int)($_SESSION['admin_last_activity'] ?? $now);
             $loginTime = (int)($_SESSION['admin_login_time'] ?? $now);
 
-            // Idle timeout: 30 minutes (1800 seconds)
-            if (($now - $lastActive) > 1800) {
+            // Idle timeout: 4 hours (14400 seconds)
+            if (($now - $lastActive) > 14400) {
                 self::destroy();
                 return;
             }
 
-            // Absolute timeout: 8 hours (28800 seconds)
-            if (($now - $loginTime) > 28800) {
+            // Absolute timeout: 24 hours (86400 seconds)
+            if (($now - $loginTime) > 86400) {
                 self::destroy();
                 return;
             }

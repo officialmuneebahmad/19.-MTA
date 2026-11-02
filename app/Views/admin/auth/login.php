@@ -250,7 +250,7 @@ $adminPath = mta_admin_path();
 
         <div class="form-group">
           <label for="email">Administrator Email</label>
-          <input type="email" id="email" name="email" value="<?= e($_POST['email'] ?? '') ?>" autocomplete="username" required autofocus class="form-control" placeholder="admin@multantech.store">
+          <input type="email" id="email" name="email" value="<?= e(\App\Core\Session::getFlash('old_email') ?? $_POST['email'] ?? '') ?>" autocomplete="username" required autofocus class="form-control" placeholder="admin@multantech.store">
         </div>
 
         <div class="form-group">
