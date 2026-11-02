@@ -199,10 +199,29 @@ $status = strtoupper($order['status'] ?? 'PENDING');
     }
 
     /* Table */
+    .invoice-table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 2rem;
+      border: 1px solid #E8E6DC;
+      border-radius: 10px;
+      background: #FFFFFF;
+    }
+
+    .invoice-table-responsive::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .invoice-table-responsive::-webkit-scrollbar-thumb {
+      background: #D5D3C8;
+      border-radius: 3px;
+    }
+
     .invoice-table {
       width: 100%;
+      min-width: 540px;
       border-collapse: collapse;
-      margin-bottom: 2rem;
     }
 
     .invoice-table th {
@@ -214,12 +233,11 @@ $status = strtoupper($order['status'] ?? 'PENDING');
       letter-spacing: 0.5px;
       padding: 0.75rem 1rem;
       text-align: left;
-      border-top: 1px solid #E8E6DC;
       border-bottom: 1px solid #E8E6DC;
     }
 
     .invoice-table td {
-      padding: 1rem 1rem;
+      padding: 0.9rem 1rem;
       border-bottom: 1px solid #F0EEE6;
       font-size: 0.9rem;
       color: #141413;
@@ -318,6 +336,15 @@ $status = strtoupper($order['status'] ?? 'PENDING');
         padding: 0 !important;
         max-width: 100% !important;
       }
+      .invoice-table-responsive {
+        overflow: visible !important;
+        border: none !important;
+        margin-bottom: 1.5rem !important;
+      }
+      .invoice-table {
+        min-width: 100% !important;
+        width: 100% !important;
+      }
       @page {
         margin: 12mm;
         size: A4 portrait;
@@ -325,22 +352,74 @@ $status = strtoupper($order['status'] ?? 'PENDING');
     }
 
     @media (max-width: 640px) {
+      body {
+        padding: 1rem 0.65rem;
+      }
+      .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+      }
+      .action-bar > div {
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+      }
+      .action-bar .btn {
+        flex: 1;
+        justify-content: center;
+        padding: 0.65rem 0.75rem;
+        font-size: 0.85rem;
+      }
       .invoice-card {
-        padding: 1.5rem 1.25rem;
+        padding: 1.25rem 1rem;
+        border-radius: 12px;
+      }
+      .invoice-header {
+        flex-direction: column;
+        gap: 1.25rem;
+        padding-bottom: 1.25rem;
+        margin-bottom: 1.25rem;
+      }
+      .brand-section img {
+        max-width: 140px;
       }
       .meta-section {
         text-align: left;
+        width: 100%;
+        padding-top: 1rem;
+        border-top: 1px dashed #E8E6DC;
+      }
+      .invoice-title {
+        font-size: 1.45rem;
       }
       .client-grid {
         grid-template-columns: 1fr;
         gap: 1.25rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .grid-block-content {
+        word-break: break-word;
+        overflow-wrap: break-word;
       }
       .invoice-footer {
         grid-template-columns: 1fr;
         gap: 1.25rem;
+        padding-top: 1.25rem;
+      }
+      .summary-section {
+        justify-content: stretch;
+        margin-bottom: 1.75rem;
       }
       .summary-box {
         max-width: 100%;
+      }
+      .cod-due-box {
+        font-size: 1rem;
+        padding: 0.85rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
       }
     }
   </style>
@@ -350,9 +429,9 @@ $status = strtoupper($order['status'] ?? 'PENDING');
   <!-- Screen Navigation Bar -->
   <div class="action-bar no-print">
     <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-      <a href="/order/summary/<?= e($orderNumber) ?>" class="btn btn-secondary">
-        &larr; Back to Order
-      </a>
+      <button type="button" onclick="handleInvoiceBack()" class="btn btn-secondary" title="Go back to previous page">
+        &larr; Back
+      </button>
       <button type="button" onclick="window.print();" class="btn btn-print">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
         Print / Save PDF
@@ -420,33 +499,35 @@ $status = strtoupper($order['status'] ?? 'PENDING');
     </section>
 
     <!-- Ordered Items Table -->
-    <table class="invoice-table">
-      <thead>
-        <tr>
-          <th style="width: 40px;" class="text-center">#</th>
-          <th>Item Description</th>
-          <th class="text-center" style="width: 70px;">Qty</th>
-          <th class="text-right" style="width: 120px;">Unit Price</th>
-          <th class="text-right" style="width: 130px;">Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php $idx = 1; foreach ($items as $item): ?>
+    <div class="invoice-table-responsive">
+      <table class="invoice-table">
+        <thead>
           <tr>
-            <td class="text-center" style="color: #8E8D88; font-weight: 600;"><?= $idx++ ?></td>
-            <td>
-              <div style="font-weight: 600;"><?= e($item['product_title']) ?></div>
-              <?php if (!empty($item['product_sku'])): ?>
-                <div class="prod-sku">SKU: <?= e($item['product_sku']) ?></div>
-              <?php endif; ?>
-            </td>
-            <td class="text-center"><?= (int)$item['quantity'] ?></td>
-            <td class="text-right"><?= mta_money($item['unit_price']) ?></td>
-            <td class="text-right" style="font-weight: 700;"><?= mta_money($item['total_price']) ?></td>
+            <th style="width: 40px;" class="text-center">#</th>
+            <th>Item Description</th>
+            <th class="text-center" style="width: 70px;">Qty</th>
+            <th class="text-right" style="width: 120px;">Unit Price</th>
+            <th class="text-right" style="width: 130px;">Amount</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <?php $idx = 1; foreach ($items as $item): ?>
+            <tr>
+              <td class="text-center" style="color: #8E8D88; font-weight: 600;"><?= $idx++ ?></td>
+              <td>
+                <div style="font-weight: 600;"><?= e($item['product_title']) ?></div>
+                <?php if (!empty($item['product_sku'])): ?>
+                  <div class="prod-sku">SKU: <?= e($item['product_sku']) ?></div>
+                <?php endif; ?>
+              </td>
+              <td class="text-center"><?= (int)$item['quantity'] ?></td>
+              <td class="text-right"><?= mta_money($item['unit_price']) ?></td>
+              <td class="text-right" style="font-weight: 700;"><?= mta_money($item['total_price']) ?></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Totals Calculation -->
     <div class="summary-section">
@@ -496,6 +577,33 @@ $status = strtoupper($order['status'] ?? 'PENDING');
     </footer>
 
   </div>
+
+  <script>
+    function handleInvoiceBack() {
+      // 1. If this window was opened by window.open / target="_blank" and has an active opener
+      if (window.opener && !window.opener.closed) {
+        window.close();
+        return;
+      }
+      // 2. If document.referrer exists and belongs to the same domain, navigate back to where the user was
+      if (document.referrer && document.referrer !== window.location.href) {
+        try {
+          var ref = new URL(document.referrer);
+          if (ref.origin === window.location.origin) {
+            window.location.href = document.referrer;
+            return;
+          }
+        } catch (e) {}
+      }
+      // 3. Fallback to browser history
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+      // 4. Default fallback
+      window.location.href = '/order/summary/<?= e($orderNumber) ?>';
+    }
+  </script>
 
 </body>
 </html>

@@ -1152,6 +1152,7 @@ button {
 
 .admin-table {
   width: 100%;
+  min-width: 680px; /* Forces smooth x-axis scrolling on mobile viewports */
   border-collapse: collapse;
   text-align: left;
   font-size: 0.885rem;
@@ -1608,6 +1609,9 @@ button {
   padding: 2.25rem 2.5rem;
   box-shadow: var(--shadow-card);
   margin-bottom: 2.25rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .admin-card-header {
@@ -1654,11 +1658,41 @@ button {
 
 .admin-table-responsive {
   width: 100%;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto !important;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 1.75rem;
   border: 1px solid var(--admin-card-border);
   border-radius: var(--radius-md);
+  display: block;
+}
+
+.admin-table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.admin-table-responsive::-webkit-scrollbar-track {
+  background: var(--admin-surface-muted);
+  border-radius: 4px;
+}
+
+.admin-table-responsive::-webkit-scrollbar-thumb {
+  background: var(--admin-card-border);
+  border-radius: 4px;
+}
+
+.admin-table-responsive::-webkit-scrollbar-thumb:hover {
+  background: var(--mta-orange-btn);
+}
+
+/* X-axis scroll for wide preformatted code, logs, and payloads */
+pre,
+.admin-code-block,
+.sync-output-box,
+.audit-details-raw {
+  max-width: 100%;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes spinRefresh {

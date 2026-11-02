@@ -327,9 +327,9 @@
         <span class="mobile-nav-badge" id="bottom-nav-cart-count"><?= $cartCount ?></span>
       <?php endif; ?>
     </a>
-    <a href="<?= e(mta_whatsapp_url('923070655275', 'Hi Multan Tech Accessories! I want to inquire about a product.')) ?>" target="_blank" rel="noopener noreferrer" class="mobile-nav-item" aria-label="Contact us on WhatsApp" style="color:var(--whatsapp);">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-      <span>WhatsApp</span>
+    <a href="/track-order" class="mobile-nav-item <?= str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/track-order') ? 'active' : '' ?>" aria-label="Track Order">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+      <span>Track Order</span>
     </a>
   </nav>
 
@@ -554,14 +554,14 @@
 
       <!-- Bottom Credits Strip -->
       <div class="footer-bottom">
-        <div>
+        <div style="text-align: center; width: 100%;">
           &copy; <?= date('Y') ?> Multan Tech Accessories. All rights reserved.
           <span class="footer-credit">&bull; <?= e(mta_setting('founder_credit', 'Founded & Developed by Muneeb Ahmad')) ?></span>
           <?php if (mta_setting('show_admin_link_in_footer', '1') === '1'): ?>
             &bull; <a href="<?= e(mta_setting('admin_portal_url', '/mta-control-9872')) ?>" target="_blank" rel="noopener noreferrer nofollow" aria-label="Admin login (opens in a new tab)" style="color:var(--text-muted); text-decoration:underline;">Admin</a>
           <?php endif; ?>
         </div>
-        <div>
+        <div style="text-align: center; width: 100%;">
           Currency: <strong>PKR (Rs.)</strong> &bull; Serving Multan & All Pakistan
         </div>
       </div>
