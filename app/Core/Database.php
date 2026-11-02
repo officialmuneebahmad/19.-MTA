@@ -136,6 +136,9 @@ class Database
                     if (!in_array('cod_due', $oCols, true)) {
                         $this->pdo->exec("ALTER TABLE orders ADD COLUMN cod_due REAL NOT NULL DEFAULT 0.00;");
                     }
+                    if (!in_array('advance_reference', $oCols, true)) {
+                        $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_reference TEXT NULL;");
+                    }
                 }
 
                 // Users
@@ -220,6 +223,10 @@ class Database
                     $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_amount DECIMAL(12,2) NOT NULL DEFAULT 0.00;");
                     $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_verified_at DATETIME NULL;");
                     $this->pdo->exec("ALTER TABLE orders ADD COLUMN cod_due DECIMAL(12,2) NOT NULL DEFAULT 0.00;");
+                }
+                $chkAdvRef = $this->pdo->query("SHOW COLUMNS FROM orders LIKE 'advance_reference'")->fetch();
+                if (!$chkAdvRef) {
+                    $this->pdo->exec("ALTER TABLE orders ADD COLUMN advance_reference VARCHAR(255) NULL;");
                 }
 
                 // Users

@@ -16,4 +16,4 @@ Disallow: /*?*sort=
 Disallow: /*?*filter=
 Disallow: /*?*utm_*
 
-Sitemap: https://multantech.pk/sitemap.xml
+Sitemap: https://multantech.store/sitemap.xml
