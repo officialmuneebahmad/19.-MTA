@@ -40,6 +40,9 @@ if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
         'must_change_password' => 0,
     ]);
     \App\Core\Session::set('is_reauthenticated', time());
+    \App\Core\Session::set('admin_last_activity', time());
+    \App\Core\Session::set('admin_login_time', time());
+    session_write_close();
     if (isset($_GET['redirect']) && $_GET['redirect'] === '1') {
         header('Location: ' . mta_admin_path());
         exit;
