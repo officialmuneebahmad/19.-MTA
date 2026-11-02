@@ -4,7 +4,7 @@
  */
 $adminPath = mta_admin_path();
 ?>
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+<div class="admin-grid-2col">
 
   <!-- Redirects Table -->
   <div class="admin-card">
@@ -13,7 +13,8 @@ $adminPath = mta_admin_path();
       <a href="<?= e($adminPath) ?>/seo-audit" class="btn btn-secondary btn-sm">&larr; SEO Audit</a>
     </div>
 
-    <table class="admin-table">
+    <div class="admin-table-responsive">
+      <table class="admin-table">
       <thead>
         <tr>
           <th>Source Path</th>
@@ -45,7 +46,8 @@ $adminPath = mta_admin_path();
           </tr>
         <?php endif; ?>
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 
   <!-- Create Redirect Form -->

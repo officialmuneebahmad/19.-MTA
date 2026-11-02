@@ -162,9 +162,14 @@ class HomeController
 
         $html = View::render('storefront/home', [
             'meta_title' => SeoService::title('Multan Tech Accessories — Authentic Tech & Accessories in Pakistan'),
-            'meta_description' => 'Shop authentic computer and mobile accessories in Pakistan. GaN fast chargers, cables, speakers & gaming gear with Cash on Delivery across Multan & all cities.',
-            'canonical_url' => mta_url(),
+            'meta_description' => 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at The Computer Shop Multan.',
+            'canonical_url' => 'https://multantech.pk/',
+            'og_url' => 'https://multantech.pk/',
+            'og_title' => 'The Computer Shop Multan',
+            'og_description' => 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at The Computer Shop Multan.',
+            'og_site_name' => 'The Computer Shop Multan',
             'og_image' => mta_url('/assets/images/og-share.jpg'),
+            'og_image_alt' => 'The Computer Shop Multan',
             'og_type' => 'website',
             'categories' => $categories,
             'bestSellers' => $bestSellers,

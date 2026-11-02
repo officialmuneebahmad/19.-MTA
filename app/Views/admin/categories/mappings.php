@@ -14,7 +14,8 @@ $adminPath = mta_admin_path();
     Whenever the supplier API synchronizes, incoming raw categories and subcategories are automatically mapped according to the rules below. You can override and remap any supplier category to any site category.
   </p>
 
-  <table class="admin-table">
+  <div class="admin-table-responsive">
+    <table class="admin-table">
     <thead>
       <tr>
         <th>Raw Supplier Category</th>
@@ -75,5 +76,6 @@ $adminPath = mta_admin_path();
         </tr>
       <?php endif; ?>
     </tbody>
-  </table>
+    </table>
+  </div>
 </div>

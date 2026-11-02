@@ -89,13 +89,53 @@ class ProductController
         $metaDescription = SeoService::productMetaDescription($product);
         $structuredData = SeoService::productSchema($product, $images);
 
-        // Resolve High-Resolution Product Image for Open Graph & WhatsApp Sharing
-        $productOgImage = mta_product_image($product, 800);
-        if (str_starts_with($productOgImage, '/')) {
-            $productOgImage = mta_url($productOgImage);
+        $canonicalUrl = mta_url('/products/' . $product['slug']);
+        $ogTitle = (string)$product['title'];
+        $ogImageAlt = (string)$product['title'];
+
+        // Build Clean Plaintext Product OG Description with Price & Store Mention
+        $cleanDesc = trim(strip_tags((string)($product['short_description'] ?: ($product['description_html'] ?: ($product['supplier_description_html'] ?: '')))));
+        $cleanDesc = preg_replace('/\s+/', ' ', $cleanDesc);
+        $sellPriceNum = (float)($product['sell_price'] ?? 0);
+        $priceText = $sellPriceNum > 0 ? 'Rs. ' . number_format($sellPriceNum) : '';
+
+        if (!empty($cleanDesc) && mb_strlen($cleanDesc) > 20) {
+            if (mb_strlen($cleanDesc) > 120) {
+                $cleanDesc = mb_substr($cleanDesc, 0, 117) . '...';
+            }
+            if ($priceText) {
+                $ogDescription = "{$cleanDesc} Price: {$priceText}. Available with Cash on Delivery at The Computer Shop Multan.";
+            } else {
+                $ogDescription = "{$cleanDesc} Available with Cash on Delivery at The Computer Shop Multan.";
+            }
+        } else {
+            if ($priceText) {
+                $ogDescription = "Buy authentic {$product['title']} at {$priceText} in Pakistan. 100% genuine products with Cash on Delivery at The Computer Shop Multan.";
+            } else {
+                $ogDescription = "Buy authentic {$product['title']} in Pakistan. 100% genuine products with Cash on Delivery at The Computer Shop Multan.";
+            }
         }
-        // WhatsApp cannot render SVG link previews; fallback to official store share image
-        if (str_ends_with(strtolower(parse_url($productOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+
+        // Primary Product Image: Ensure Complete Absolute HTTPS URL
+        $productOgImage = '';
+        if (!empty($product['primary_image_url'])) {
+            $img = trim((string)$product['primary_image_url']);
+            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
+                $productOgImage = $img;
+            } elseif (str_starts_with($img, '/')) {
+                $productOgImage = mta_url($img);
+            }
+        }
+        if (empty($productOgImage) && !empty($images[0]['url'])) {
+            $img = trim((string)$images[0]['url']);
+            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
+                $productOgImage = $img;
+            } elseif (str_starts_with($img, '/')) {
+                $productOgImage = mta_url($img);
+            }
+        }
+        // Fallback to dedicated raster share image if missing or SVG
+        if (empty($productOgImage) || str_ends_with(strtolower(parse_url($productOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
             $productOgImage = mta_url('/assets/images/og-share.jpg');
         }
 
@@ -113,11 +153,16 @@ class ProductController
             'breadcrumbs' => $breadcrumbs,
             'meta_title' => $metaTitle,
             'meta_description' => $metaDescription,
-            'canonical_url' => mta_url('/products/' . $product['slug']),
+            'canonical_url' => $canonicalUrl,
             'noindex' => !$isIndexable,
             'product_id' => $product['id'],
             'structured_data' => $structuredData,
+            'og_title' => $ogTitle,
+            'og_description' => $ogDescription,
+            'og_url' => $canonicalUrl,
             'og_image' => $productOgImage,
+            'og_image_alt' => $ogImageAlt,
+            'og_site_name' => 'The Computer Shop Multan',
             'og_type' => 'product',
             'product_price' => (float)($product['sell_price'] ?? 0),
             'product_availability' => $availability,

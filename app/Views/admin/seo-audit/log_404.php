@@ -16,7 +16,8 @@ $adminPath = mta_admin_path();
     </div>
   </div>
 
-  <table class="admin-table">
+  <div class="admin-table-responsive">
+    <table class="admin-table">
     <thead>
       <tr>
         <th>Missing URL</th>
@@ -53,5 +54,6 @@ $adminPath = mta_admin_path();
         </tr>
       <?php endif; ?>
     </tbody>
-  </table>
+    </table>
+  </div>
 </div>

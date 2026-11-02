@@ -22,7 +22,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.02-v3.0.0-mobile-footer-nav-invoice-refinements');
+    define('MTA_BUILD_VERSION', '2026.11.02-v3.1.0-og-previews-mobile-admin-tables');
 }
 
 // ----------------------------------------------------------------------
@@ -135,13 +135,12 @@ function mta_product_image(?array $product, int $size = 400): string {
     if (!empty($product['image_400'])) {
         return (string)$product['image_400'];
     }
-    // 2. Cloudinary or live supplier image (rewrite dead cdn subdomain to store subdomain)
+    // 2. Cloudinary or live supplier image (intercept dead mock cdn subdomain)
     if (!empty($product['primary_image_url'])) {
         $url = trim((string)$product['primary_image_url']);
-        if (str_contains($url, 'cdn.computerzone.pk/products/')) {
-            $url = str_replace('cdn.computerzone.pk/products/', 'store.computerzone.pk/images/pro_images/', $url);
+        if (!str_contains($url, 'cdn.computerzone.pk')) {
+            return $url;
         }
-        return $url;
     }
     // 3. Category-specific vector illustration
     $catSlug = $product['category_slug'] ?? '';

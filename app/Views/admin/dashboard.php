@@ -199,8 +199,8 @@ $adminPath = mta_admin_path();
       <a href="<?= e($adminPath) ?>/orders" class="panel-link">Manage All &rarr;</a>
     </div>
 
-    <div class="table-responsive">
-      <table class="admin-table">
+    <div class="admin-table-responsive">
+      <table class="admin-table orders-table">
         <thead>
           <tr>
             <th>Order #</th>

@@ -47,7 +47,8 @@ $adminPath = mta_admin_path();
     <div class="admin-card-title">AI Drafts Awaiting Human Review (<?= count($drafts) ?>)</div>
   </div>
 
-  <table class="admin-table">
+  <div class="admin-table-responsive">
+    <table class="admin-table">
     <thead>
       <tr>
         <th>Product Title & SKU</th>
@@ -85,5 +86,6 @@ $adminPath = mta_admin_path();
         </tr>
       <?php endif; ?>
     </tbody>
-  </table>
+    </table>
+  </div>
 </div>

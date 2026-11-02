@@ -172,7 +172,7 @@ $adminPath = mta_admin_path();
       </div>
     </div>
 
-    <div class="table-responsive">
+    <div class="admin-table-responsive">
       <table class="admin-table">
         <thead>
           <tr>

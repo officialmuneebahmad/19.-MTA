@@ -10,7 +10,8 @@ $adminPath = mta_admin_path();
     <a href="<?= e($adminPath) ?>/guides/create" class="btn btn-primary btn-sm">+ Write New Guide</a>
   </div>
 
-  <table class="admin-table">
+  <div class="admin-table-responsive">
+    <table class="admin-table">
     <thead>
       <tr>
         <th>Title</th>
@@ -56,5 +57,6 @@ $adminPath = mta_admin_path();
         </tr>
       <?php endif; ?>
     </tbody>
-  </table>
+    </table>
+  </div>
 </div>

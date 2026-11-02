@@ -21,7 +21,7 @@ $adminPath = mta_admin_path();
   </div>
 
   <!-- Search & Filter Bar -->
-  <form action="<?= e($adminPath) ?>/orders" method="GET" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.75rem; align-items: center;">
+  <form action="<?= e($adminPath) ?>/orders" method="GET" class="admin-filter-form">
     <div style="flex: 2; min-width: 240px;">
       <input type="text" name="q" value="<?= e($search) ?>" placeholder="Search by Order #, Customer Name, or Phone..." class="form-control">
     </div>
@@ -37,7 +37,7 @@ $adminPath = mta_admin_path();
       </select>
     </div>
 
-    <div style="display: flex; gap: 0.5rem;">
+    <div class="filter-actions" style="display: flex; gap: 0.5rem;">
       <button type="submit" class="btn btn-primary btn-sm">Filter</button>
       <a href="<?= e($adminPath) ?>/orders" class="btn btn-secondary btn-sm">Reset</a>
     </div>
@@ -49,7 +49,7 @@ $adminPath = mta_admin_path();
       <span style="font-size: 1.1rem;">☑️</span>
       <strong id="selectedCountText" style="font-size: 0.95rem; color: var(--admin-text);">0 orders selected</strong>
     </div>
-    <div style="display: flex; gap: 0.5rem; align-items: center;">
+    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
       <button type="button" id="btnBulkDelete" class="btn btn-danger btn-sm">
         🗑️ Delete Selected Orders
       </button>
@@ -65,8 +65,12 @@ $adminPath = mta_admin_path();
     <div id="bulkDeleteInputs"></div>
   </form>
 
+  <!-- Orders Table with Visible X-Axis Scroll on Mobile -->
+  <div class="table-scroll-hint mobile-only">
+    <span>&larr; Swipe horizontally to view all order columns &rarr;</span>
+  </div>
   <div class="admin-table-responsive">
-    <table class="admin-table">
+    <table class="admin-table orders-table">
       <thead>
         <tr>
           <th style="width: 44px; text-align: center;">

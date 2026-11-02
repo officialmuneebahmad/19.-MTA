@@ -18,7 +18,7 @@ $adminPath = mta_admin_path();
   </div>
 
   <!-- Search & Filter Form -->
-  <form action="<?= e($adminPath) ?>/products" method="GET" style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+  <form action="<?= e($adminPath) ?>/products" method="GET" class="admin-filter-form">
     <div style="flex: 2; min-width: 220px;">
       <input type="text" name="q" value="<?= e($search) ?>" placeholder="Search by title, SKU, or supplier ID..." class="form-control">
     </div>
@@ -52,13 +52,18 @@ $adminPath = mta_admin_path();
       </select>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-sm">Filter</button>
-    <a href="<?= e($adminPath) ?>/products" class="btn btn-secondary btn-sm">Reset</a>
+    <div class="filter-actions" style="display: flex; gap: 0.5rem;">
+      <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+      <a href="<?= e($adminPath) ?>/products" class="btn btn-secondary btn-sm">Reset</a>
+    </div>
   </form>
 
-  <!-- Products Table -->
+  <!-- Products Table with Visible X-Axis Scroll on Mobile -->
+  <div class="table-scroll-hint mobile-only">
+    <span>&larr; Swipe horizontally to view all product columns &rarr;</span>
+  </div>
   <div class="admin-table-responsive">
-  <table class="admin-table">
+    <table class="admin-table products-table">
     <thead>
       <tr>
         <th style="width: 50px;">Img</th>

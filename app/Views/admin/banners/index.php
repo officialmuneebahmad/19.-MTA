@@ -4,7 +4,7 @@
  */
 $adminPath = mta_admin_path();
 ?>
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+<div class="admin-grid-2col">
 
   <!-- Banners List -->
   <div class="admin-card">
@@ -12,7 +12,8 @@ $adminPath = mta_admin_path();
       <div class="admin-card-title">Active Carousel Slides</div>
     </div>
 
-    <table class="admin-table">
+    <div class="admin-table-responsive">
+      <table class="admin-table">
       <thead>
         <tr>
           <th>Badge & Title</th>
@@ -58,7 +59,8 @@ $adminPath = mta_admin_path();
           </tr>
         <?php endif; ?>
       </tbody>
-    </table>
+      </table>
+    </div>
   </div>
 
   <!-- Create Banner Form -->

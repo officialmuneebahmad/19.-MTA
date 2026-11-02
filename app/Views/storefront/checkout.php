@@ -121,14 +121,14 @@ foreach ($cartItems as $item) {
             <div style="display: flex; justify-content: space-between;">
               <span style="color: var(--text-muted);">Delivery Charge:</span>
               <span id="summary-delivery-charge" style="font-weight: 600; color: var(--accent-strong);">
-                Rs. 100
+                <?= $subtotal >= 5000 ? 'FREE' : 'Rs. 100' ?>
               </span>
             </div>
 
             <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: 800; border-top: 2px solid var(--border); padding-top: 0.75rem; margin-top: 0.5rem;">
               <span>Total Payable:</span>
               <span id="summary-total-payable" style="color: var(--accent-strong); font-family: var(--font-heading);">
-                <?= mta_money($subtotal + 100) ?>
+                <?= mta_money($subtotal + ($subtotal >= 5000 ? 0 : 100)) ?>
               </span>
             </div>
           </div>
@@ -159,8 +159,9 @@ foreach ($cartItems as $item) {
 <script>
 function calculateDelivery(city) {
   var subtotal = <?= (float)$subtotal ?>;
-  var charge = (city && city.toLowerCase() === 'multan') ? 100 : 250;
-  document.getElementById('summary-delivery-charge').innerText = 'Rs. ' + charge.toLocaleString();
+  var isFree = (subtotal >= 5000);
+  var charge = isFree ? 0 : ((city && city.toLowerCase() === 'multan') ? 100 : 250);
+  document.getElementById('summary-delivery-charge').innerText = isFree ? 'FREE' : ('Rs. ' + charge.toLocaleString());
   var total = subtotal + charge;
   document.getElementById('summary-total-payable').innerText = 'Rs. ' + total.toLocaleString();
 }

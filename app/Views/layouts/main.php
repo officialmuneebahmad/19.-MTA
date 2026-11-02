@@ -58,13 +58,19 @@
         'gif' => 'image/gif',
         default => 'image/jpeg',
     };
+    $ogSiteName = !empty($og_site_name) ? (string)$og_site_name : 'The Computer Shop Multan';
+    $ogTitle = !empty($og_title) ? (string)$og_title : ($meta_title ?? 'The Computer Shop Multan');
+    $ogDescription = !empty($og_description) ? (string)$og_description : ($meta_description ?? 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at The Computer Shop Multan.');
+    $ogUrl = !empty($og_url) ? (string)$og_url : (!empty($canonical_url) ? (string)$canonical_url : mta_url($_SERVER['REQUEST_URI'] ?? ''));
+    $ogType = !empty($og_type) ? (string)$og_type : 'website';
+    $ogImageAlt = !empty($og_image_alt) ? (string)$og_image_alt : $ogTitle;
   ?>
   <!-- Open Graph / WhatsApp / Facebook -->
-  <meta property="og:site_name" content="Multan Tech Accessories">
-  <meta property="og:type" content="<?= e($og_type ?? 'website') ?>">
-  <meta property="og:title" content="<?= e($meta_title ?? 'Multan Tech Accessories — Authentic Tech & Accessories in Pakistan') ?>">
-  <meta property="og:description" content="<?= e($meta_description ?? 'Shop authentic computer and mobile accessories in Pakistan with Cash on Delivery across Multan & nationwide.') ?>">
-  <meta property="og:url" content="<?= e($canonical_url ?? mta_url()) ?>">
+  <meta property="og:site_name" content="<?= e($ogSiteName) ?>">
+  <meta property="og:type" content="<?= e($ogType) ?>">
+  <meta property="og:title" content="<?= e($ogTitle) ?>">
+  <meta property="og:description" content="<?= e($ogDescription) ?>">
+  <meta property="og:url" content="<?= e($ogUrl) ?>">
   <meta property="og:image" content="<?= e($currentOgImage) ?>">
   <meta property="og:image:secure_url" content="<?= e($currentOgImage) ?>">
   <meta property="og:image:type" content="<?= e($ogMime) ?>">
@@ -77,10 +83,10 @@
   <?php if (!empty($og_image_height)): ?>
     <meta property="og:image:height" content="<?= (int)$og_image_height ?>">
   <?php endif; ?>
-  <meta property="og:image:alt" content="<?= e($meta_title ?? 'Multan Tech Accessories') ?>">
+  <meta property="og:image:alt" content="<?= e($ogImageAlt) ?>">
 
   <!-- Product Rich Snippets for WhatsApp & Social Media -->
-  <?php if (!empty($og_type) && ($og_type === 'product' || $og_type === 'og:product')): ?>
+  <?php if ($ogType === 'product' || $ogType === 'og:product'): ?>
     <?php if (isset($product_price) && (float)$product_price > 0): ?>
       <meta property="product:price:amount" content="<?= number_format((float)$product_price, 2, '.', '') ?>">
       <meta property="product:price:currency" content="PKR">
@@ -95,8 +101,8 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : 'summary_large_image' ?>">
-  <meta name="twitter:title" content="<?= e($meta_title ?? 'Multan Tech Accessories') ?>">
-  <meta name="twitter:description" content="<?= e($meta_description ?? 'Shop authentic computer and mobile accessories in Pakistan.') ?>">
+  <meta name="twitter:title" content="<?= e($ogTitle) ?>">
+  <meta name="twitter:description" content="<?= e($ogDescription) ?>">
   <meta name="twitter:image" content="<?= e($currentOgImage) ?>">
 
   <?php if (!empty($product_id)): ?>
