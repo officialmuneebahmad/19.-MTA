@@ -217,6 +217,7 @@
       <form action="/search" method="GET">
         <input type="search" name="q" class="search-input" placeholder="Search accessories..." value="<?= e($_GET['q'] ?? '') ?>" autocomplete="off">
       </form>
+      <div class="search-suggestions"></div>
     </div>
   </div>
 

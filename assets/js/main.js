@@ -106,15 +106,18 @@ function initSearchAutocomplete() {
           if (!Array.isArray(items) || items.length === 0) {
             suggestionsBox.innerHTML = `<div style="padding:0.75rem 1rem;font-size:0.85rem;color:var(--text-muted);">No accessories found for "${escapeHtml(query)}"</div>`;
           } else {
-            suggestionsBox.innerHTML = items.map(item => `
+            suggestionsBox.innerHTML = items.map(item => {
+              const imgUrl = item.image || item.primary_image_url || '/assets/images/placeholder.svg';
+              return `
               <a href="/products/${item.slug}" class="search-item">
-                <img src="${(item.primary_image_url && !item.primary_image_url.includes('computerzone.pk')) ? item.primary_image_url : '/assets/images/placeholder.svg'}" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';" alt="${escapeHtml(item.title)}" class="search-item-img" width="44" height="44" loading="lazy">
+                <img src="${imgUrl}" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';" alt="${escapeHtml(item.title)}" class="search-item-img" width="48" height="48" loading="lazy" referrerpolicy="no-referrer">
                 <div style="flex:1;overflow:hidden;">
                   <div class="search-item-title">${escapeHtml(item.title)}</div>
                   <div class="search-item-price">Rs. ${Number(item.sell_price).toLocaleString()}</div>
                 </div>
               </a>
-            `).join('');
+            `;
+            }).join('');
           }
           suggestionsBox.classList.add('active');
         } catch (e) {

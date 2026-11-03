@@ -440,11 +440,15 @@ select option {
 }
 
 .search-item-img {
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 6px;
-  background: var(--surface-2);
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  padding: 2px;
+  flex-shrink: 0;
 }
 
 .search-item-title {

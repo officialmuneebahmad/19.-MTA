@@ -92,15 +92,22 @@ class SearchController
         $searchTerm = '%' . $query . '%';
 
         $items = $db->fetchAll(
-            "SELECT p.id, p.title, p.slug, p.sell_price, p.primary_image_url
+            "SELECT p.id, p.title, p.slug, p.sell_price, p.primary_image_url, p.image_400
              FROM products p
              LEFT JOIN brands b ON b.id = p.brand_id
              WHERE p.is_active = 1 AND p.is_published = 1
                AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ?)
-             ORDER BY p.popularity_score DESC, p.id DESC
-             LIMIT 6",
+             ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
+             LIMIT 8",
             [$searchTerm, $searchTerm, $searchTerm]
         );
+
+        foreach ($items as &$item) {
+            $item['image'] = !empty($item['image_400'])
+                ? (string)$item['image_400']
+                : (!empty($item['primary_image_url']) ? (string)$item['primary_image_url'] : '/assets/images/placeholder.svg');
+        }
+        unset($item);
 
         return $resp->json($items);
     }
