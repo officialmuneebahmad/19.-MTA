@@ -132,6 +132,9 @@ foreach ($cartItems as $item) {
       </div>
     </div>
 
+    <!-- Security Advance Alert -->
+    <?php require MTA_APP . '/Views/partials/advance-caution-notice.php'; ?>
+
     <!-- Policy Reminder -->
     <div style="margin-top: 1.5rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
       <div>&#10003; <strong>3 Days Check Warranty Only:</strong> Please test your items within 3 days of receiving.</div>

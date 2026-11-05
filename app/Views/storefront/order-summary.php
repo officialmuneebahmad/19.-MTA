@@ -3,7 +3,7 @@
  * Multan Tech Accessories — Order Thank-You & Summary View (noindex)
  */
 $orderNumber = $order['order_number'] ?? '';
-$waMsg = "Hello Multan Tech Accessories! I have placed order *{$orderNumber}* on MultanTech.pk.\nName: {$order['customer_name']}\nTotal: " . mta_money($order['total']) . " (COD)\nDelivery City: {$order['city']}\nPlease confirm and dispatch.";
+$waMsg = "Hello Multan Tech Accessories! I have placed order *{$orderNumber}* on MultanTech.pk.\nName: {$order['customer_name']}\nTotal: " . mta_money($order['total']) . " (COD)\nDelivery City: {$order['city']}\nSending Rs. 100/- advance for order booking verification. Please confirm and dispatch.";
 $waConfirmUrl = mta_whatsapp_url('923070655275', $waMsg);
 ?>
 <div class="container" style="padding: 3rem 1.25rem; max-width: 720px; text-align: center;">
@@ -17,6 +17,11 @@ $waConfirmUrl = mta_whatsapp_url('923070655275', $waMsg);
     Thank you for shopping with Multan Tech Accessories, <strong><?= e($order['customer_name']) ?></strong>.<br>
     Your order number is <strong style="color: var(--accent-strong); font-family: monospace; font-size: 1.15rem;"><?= e($orderNumber) ?></strong>.
   </p>
+
+  <!-- Security Advance Booking Notice (Red Box with Caution Sign) -->
+  <div style="text-align: left; margin-bottom: 1.75rem;">
+    <?php require MTA_APP . '/Views/partials/advance-caution-notice.php'; ?>
+  </div>
 
   <!-- WhatsApp Confirmation Callout -->
   <div style="background: #E8F9EE; border: 2px dashed var(--whatsapp); border-radius: var(--radius-lg); padding: 1.75rem; margin-bottom: 2rem; text-align: center;">

@@ -25,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.03-v3.8.0-search-image-and-architecture-pdf');
+    define('MTA_BUILD_VERSION', '2026.11.05-v3.8.1-security-advance-notice-red-box');
 }
 
 // ----------------------------------------------------------------------

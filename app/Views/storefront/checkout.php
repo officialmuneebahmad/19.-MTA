@@ -87,9 +87,7 @@ foreach ($cartItems as $item) {
             </div>
             <input type="radio" name="payment_method" value="cod" checked style="accent-color: var(--accent-strong); transform: scale(1.3);">
           </div>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem;">
-            * Advance payment via JazzCash, Easypaisa, or online bank transfer can also be arranged on WhatsApp upon request after placing this order.
-          </p>
+          <?php require MTA_APP . '/Views/partials/advance-caution-notice.php'; ?>
         </div>
       </div>
 
@@ -140,6 +138,9 @@ foreach ($cartItems as $item) {
             <div>&#10003; <strong>No Refund, Exchange can be made only for certain circumstances</strong></div>
             <div>&#10003; <strong>The Customer has to Return parcel with their own money & courier</strong></div>
           </div>
+
+          <!-- Security Advance Alert -->
+          <?php $isCompact = true; require MTA_APP . '/Views/partials/advance-caution-notice.php'; $isCompact = false; ?>
 
           <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1.25rem; min-height: 48px; font-size: 1.05rem;">
             Confirm Order &rarr;

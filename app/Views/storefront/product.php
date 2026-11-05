@@ -198,12 +198,15 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
         <?php endif; ?>
       </div>
 
+      <!-- Advance Booking Security Notice -->
+      <?php require MTA_APP . '/Views/partials/advance-caution-notice.php'; ?>
+
       <!-- Trust Badges & Policies -->
       <div style="border-top:1px solid var(--border); padding-top:1.25rem; font-size:0.875rem; color:var(--text-muted); line-height:1.8;">
         <div>&#10003; <strong>Warranty:</strong> <span style="color:var(--text); font-weight:700;">We Offer 3 Days Check Warranty Only</span> (Test upon arrival).</div>
         <div>&#10003; <strong>Returns & Refunds:</strong> <span style="color:var(--text); font-weight:700;">No Refund, Exchange can be made only for certain circumstances</span>.</div>
         <div>&#10003; <strong>Courier Charges:</strong> <span style="color:var(--text); font-weight:700;">The Customer has to Return parcel with their own money & courier</span>.</div>
-        <div>&#10003; <strong>Payment:</strong> Cash on Delivery (COD) across Pakistan.</div>
+        <div>&#10003; <strong>Payment:</strong> Cash on Delivery (COD) &bull; <strong style="color: var(--danger, #DC2626);">Rs. 100/- Advance for Booking</strong> (Security Purpose).</div>
         <div>&#10003; <strong>Store Pickup:</strong> Al-Quresh Phase 3, Sher Shah Road, Multan.</div>
       </div>
 
