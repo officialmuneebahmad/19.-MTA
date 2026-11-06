@@ -84,6 +84,16 @@ class Request
         return $this->post[$key] ?? $this->get[$key] ?? $default;
     }
 
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->post) || array_key_exists($key, $this->get);
+    }
+
+    public function hasPost(string $key): bool
+    {
+        return array_key_exists($key, $this->post);
+    }
+
     public function post(?string $key = null, mixed $default = null): mixed
     {
         if ($key === null) {
