@@ -1,0 +1,118 @@
+{
+    "status": "success",
+    "generated_at": "2026-11-06T19:05:47+05:00",
+    "base_url": "https://multantech.pk",
+    "total_urls": 958,
+    "indexable_urls": 958,
+    "files": {
+        "sitemap-pages.xml": {
+            "path": "/sitemap-pages.xml",
+            "sub_path": "/sitemaps/sitemap-pages.xml",
+            "size_bytes": 2077,
+            "size_kb": 2.03,
+            "url_count": 17,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap-categories.xml": {
+            "path": "/sitemap-categories.xml",
+            "sub_path": "/sitemaps/sitemap-categories.xml",
+            "size_bytes": 1285,
+            "size_kb": 1.25,
+            "url_count": 9,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap-brands.xml": {
+            "path": "/sitemap-brands.xml",
+            "sub_path": "/sitemaps/sitemap-brands.xml",
+            "size_bytes": 2459,
+            "size_kb": 2.4,
+            "url_count": 20,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap-guides.xml": {
+            "path": "/sitemap-guides.xml",
+            "sub_path": "/sitemaps/sitemap-guides.xml",
+            "size_bytes": 109,
+            "size_kb": 0.11,
+            "url_count": 0,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap-products-1.xml": {
+            "path": "/sitemap-products-1.xml",
+            "sub_path": "/sitemaps/sitemap-products-1.xml",
+            "size_bytes": 207162,
+            "size_kb": 202.31,
+            "url_count": 500,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap-products-2.xml": {
+            "path": "/sitemap-products-2.xml",
+            "sub_path": "/sitemaps/sitemap-products-2.xml",
+            "size_bytes": 171028,
+            "size_kb": 167.02,
+            "url_count": 412,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        },
+        "sitemap.xml": {
+            "path": "/sitemap.xml",
+            "sub_path": "/sitemaps/sitemap.xml",
+            "size_bytes": 912,
+            "size_kb": 0.89,
+            "url_count": 6,
+            "last_modified": "2026-11-06 19:05:47",
+            "status": "active"
+        }
+    },
+    "exclusions": {
+        "total_excluded": 180,
+        "reasons": {
+            "content_not_approved": {
+                "count": 79,
+                "label": "Content Not Approved",
+                "description": "Supplier-raw products awaiting editorial AI rewrite/approval (Content Gate)"
+            },
+            "inactive_products": {
+                "count": 0,
+                "label": "Inactive Products",
+                "description": "De-listed or archived products removed from active catalog"
+            },
+            "out_of_stock_products": {
+                "count": 79,
+                "label": "Out of Stock Products",
+                "description": "Products with status 2 excluded to protect search crawl budget"
+            },
+            "thin_categories": {
+                "count": 4,
+                "label": "Thin Categories",
+                "description": "Categories with fewer than 4 items or missing unique editorial introduction"
+            },
+            "thin_brands": {
+                "count": 9,
+                "label": "Thin Brands",
+                "description": "Brands with fewer than 4 products or lacking authentic brand intro copy"
+            },
+            "utility_routes": {
+                "count": 9,
+                "label": "Restricted Storefront Flows",
+                "description": "Cart, checkout, customer orders, search, and admin endpoints disallowed by robots.txt",
+                "details": {
+                    "/cart": "Disallowed: Shopping cart session",
+                    "/checkout": "Disallowed: Personal customer checkout",
+                    "/order/*": "Disallowed: Customer order tracking confirmation",
+                    "/search": "Disallowed: Dynamic keyword search parameter space",
+                    "/api/*": "Disallowed: Internal REST and suggestions endpoints",
+                    "/*?*sort=*": "Disallowed: Duplicate query filter variation",
+                    "/*?*filter=*": "Disallowed: Facet filter variation",
+                    "/*?*utm_*": "Disallowed: Campaign tracking query strings",
+                    "/mta-control-9872/*": "Disallowed: Secret administrative portal"
+                }
+            }
+        }
+    }
+}

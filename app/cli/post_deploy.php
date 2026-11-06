@@ -258,6 +258,58 @@ try {
     $pd_log("Task 3 error updating brand logos: " . $e->getMessage());
 }
 
+// Task 4: SEO & Catalog Indexability Approval
+try {
+    // 1. Approve active in-stock and pre-order products for indexing
+    $approvedCount = $db->execute("
+        UPDATE products 
+        SET content_state = 'approved', updated_at = CURRENT_TIMESTAMP 
+        WHERE is_active = 1 AND is_published = 1 AND status != 2 AND (content_state IS NULL OR content_state != 'approved')
+    ");
+    $pd_log("Task 4: Catalog Indexability: {$approvedCount} active products approved for search indexing.");
+
+    // 2. Ensure brand intros populated for top verified brands
+    $brandIntros = [
+        'anker' => '<p>Explore authentic Anker charging accessories, PowerIQ fast wall chargers, multi-device power banks, GaN technology adapters, and durable braided cables with nationwide Cash on Delivery.</p>',
+        'baseus' => '<p>Shop original Baseus tech accessories, high-speed multi-port chargers, magnetic wireless power banks, USB-C hub adapters, and ergonomic phone car mounts across Pakistan.</p>',
+        'ugreen' => '<p>Discover official Ugreen connectivity hardware, Nexode GaN fast chargers, 4K/8K HDMI cables, USB-C audio adapters, and gigabit Ethernet adapters backed by official warranty.</p>',
+        'a4tech' => '<p>Browse dependable A4Tech desktop peripherals, optical USB mice, durable office keyboards, noise-isolating headsets, and computing accessories for home and workplace productivity.</p>',
+        'bloody' => '<p>Dominate your gameplay with Bloody pro-esports hardware, optical-mechanical switches, ultra-fast response gaming mice, surround headsets, and gaming surfaces in Pakistan.</p>',
+        'logitech' => '<p>Find genuine Logitech wireless mice, MX Master productivity keyboards, HD webcams, and presentation remotes engineered for reliable computing and daily precision.</p>',
+        'fantech' => '<p>Shop authentic Fantech gaming peripherals, RGB mechanical keyboards, programmable gaming mice, surround gaming headsets, and desktop PC gaming equipment.</p>',
+        'kingston' => '<p>Upgrade your digital storage with authentic Kingston DataTraveler USB 3.2 flash drives, Canvas Select microSD cards, and solid-state drives with verified performance.</p>',
+        'sandisk' => '<p>Buy original SanDisk storage solutions, Ultra and Extreme high-speed microSD memory cards, USB-C dual flash drives, and portable storage devices across Pakistan.</p>',
+        'tp-link' => '<p>Strengthen your wireless connectivity with TP-Link Wi-Fi routers, high-gain USB Wi-Fi adapters, gigabit switches, and Wi-Fi range extenders with official warranty.</p>',
+        'redragon' => '<p>Explore high-value Redragon gaming keyboards, hot-swappable mechanical switches, RGB ergonomic gaming mice, and studio-grade gaming headsets at competitive prices.</p>',
+        'kisonli' => '<p>Enjoy crystal-clear sound with Kisonli multimedia desktop speakers, USB-powered stereo soundbars, and portable Bluetooth speakers with deep bass for computers and mobile devices.</p>',
+        'faster' => '<p>Shop genuine Faster mobile accessories, high-speed Quick Charge wall adapters, braided charging cables, high-capacity power banks, and wireless earbuds in Pakistan.</p>',
+        'audionic' => '<p>Experience legendary Pakistani sound engineering with Audionic portable Bluetooth speakers, wireless stereo earbuds, neckbands, and home theater audio systems.</p>',
+        'dany' => '<p>Browse Dany smart lifestyle electronics, high-capacity fast charging power banks, multimedia speakers, and everyday tech accessories with nationwide delivery.</p>',
+        'remax' => '<p>Discover modern Remax lifestyle accessories, high-speed charging cables, ultra-thin portable power banks, and multi-angle desktop stands for smartphones and tablets.</p>',
+        'joyroom' => '<p>Shop official Joyroom wireless earbuds, magnetic car chargers, high-speed Power Delivery adapters, and premium protective accessories for daily smart connectivity.</p>',
+        'havit' => '<p>Explore authentic Havit PC accessories, RGB gaming headsets with clear microphones, mechanical gaming keyboards, and durable computing peripherals in Pakistan.</p>',
+        'micropack' => '<p>Choose dependable Micropack computer peripherals, optical wireless mice, spill-resistant keyboards, and multi-port USB hubs for smooth office and academic workflows.</p>',
+        'ronin' => '<p>Shop authentic Ronin wireless audio earbuds, heavy-duty fast charging cables, and high-capacity portable power banks engineered for Pakistani mobile users.</p>',
+    ];
+    $bIntroUpdated = 0;
+    foreach ($brandIntros as $bSlug => $bIntro) {
+        $bExisting = $db->fetch("SELECT intro_html FROM brands WHERE slug = ? LIMIT 1", [$bSlug]);
+        if ($bExisting && empty(trim((string)$bExisting['intro_html']))) {
+            $db->execute("UPDATE brands SET intro_html = ? WHERE slug = ?", [$bIntro, $bSlug]);
+            $bIntroUpdated++;
+        }
+    }
+    $pd_log("Task 4: Brand Hubs: {$bIntroUpdated} brand intros populated with authentic editorial text.");
+
+    // 3. Generate static sitemaps atomically
+    $sitemapReport = \App\Services\SitemapService::generateAll();
+    $totalUrls = $sitemapReport['total_urls'] ?? 0;
+    $sitemapFilesCount = count($sitemapReport['files'] ?? []);
+    $pd_log("Task 4: Sitemaps Engine: Generated {$sitemapFilesCount} sitemap files ({$totalUrls} total indexable URLs) atomically.");
+} catch (\Throwable $e) {
+    $pd_log("Task 4 SEO & Sitemap generation error: " . $e->getMessage());
+}
+
 // Security Audit
 try {
     $allUsers = $db->fetchAll("SELECT id, email, role, must_change_password, failed_logins FROM users");

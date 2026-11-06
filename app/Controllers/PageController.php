@@ -217,10 +217,30 @@ class PageController
     {
         $db = Database::getInstance();
         $categories = $db->fetchAll(
-            "SELECT id, slug, name, product_count 
-             FROM categories 
-             WHERE parent_id IS NULL AND is_active = 1 
-             ORDER BY sort_order ASC, name ASC"
+            "SELECT c.id, c.slug, c.name, COUNT(p.id) AS product_count 
+             FROM categories c
+             LEFT JOIN products p ON p.category_id = c.id AND p.is_active = 1
+             WHERE c.is_active = 1 
+             GROUP BY c.id
+             HAVING product_count >= 1
+             ORDER BY c.sort_order ASC, c.name ASC"
+        );
+
+        $brands = $db->fetchAll(
+            "SELECT b.id, b.slug, b.name, COUNT(p.id) AS product_count 
+             FROM brands b
+             LEFT JOIN products p ON p.brand_id = b.id AND p.is_active = 1
+             WHERE b.is_active = 1
+             GROUP BY b.id
+             HAVING product_count >= 4
+             ORDER BY product_count DESC, b.name ASC"
+        );
+
+        $guides = $db->fetchAll(
+            "SELECT id, slug, title, updated_at 
+             FROM posts 
+             WHERE status = 'published' 
+             ORDER BY id DESC"
         );
 
         $breadcrumbs = [
@@ -231,9 +251,11 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/sitemap', [
             'categories' => $categories,
+            'brands' => $brands,
+            'guides' => $guides,
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('HTML Sitemap — All Categories & Pages'),
-            'meta_description' => 'Complete navigational directory of all products, categories, guides, and store policies at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('HTML Sitemap — All Categories, Brands & Pages'),
+            'meta_description' => 'Complete navigational directory of all products, categories, brands, guides, and store policies at Multan Tech Accessories.',
             'canonical' => mta_url('/sitemap'),
         ]));
     }

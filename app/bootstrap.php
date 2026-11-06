@@ -25,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.06-v3.9.2-searchbar-price-update-cache-shield');
+    define('MTA_BUILD_VERSION', '2026.11.06-v4.0.0-sitemap-indexing-engine');
 }
 
 // ----------------------------------------------------------------------

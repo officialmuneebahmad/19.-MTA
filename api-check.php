@@ -160,6 +160,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         $rows = $db->fetchAll("SELECT `key`, `value` FROM settings WHERE `key` LIKE 'supplier%' OR `key` = 'site_url'");
         echo json_encode($rows, JSON_PRETTY_PRINT);
         exit;
+    } elseif ($_POST['action'] === 'audit_counts_json') {
+        header('Content-Type: application/json');
+        $productStats = $db->fetchAll("SELECT content_state, is_active, is_published, count(*) as count FROM products GROUP BY content_state, is_active, is_published");
+        $catStats = $db->fetchAll("SELECT id, name, slug, intro_html, (SELECT count(*) FROM products p WHERE p.category_id = c.id AND p.is_active = 1) as prod_count FROM categories c WHERE c.is_active = 1");
+        $brandStats = $db->fetchAll("SELECT id, name, slug, intro_html, (SELECT count(*) FROM products p WHERE p.brand_id = b.id AND p.is_active = 1) as prod_count FROM brands b WHERE b.is_active = 1");
+        $postCount = $db->fetch("SELECT count(*) as count FROM posts WHERE status = 'published'")['count'] ?? 0;
+        echo json_encode([
+            'products' => $productStats,
+            'categories' => $catStats,
+            'brands' => $brandStats,
+            'posts' => $postCount,
+        ], JSON_PRETTY_PRINT);
+        exit;
     } elseif ($_POST['action'] === 'diagnose_settings_post') {
         header('Content-Type: application/json');
         try {

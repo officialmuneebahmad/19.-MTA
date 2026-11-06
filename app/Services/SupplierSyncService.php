@@ -287,6 +287,11 @@ class SupplierSyncService
                 \App\Core\Cache::flush();
             } catch (\Throwable) {}
 
+            // Atomically regenerate XML sitemaps post-sync
+            try {
+                \App\Services\SitemapService::generateAll();
+            } catch (\Throwable) {}
+
         } catch (\Throwable $e) {
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();

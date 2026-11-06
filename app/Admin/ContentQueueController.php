@@ -73,6 +73,10 @@ class ContentQueueController
             [date('Y-m-d H:i:s'), $productId]
         );
 
+        try {
+            \App\Services\SitemapService::generateAll();
+        } catch (\Throwable) {}
+
         Session::flash('success', "Product #{$productId} approved and added to live XML sitemaps.");
         return $resp->redirect($adminPath . '/queue');
     }
@@ -87,6 +91,10 @@ class ContentQueueController
             "UPDATE products SET content_state = 'approved', updated_at = ? WHERE content_state = 'ai_draft'",
             [date('Y-m-d H:i:s')]
         );
+
+        try {
+            \App\Services\SitemapService::generateAll();
+        } catch (\Throwable) {}
 
         Session::flash('success', "Bulk approved {$affected} product drafts for search engine indexing.");
         return $resp->redirect($adminPath . '/queue');

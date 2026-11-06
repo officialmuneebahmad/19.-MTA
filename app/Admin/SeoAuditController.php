@@ -147,4 +147,48 @@ class SeoAuditController
         Session::flash('success', '404 log cleared.');
         return $resp->redirect($adminPath . '/seo-audit/log-404');
     }
+
+    public function sitemaps(Request $request): Response
+    {
+        $telemetryPath = MTA_STORAGE . '/sitemap_telemetry.json';
+        $telemetry = [];
+        if (file_exists($telemetryPath)) {
+            $telemetry = json_decode((string)file_get_contents($telemetryPath), true) ?: [];
+        }
+
+        // If no telemetry or files missing, generate now
+        if (empty($telemetry['files'])) {
+            $telemetry = \App\Services\SitemapService::generateAll();
+        }
+
+        // Run validation suite
+        $validation = \App\Services\SitemapService::validateSitemaps();
+
+        $content = View::render('admin/seo-audit/sitemaps', [
+            'telemetry' => $telemetry,
+            'validation' => $validation,
+        ]);
+
+        $resp = new Response();
+        return $resp->html(View::render('layouts/admin', [
+            'content' => $content,
+            'page_title' => 'XML Sitemaps & Technical Indexing Engine',
+            'meta_title' => 'Sitemaps & Indexing — Multan Tech Accessories',
+        ]));
+    }
+
+    public function regenerateSitemaps(Request $request): Response
+    {
+        $adminPath = mta_admin_path();
+        $resp = new Response();
+        try {
+            $result = \App\Services\SitemapService::generateAll();
+            $count = $result['total_urls'] ?? 0;
+            $filesCount = count($result['files'] ?? []);
+            Session::flash('success', "All {$filesCount} sitemap files successfully regenerated atomically with {$count} indexable URLs.");
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Sitemap generation failed: ' . $e->getMessage());
+        }
+        return $resp->redirect($adminPath . '/seo-audit/sitemaps');
+    }
 }

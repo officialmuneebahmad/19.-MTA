@@ -2,12 +2,15 @@ User-agent: *
 Allow: /
 Allow: /assets/
 Allow: /storage/images/
+Allow: /sitemap.xml
+Allow: /sitemap-*.xml
+Allow: /sitemaps/
 
 # Disallow cart, checkout, customer sensitive flows and search
 Disallow: /cart
 Disallow: /checkout
 Disallow: /order/
-Disallow: /track-order
+Disallow: /track-order?*
 Disallow: /search
 Disallow: /api/
 Disallow: /mta-control-9872/
@@ -16,4 +19,4 @@ Disallow: /*?*sort=
 Disallow: /*?*filter=
 Disallow: /*?*utm_*
 
-Sitemap: https://multantech.store/sitemap.xml
+Sitemap: https://multantech.pk/sitemap.xml

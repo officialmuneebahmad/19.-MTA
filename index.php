@@ -44,7 +44,9 @@ $isCacheable = ($requestMethod === 'GET')
     && !str_starts_with($pathOnly, '/search')
     && !str_starts_with($pathOnly, '/track-order')
     && !str_contains($pathOnly, 'control-')
-    && !str_starts_with($pathOnly, '/api');
+    && !str_starts_with($pathOnly, '/api')
+    && !str_starts_with($pathOnly, '/sitemap')
+    && !str_ends_with($pathOnly, '.xml');
 
 if (isset($_GET['flush_cache']) || isset($_GET['refresh'])) {
     $cachedFiles = @glob(MTA_STORAGE . '/cache/*.html');

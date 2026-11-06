@@ -9,6 +9,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
 
 use App\Core\Database;
 use App\Services\SeoService;
+use App\Services\SitemapService;
 use App\Controllers\SeoController;
 
 class SeoTest
@@ -70,28 +71,67 @@ class SeoTest
         assert(str_contains($catResp->getBody(), 'https://multantech.pk/categories/'));
         assert(!str_contains($catResp->getBody(), 'multantech.store'), "Category sitemap must not contain .store references");
 
+        $pageResp = $controller->pages();
+        assert($pageResp->getStatusCode() === 200);
+        assert(str_contains($pageResp->getBody(), '<urlset'));
+        assert(str_contains($pageResp->getBody(), 'https://multantech.pk/sitemap'));
+
         echo "PASSED\n";
     }
 
     private function testStrictContentGateFilter(): void
     {
-        echo "Testing Content Gate: Product Sitemap includes active catalog products... ";
+        echo "Testing Content Gate: Product Sitemaps chunking, image tags, and indexability rules... ";
         $db = Database::getInstance();
 
-        // Count active products in DB
-        $approvedCount = (int)$db->fetchColumn(
-            "SELECT COUNT(*) FROM products WHERE is_active = 1"
+        // 1. Approve active in-stock products for testing
+        $db->execute("
+            UPDATE products 
+            SET content_state = 'approved', updated_at = CURRENT_TIMESTAMP 
+            WHERE is_active = 1 AND is_published = 1 AND status != 2
+        ");
+
+        // 2. Count expected indexable products (approved, active, published, status != 2)
+        $expectedCount = (int)$db->fetchColumn(
+            "SELECT COUNT(*) FROM products WHERE is_active = 1 AND is_published = 1 AND content_state = 'approved' AND status != 2"
         );
 
+        // 3. Generate sitemaps
+        $report = SitemapService::generateAll();
+        assert($report['status'] === 'success');
+
         $controller = new SeoController();
-        $prodResp = $controller->products();
-        $xml = $prodResp->getBody();
+        $prod1Resp = $controller->products1();
+        assert($prod1Resp->getStatusCode() === 200);
+        $xml1 = $prod1Resp->getBody();
 
-        // Count occurrences of <url>
-        $urlCount = substr_count($xml, '<url>');
-        assert($urlCount === $approvedCount, "Sitemap URLs ({$urlCount}) must match active products in DB ({$approvedCount})");
+        // Check max 500 URLs per file
+        $count1 = substr_count($xml1, '<url>');
+        assert($count1 <= SitemapService::CHUNK_SIZE, "Chunk 1 must have <= 500 URLs. Got: {$count1}");
+        assert(str_contains($xml1, '<image:image>'), "Product sitemap must contain <image:image> tags");
+        assert(!str_contains($xml1, '<priority>'), "Sitemap must NOT contain deprecated <priority>");
+        assert(!str_contains($xml1, '<changefreq>'), "Sitemap must NOT contain deprecated <changefreq>");
 
-        echo "PASSED ({$urlCount} active indexable products)\n";
+        $prod2Resp = $controller->products2();
+        assert($prod2Resp->getStatusCode() === 200);
+        $xml2 = $prod2Resp->getBody();
+        $count2 = substr_count($xml2, '<url>');
+
+        $totalProductUrls = $count1 + $count2;
+        assert($totalProductUrls === $expectedCount, "Total product sitemap URLs ({$totalProductUrls}) must match approved in-stock products in DB ({$expectedCount})");
+
+        // Out of stock product exclusion check
+        $outOfStockInSitemap = false;
+        $outOfStockSlugs = $db->fetchAll("SELECT slug FROM products WHERE status = 2 LIMIT 10");
+        foreach ($outOfStockSlugs as $oos) {
+            if (str_contains($xml1, '/products/' . $oos['slug']) || str_contains($xml2, '/products/' . $oos['slug'])) {
+                $outOfStockInSitemap = true;
+                break;
+            }
+        }
+        assert(!$outOfStockInSitemap, "Out of stock products (status=2) must be excluded from XML sitemaps");
+
+        echo "PASSED ({$totalProductUrls} approved indexable products across " . count($report['files']) . " files)\n";
     }
 }
 

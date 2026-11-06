@@ -123,11 +123,14 @@ $router->get('/sitemap', [PageController::class, 'sitemap']);
 // ======================================================================
 $router->get('/sitemap.xml', [SeoController::class, 'index']);
 $router->get('/sitemap-products.xml', [SeoController::class, 'products']);
-$router->get('/sitemap-products-1.xml', [SeoController::class, 'products']);
+$router->get('/sitemap-products-1.xml', [SeoController::class, 'products1']);
+$router->get('/sitemap-products-2.xml', [SeoController::class, 'products2']);
+$router->get('/sitemap-products-3.xml', [SeoController::class, 'products3']);
 $router->get('/sitemap-categories.xml', [SeoController::class, 'categories']);
 $router->get('/sitemap-brands.xml', [SeoController::class, 'brands']);
 $router->get('/sitemap-guides.xml', [SeoController::class, 'guides']);
 $router->get('/sitemap-pages.xml', [SeoController::class, 'pages']);
+$router->get('/sitemaps/{name}', [SeoController::class, 'submap']);
 
 // ======================================================================
 // 6. SECURE ADMIN DASHBOARD (Obfuscated Configurable Path)
@@ -217,6 +220,8 @@ $router->post("/{$adminBase}/queue/bulk-enqueue", [AdminContentQueueController::
 
 // SEO Audit & Redirects
 $router->get("/{$adminBase}/seo-audit", [AdminSeoAuditController::class, 'index'], $adminMw);
+$router->get("/{$adminBase}/seo-audit/sitemaps", [AdminSeoAuditController::class, 'sitemaps'], $adminMw);
+$router->post("/{$adminBase}/seo-audit/sitemaps/regenerate", [AdminSeoAuditController::class, 'regenerateSitemaps'], $adminCsrfMw);
 $router->get("/{$adminBase}/seo-audit/redirects", [AdminSeoAuditController::class, 'redirects'], $adminMw);
 $router->post("/{$adminBase}/seo-audit/redirects", [AdminSeoAuditController::class, 'storeRedirect'], $adminCsrfMw);
 $router->post("/{$adminBase}/seo-audit/redirects/{id}/delete", [AdminSeoAuditController::class, 'deleteRedirect'], $adminCsrfMw);

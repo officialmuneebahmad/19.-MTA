@@ -97,6 +97,8 @@ AddDefaultCharset UTF-8
     # HTML & Dynamic JSON APIs (stale-while-revalidate friendly, zero stale cache for APIs)
     ExpiresByType text/html "access plus 0 seconds"
     ExpiresByType application/json "access plus 0 seconds"
+    ExpiresByType application/xml "access plus 3600 seconds"
+    ExpiresByType text/xml "access plus 3600 seconds"
 
     # Assets (CSS, JS)
     ExpiresByType text/css "access plus 1 year"
@@ -125,5 +127,11 @@ AddDefaultCharset UTF-8
     # Static Assets Cache-Control
     <FilesMatch "\.(css|js|woff2|woff|webp|png|jpg|svg)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Sitemaps: Content-Type and 1-hour Caching
+    <FilesMatch "(sitemap.*\.xml|\.xml)$">
+        Header set Content-Type "application/xml; charset=UTF-8"
+        Header set Cache-Control "public, max-age=3600"
     </FilesMatch>
 </IfModule>

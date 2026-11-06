@@ -50,6 +50,18 @@ $adminPath = mta_admin_path();
     </div>
   </div>
 
+  <div class="admin-card" style="margin-bottom: 0;">
+    <div style="font-size: 0.8rem; text-transform: uppercase; color: #777; font-weight: 700; margin-bottom: 0.35rem;">
+      XML Sitemaps
+    </div>
+    <div style="font-size: 2rem; font-weight: 800; color: #0E7064;">
+      Active
+    </div>
+    <div style="font-size: 0.75rem; color: #777;">
+      <a href="<?= e($adminPath) ?>/seo-audit/sitemaps" style="text-decoration: underline; font-weight: 600; color: #0369A1;">Manage Sitemaps &rarr;</a>
+    </div>
+  </div>
+
 </div>
 
 <!-- Uncategorized Products Table -->
