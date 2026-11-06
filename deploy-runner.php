@@ -39,6 +39,17 @@ if (isset($_GET['test_session']) && $_GET['test_session'] === '1') {
     \App\Core\Session::set('is_reauthenticated', time());
     \App\Core\Session::set('admin_last_activity', time());
     \App\Core\Session::set('admin_login_time', time());
+    $sessId = session_id();
+    if ($sessId) {
+        setcookie('mta_session', $sessId, [
+            'expires' => 0,
+            'path' => '/',
+            'domain' => '',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Strict',
+        ]);
+    }
     session_write_close();
     if (isset($_GET['redirect']) && $_GET['redirect'] === '1') {
         header('Location: ' . mta_admin_path());
