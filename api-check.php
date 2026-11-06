@@ -160,6 +160,37 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         $rows = $db->fetchAll("SELECT `key`, `value` FROM settings WHERE `key` LIKE 'supplier%' OR `key` = 'site_url'");
         echo json_encode($rows, JSON_PRETTY_PRINT);
         exit;
+    } elseif ($_POST['action'] === 'diagnose_settings_post') {
+        header('Content-Type: application/json');
+        try {
+            $cols = $db->fetchAll("PRAGMA table_info(settings)");
+            $allowedKeys = [
+                'site_name', 'store_address', 'store_phone', 'store_whatsapp',
+                'social_facebook', 'social_instagram', 'announcement_marquee',
+                'show_wa_on_product_cards',
+                'delivery_free_threshold', 'delivery_multan_charge', 'delivery_standard_charge',
+                'pricing_threshold', 'pricing_tier1_add', 'pricing_tier1_mode', 'pricing_tier1_ending',
+                'pricing_tier2_add', 'pricing_tier2_mode', 'pricing_tier2_ending',
+                'advance_payment_required', 'advance_minimum_amount',
+                'adsense_client_id', 'google_analytics_id',
+                'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_secure',
+            ];
+            $results = [];
+            foreach ($allowedKeys as $k) {
+                $existing = $db->fetch("SELECT `key` FROM settings WHERE `key` = ? LIMIT 1", [$k]);
+                if ($existing) {
+                    $db->execute("UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?", ['100', $k]);
+                    $results[$k] = 'updated';
+                } else {
+                    $db->execute("INSERT INTO settings (`key`, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)", [$k, '100']);
+                    $results[$k] = 'inserted';
+                }
+            }
+            echo json_encode(['status' => 'success', 'results' => $results, 'cols' => $cols], JSON_PRETTY_PRINT);
+        } catch (\Throwable $e) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage(), 'file' => $e->getFile() . ':' . $e->getLine()], JSON_PRETTY_PRINT);
+        }
+        exit;
     } elseif ($_POST['action'] === 'test_order_insert_json') {
         header('Content-Type: application/json');
         try {
