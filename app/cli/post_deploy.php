@@ -290,6 +290,23 @@ try {
         'havit' => '<p>Explore authentic Havit PC accessories, RGB gaming headsets with clear microphones, mechanical gaming keyboards, and durable computing peripherals in Pakistan.</p>',
         'micropack' => '<p>Choose dependable Micropack computer peripherals, optical wireless mice, spill-resistant keyboards, and multi-port USB hubs for smooth office and academic workflows.</p>',
         'ronin' => '<p>Shop authentic Ronin wireless audio earbuds, heavy-duty fast charging cables, and high-capacity portable power banks engineered for Pakistani mobile users.</p>',
+        'speedx' => '<p>Explore authentic SpeedX computer accessories, high-speed HDMI cables, video splitters, fast charging adapters, and POS peripherals with nationwide Cash on Delivery.</p>',
+        'xtrike-me' => '<p>Shop official XTRIKE ME gaming gear, pro RGB gaming headsets, durable mechanical keyboards, high-DPI gaming mice, and gaming surfaces across Pakistan.</p>',
+        'aspor' => '<p>Discover original Aspor mobile charging accessories, high-capacity power banks, multi-port wall chargers, durable cables, and wireless audio with official warranty.</p>',
+        'xiaomi' => '<p>Buy original Xiaomi smart lifestyle accessories, fast charging power banks, wireless earbuds, smart cameras, and digital connectivity peripherals.</p>',
+        'ldnio' => '<p>Shop LDNIO high-power GaN desktop chargers, multi-port USB hubs, surge-protected extension power strips, and car chargers with official warranty.</p>',
+        'lenovo' => '<p>Browse Lenovo business accessories, wireless laser mice, spill-resistant ThinkPad keyboards, laptop chargers, and USB-C connectivity hubs.</p>',
+        'orico' => '<p>Upgrade your storage setup with Orico external hard drive enclosures, transparent SSD caddies, multi-bay docking stations, and high-speed USB hubs.</p>',
+        'faxite' => '<p>Find reliable Faxite computer cables, audio-video splitters, adapters, and peripheral connectivity hardware for office and home computing.</p>',
+        'jmary' => '<p>Shop authentic Jmary professional camera tripods, phone video mounts, ring lights, and photography stands with stable build quality.</p>',
+        'nia' => '<p>Experience rich wireless sound with NIA Bluetooth headphones, over-ear stereo headsets, and portable personal audio accessories.</p>',
+        'romoss' => '<p>Buy original Romoss high-capacity portable power banks, 20000mAh to 40000mAh battery packs, and rapid Power Delivery charging solutions.</p>',
+        'hp' => '<p>Choose authentic HP computing peripherals, optical wireless mice, classic desktop keyboards, laptop bags, and power supplies in Pakistan.</p>',
+        'logilink' => '<p>Explore LogiLink German-engineered network patch cables, display adapters, USB peripherals, and structured cabling solutions.</p>',
+        'xbox' => '<p>Shop official Xbox compatible gaming controllers, charging docks, wireless gamepads, and gaming accessories in Pakistan.</p>',
+        'western-digital' => '<p>Store and protect your digital files with Western Digital WD external hard drives, high-speed internal HDDs, and storage enclosures.</p>',
+        'alfa' => '<p>Maximize long-range wireless reception with Alfa Network high-gain Wi-Fi USB adapters, external antennas, and network signal receivers.</p>',
+        'neepho' => '<p>Discover versatile NeePho multi-function camera tripods, live streaming phone holders, and photography accessories for creators.</p>',
     ];
     $bIntroUpdated = 0;
     foreach ($brandIntros as $bSlug => $bIntro) {

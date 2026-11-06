@@ -46,6 +46,11 @@
 
 <div class="container">
 
+  <!-- Main Accessible H1 for Technical SEO Crawlers -->
+  <h1 class="visually-hidden" style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; white-space: nowrap;">
+    Multan Tech Accessories &mdash; Original Computer &amp; Mobile Accessories in Pakistan
+  </h1>
+
   <!-- Domain Migration Highlight Announcement -->
   <aside class="domain-migration-banner" aria-label="Official Domain Migration Announcement">
     <div class="domain-migration-badge">
