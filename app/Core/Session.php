@@ -131,6 +131,11 @@ class Session
         return $_SESSION['_csrf_token'] ?? '';
     }
 
+    public static function getCsrfToken(): string
+    {
+        return self::csrfToken();
+    }
+
     public static function validateCsrf(?string $token): bool
     {
         self::start();

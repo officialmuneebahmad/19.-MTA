@@ -19,7 +19,7 @@ $sampledUrls = $validation['sampled_urls'] ?? [];
   </div>
   <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
     <form method="POST" action="<?= e($adminPath) ?>/seo-audit/sitemaps/regenerate" style="margin: 0;">
-      <input type="hidden" name="csrf_token" value="<?= e(\App\Core\Session::getCsrfToken()) ?>">
+      <input type="hidden" name="csrf_token" value="<?= e(\App\Core\Session::csrfToken()) ?>">
       <button type="submit" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; padding: 0.55rem 1rem;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"></path></svg>
         Regenerate Sitemaps Now
