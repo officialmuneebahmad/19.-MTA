@@ -135,7 +135,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
         try {
             $output = [];
             $code = 0;
-            @exec('git checkout -- robots.txt app/storage/asset_manifest.json 2>&1');
+            @exec('git checkout -- robots.txt app/storage/asset_manifest.json app/storage/sitemap_telemetry.json sitemap*.xml sitemaps/*.xml 2>&1');
             exec('git pull origin master 2>&1', $output, $code);
             \App\Core\Cache::flush();
             $log = implode("\n", $output);
