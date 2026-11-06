@@ -23,3 +23,4 @@ $isCompact = !empty($isCompact);
     </div>
   </div>
 <?php endif; ?>
+

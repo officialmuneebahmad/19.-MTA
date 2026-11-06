@@ -13,6 +13,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
 use App\Core\View;
+use App\Services\SearchService;
 
 class ProductController
 {
@@ -28,53 +29,61 @@ class ProductController
         $stockStatus = trim((string)$request->get('stock_status', ''));
         $contentState = trim((string)$request->get('content_state', ''));
 
-        $where = ['1=1'];
-        $params = [];
-
         if ($search !== '') {
-            $where[] = '(p.title LIKE ? OR p.sku LIKE ? OR p.supplier_id LIKE ?)';
-            $like = '%' . $search . '%';
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
+            $searchResult = SearchService::searchAdmin(
+                $search,
+                [
+                    'category_id' => $categoryId,
+                    'stock_status' => $stockStatus,
+                    'content_state' => $contentState,
+                ],
+                $perPage,
+                $offset
+            );
+            $products = $searchResult['items'];
+            $total = $searchResult['total'];
+        } else {
+            $where = ['1=1'];
+            $params = [];
+
+            if ($categoryId > 0) {
+                $where[] = 'p.category_id = ?';
+                $params[] = $categoryId;
+            }
+
+            if ($stockStatus !== '') {
+                $where[] = 'p.stock_status = ?';
+                $params[] = $stockStatus;
+            }
+
+            if ($contentState !== '') {
+                $where[] = 'p.content_state = ?';
+                $params[] = $contentState;
+            }
+
+            $whereClause = implode(' AND ', $where);
+
+            // Count total
+            $countRow = $db->fetch(
+                "SELECT COUNT(p.id) as total FROM products p WHERE {$whereClause}",
+                $params
+            );
+            $total = (int)($countRow['total'] ?? 0);
+
+            // Fetch products
+            $products = $db->fetchAll(
+                "SELECT p.*, b.name AS brand_name, c.name AS category_name
+                 FROM products p
+                 LEFT JOIN brands b ON b.id = p.brand_id
+                 LEFT JOIN categories c ON c.id = p.category_id
+                 WHERE {$whereClause}
+                 ORDER BY p.id DESC
+                 LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
+                $params
+            );
         }
 
-        if ($categoryId > 0) {
-            $where[] = 'p.category_id = ?';
-            $params[] = $categoryId;
-        }
-
-        if ($stockStatus !== '') {
-            $where[] = 'p.stock_status = ?';
-            $params[] = $stockStatus;
-        }
-
-        if ($contentState !== '') {
-            $where[] = 'p.content_state = ?';
-            $params[] = $contentState;
-        }
-
-        $whereClause = implode(' AND ', $where);
-
-        // Count total
-        $countRow = $db->fetch(
-            "SELECT COUNT(p.id) as total FROM products p WHERE {$whereClause}",
-            $params
-        );
-        $total = (int)($countRow['total'] ?? 0);
         $totalPages = max(1, (int)ceil($total / $perPage));
-
-        // Fetch products
-        $products = $db->fetchAll(
-            "SELECT p.*, b.name AS brand_name, c.name AS category_name
-             FROM products p
-             LEFT JOIN brands b ON b.id = p.brand_id
-             LEFT JOIN categories c ON c.id = p.category_id
-             WHERE {$whereClause}
-             ORDER BY p.id DESC
-             LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
-            $params
-        );
 
         $categories = $db->fetchAll("SELECT id, name FROM categories ORDER BY name ASC");
 

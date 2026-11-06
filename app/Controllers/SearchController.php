@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
+use App\Services\SearchService;
 use App\Services\SeoService;
 
 class SearchController
@@ -22,37 +22,9 @@ class SearchController
         $perPage = 24;
         $offset = ($page - 1) * $perPage;
 
-        $db = Database::getInstance();
-        $products = [];
-        $total = 0;
-
-        if ($query !== '') {
-            $searchTerm = '%' . $query . '%';
-            
-            // Count total matching
-            $countRow = $db->fetch(
-                "SELECT COUNT(p.id) as total
-                 FROM products p
-                 LEFT JOIN brands b ON b.id = p.brand_id
-                 WHERE p.is_active = 1 AND p.is_published = 1
-                   AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ? OR p.description_html LIKE ?)",
-                [$searchTerm, $searchTerm, $searchTerm, $searchTerm]
-            );
-            $total = (int)($countRow['total'] ?? 0);
-
-            // Fetch products
-            $products = $db->fetchAll(
-                "SELECT p.*, b.name AS brand_name
-                 FROM products p
-                 LEFT JOIN brands b ON b.id = p.brand_id
-                 WHERE p.is_active = 1 AND p.is_published = 1
-                   AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ? OR p.description_html LIKE ?)
-                 ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
-                 LIMIT " . (int)$perPage . " OFFSET " . (int)$offset,
-                [$searchTerm, $searchTerm, $searchTerm, $searchTerm]
-            );
-        }
-
+        $searchResult = SearchService::search($query, $perPage, $offset);
+        $products = $searchResult['items'];
+        $total = $searchResult['total'];
         $totalPages = max(1, (int)ceil($total / $perPage));
 
         $breadcrumbs = [
@@ -88,26 +60,7 @@ class SearchController
             return $resp->json([]);
         }
 
-        $db = Database::getInstance();
-        $searchTerm = '%' . $query . '%';
-
-        $items = $db->fetchAll(
-            "SELECT p.id, p.title, p.slug, p.sell_price, p.primary_image_url, p.image_400
-             FROM products p
-             LEFT JOIN brands b ON b.id = p.brand_id
-             WHERE p.is_active = 1 AND p.is_published = 1
-               AND (p.title LIKE ? OR p.sku LIKE ? OR b.name LIKE ?)
-             ORDER BY (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC, p.popularity_score DESC, p.id DESC
-             LIMIT 8",
-            [$searchTerm, $searchTerm, $searchTerm]
-        );
-
-        foreach ($items as &$item) {
-            $item['image'] = !empty($item['image_400'])
-                ? (string)$item['image_400']
-                : (!empty($item['primary_image_url']) ? (string)$item['primary_image_url'] : '/assets/images/placeholder.svg');
-        }
-        unset($item);
+        $items = SearchService::suggestions($query, 8);
 
         return $resp->json($items);
     }

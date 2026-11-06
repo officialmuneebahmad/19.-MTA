@@ -16,6 +16,7 @@ $tests = [
     'tests/PricingDeliveryTest.php',
     'tests/SeoTest.php',
     'tests/SecurityTest.php',
+    'tests/SearchServiceTest.php',
 ];
 
 $passedCount = 0;
