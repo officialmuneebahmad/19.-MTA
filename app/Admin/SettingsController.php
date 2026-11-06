@@ -47,43 +47,105 @@ class SettingsController
         $resp = new Response();
         $db = Database::getInstance();
 
-        $allowedKeys = [
-            'site_name', 'store_address', 'store_phone', 'store_whatsapp',
-            'social_facebook', 'social_instagram', 'announcement_marquee',
-            'show_wa_on_product_cards',
-            'delivery_free_threshold', 'delivery_multan_charge', 'delivery_standard_charge',
-            'pricing_threshold', 'pricing_tier1_add', 'pricing_tier1_mode', 'pricing_tier1_ending',
-            'pricing_tier2_add', 'pricing_tier2_mode', 'pricing_tier2_ending',
-            'advance_payment_required', 'advance_minimum_amount',
-            'adsense_client_id', 'google_analytics_id',
-            'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_secure',
-        ];
+        try {
+            $allowedKeys = [
+                'site_name', 'store_address', 'store_phone', 'store_whatsapp',
+                'social_facebook', 'social_instagram', 'announcement_marquee',
+                'show_wa_on_product_cards',
+                'delivery_free_threshold', 'delivery_multan_charge', 'delivery_standard_charge',
+                'pricing_threshold', 'pricing_tier1_add', 'pricing_tier1_mode', 'pricing_tier1_ending',
+                'pricing_tier2_add', 'pricing_tier2_mode', 'pricing_tier2_ending',
+                'advance_payment_required', 'advance_minimum_amount',
+                'adsense_client_id', 'google_analytics_id',
+                'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_secure',
+            ];
 
-        $updatedCount = 0;
-        foreach ($allowedKeys as $key) {
-            $val = trim((string)$request->post($key, ''));
-            // Check if key exists in settings
-            $existing = $db->fetch("SELECT `key` FROM settings WHERE `key` = ? LIMIT 1", [$key]);
-            if ($existing) {
-                $db->execute(
-                    "UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?",
-                    [$val, $key]
-                );
-            } else {
-                $db->execute(
-                    "INSERT INTO settings (`key`, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)",
-                    [$key, $val]
-                );
+            $groupMap = [
+                'pricing_threshold' => 'pricing',
+                'pricing_tier1_add' => 'pricing',
+                'pricing_tier1_mode' => 'pricing',
+                'pricing_tier1_ending' => 'pricing',
+                'pricing_tier2_add' => 'pricing',
+                'pricing_tier2_mode' => 'pricing',
+                'pricing_tier2_ending' => 'pricing',
+                'delivery_free_threshold' => 'delivery',
+                'delivery_multan_charge' => 'delivery',
+                'delivery_standard_charge' => 'delivery',
+                'advance_payment_required' => 'orders',
+                'advance_minimum_amount' => 'orders',
+                'adsense_client_id' => 'integrations',
+                'google_analytics_id' => 'integrations',
+                'smtp_host' => 'integrations',
+                'smtp_port' => 'integrations',
+                'smtp_user' => 'integrations',
+                'smtp_pass' => 'integrations',
+                'smtp_secure' => 'integrations',
+            ];
+
+            $updatedCount = 0;
+            $pricingChanged = false;
+
+            foreach ($allowedKeys as $key) {
+                if (!$request->has($key)) {
+                    continue;
+                }
+                $val = trim((string)$request->post($key, ''));
+                $group = $groupMap[$key] ?? 'storefront';
+
+                // Check if key exists in settings
+                $existing = $db->fetch("SELECT `key`, `value` FROM settings WHERE `key` = ? LIMIT 1", [$key]);
+                if ($existing) {
+                    if ((string)$existing['value'] !== $val) {
+                        if (str_starts_with($key, 'pricing_')) {
+                            $pricingChanged = true;
+                        }
+                        $db->execute(
+                            "UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?",
+                            [$val, $key]
+                        );
+                    }
+                } else {
+                    if (str_starts_with($key, 'pricing_')) {
+                        $pricingChanged = true;
+                    }
+                    $db->execute(
+                        "INSERT INTO settings (`key`, value, description, group_name, updated_at) VALUES (?, ?, '', ?, CURRENT_TIMESTAMP)",
+                        [$key, $val, $group]
+                    );
+                }
+                $updatedCount++;
             }
-            $updatedCount++;
+
+            // Synchronize pricing_tier_threshold with pricing_threshold
+            $threshVal = trim((string)$request->post('pricing_threshold', ''));
+            if ($threshVal !== '') {
+                $chkThresh = $db->fetch("SELECT `key` FROM settings WHERE `key` = 'pricing_tier_threshold' LIMIT 1");
+                if ($chkThresh) {
+                    $db->execute("UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = 'pricing_tier_threshold'", [$threshVal]);
+                } else {
+                    $db->execute("INSERT INTO settings (`key`, value, description, group_name, updated_at) VALUES ('pricing_tier_threshold', ?, 'Tier Threshold', 'pricing', CURRENT_TIMESTAMP)", [$threshVal]);
+                }
+            }
+
+            // If pricing rules were updated, immediately reprice all catalog products
+            $repriceNotice = '';
+            if ($pricingChanged) {
+                PricingService::getConfig(true); // reload config cache
+                $repriceCount = PricingService::repriceAllProducts();
+                $repriceNotice = " Catalog updated: {$repriceCount} products re-priced with new formula.";
+            }
+
+            // Clear full page cache so changes propagate to storefront
+            Cache::flush();
+
+            AuditLogger::log('update_settings', 'settings', null, ['keys_updated' => $updatedCount, 'pricing_changed' => $pricingChanged]);
+
+            Session::flash('success', "Store settings saved successfully.{$repriceNotice} Full-page cache cleared.");
+        } catch (\Throwable $e) {
+            error_log("[Settings Update Exception] " . $e->getMessage() . " at " . $e->getFile() . ":" . $e->getLine());
+            Session::flash('error', "Could not save settings: " . $e->getMessage());
         }
 
-        // Clear full page cache so changes propagate to storefront
-        Cache::flush();
-
-        AuditLogger::log('update_settings', 'settings', null, ['keys_updated' => $updatedCount]);
-
-        Session::flash('success', 'Store settings and pricing engine parameters updated successfully. Full-page cache cleared.');
         return $resp->redirect($adminPath . '/settings');
     }
 

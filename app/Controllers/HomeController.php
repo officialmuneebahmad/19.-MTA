@@ -81,7 +81,7 @@ class HomeController
              LIMIT 12"
         );
 
-        // New Arrivals (Power banks, gaming accessories, cameras, cables, audio, gadgets)
+        // New Arrivals: Strictly ordered by newest added to Computer Zone (highest supplier_id), with in-stock first
         $newArrivals = $db->fetchAll(
             "SELECT p.*, b.name AS brand_name 
              FROM products p
@@ -89,18 +89,7 @@ class HomeController
              WHERE p.is_active = 1 {$excludeSparePartsSql}
              ORDER BY 
                (CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC,
-               (CASE 
-                  WHEN LOWER(p.title) LIKE '%power bank%' THEN 100
-                  WHEN LOWER(p.title) LIKE '%gaming%' OR LOWER(p.title) LIKE '%controller%' THEN 95
-                  WHEN LOWER(p.title) LIKE '%camera%' OR LOWER(p.title) LIKE '%cctv%' THEN 90
-                  WHEN LOWER(p.title) LIKE '%cable%' THEN 85
-                  WHEN LOWER(p.title) LIKE '%charger%' THEN 80
-                  WHEN LOWER(p.title) LIKE '%audio%' OR LOWER(p.title) LIKE '%speaker%' THEN 75
-                  WHEN LOWER(p.title) LIKE '%keyboard%' OR LOWER(p.title) LIKE '%mouse%' THEN 70
-                  WHEN LOWER(p.title) LIKE '%wifi%' OR LOWER(p.title) LIKE '%router%' THEN 65
-                  WHEN LOWER(p.title) LIKE '%microsd%' OR LOWER(p.title) LIKE '%flash drive%' THEN 60
-                  ELSE 0
-                END) DESC,
+               CAST(p.supplier_id AS INTEGER) DESC,
                p.id DESC
              LIMIT 12"
         );

@@ -137,6 +137,7 @@ try {
 
     $response->send();
 } catch (\Throwable $e) {
+    error_log('[MTA 500 Exception] ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() . "\n" . $e->getTraceAsString());
     if (mta_config('app.debug', false)) {
         echo '<h1>500 System Exception</h1>';
         echo '<p><strong>Message:</strong> ' . e($e->getMessage()) . '</p>';

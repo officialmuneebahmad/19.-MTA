@@ -47,6 +47,42 @@ $pd_log("==================================================");
 $db = Database::getInstance();
 $pd_log("Database connected successfully (driver: " . $db->getDriver() . ").");
 
+// SQLite Automated Health Check & Table Self-Repair
+if ($db->getDriver() === 'sqlite') {
+    try {
+        $pdo = $db->getPdo();
+        @$pdo->exec("REINDEX;");
+        $testKey = '__deploy_test__' . time();
+        $pdo->exec("INSERT INTO settings (`key`, value, description, group_name) VALUES ('{$testKey}', '1', '', 'system')");
+        $pdo->exec("DELETE FROM settings WHERE `key` = '{$testKey}'");
+        $pd_log("SQLite settings table write test: PASSED");
+    } catch (\Throwable $e) {
+        $pd_log("SQLite integrity repair needed: " . $e->getMessage());
+        try {
+            $pdo = $db->getPdo();
+            $rows = $pdo->query("SELECT `key`, `value` FROM settings")->fetchAll(PDO::FETCH_ASSOC);
+            $pdo->exec("DROP TABLE IF EXISTS settings_repair;");
+            $pdo->exec("CREATE TABLE settings_repair (
+                `key` TEXT PRIMARY KEY,
+                `value` TEXT NULL,
+                `description` TEXT NULL,
+                `group_name` TEXT NOT NULL DEFAULT 'general',
+                `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+            );");
+            $ins = $pdo->prepare("INSERT INTO settings_repair (`key`, `value`, `group_name`) VALUES (?, ?, 'general')");
+            foreach ($rows as $r) {
+                $ins->execute([$r['key'], $r['value']]);
+            }
+            $pdo->exec("DROP TABLE settings;");
+            $pdo->exec("ALTER TABLE settings_repair RENAME TO settings;");
+            @$pdo->exec("VACUUM;");
+            $pd_log("SQLite settings table successfully repaired and rebuilt from " . count($rows) . " valid rows.");
+        } catch (\Throwable $re) {
+            $pd_log("SQLite repair exception: " . $re->getMessage());
+        }
+    }
+}
+
 // Task 0: Handle admin password (preserve if user already changed it)
 $adminEmail = 'admin@multantech.store';
 $newPass = null;

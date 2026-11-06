@@ -67,7 +67,7 @@ class CategoryController
         $sort = (string)$request->query('sort', 'popular');
         $availSort = '(CASE WHEN p.status = 1 THEN 1 WHEN p.status = 3 THEN 2 ELSE 3 END) ASC';
         $orderBy = match ($sort) {
-            'newest' => "{$availSort}, p.created_at DESC, p.id DESC",
+            'newest' => "{$availSort}, CAST(p.supplier_id AS INTEGER) DESC, p.id DESC",
             'price_asc' => "{$availSort}, p.sell_price ASC, p.id DESC",
             'price_desc' => "{$availSort}, p.sell_price DESC, p.id DESC",
             default => "{$availSort}, p.popularity_score DESC, p.id DESC",

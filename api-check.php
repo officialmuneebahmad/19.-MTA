@@ -191,6 +191,60 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && isset($_POST['action']))
             echo json_encode(['status' => 'error', 'message' => $e->getMessage(), 'file' => $e->getFile() . ':' . $e->getLine()], JSON_PRETTY_PRINT);
         }
         exit;
+    } elseif ($_POST['action'] === 'repair_database') {
+        header('Content-Type: application/json');
+        try {
+            $pdo = $db->getPdo();
+            $log = [];
+
+            // 1. Try Reindex
+            try {
+                $pdo->exec("REINDEX;");
+                $log[] = "REINDEX success";
+            } catch (\Throwable $e) {
+                $log[] = "REINDEX failed: " . $e->getMessage();
+            }
+
+            // 2. Fix settings table if corrupted
+            try {
+                $rows = $pdo->query("SELECT `key`, `value` FROM settings")->fetchAll(PDO::FETCH_ASSOC);
+                $pdo->exec("DROP TABLE IF EXISTS settings_new;");
+                $pdo->exec("CREATE TABLE settings_new (
+                    `key` TEXT PRIMARY KEY,
+                    `value` TEXT NULL,
+                    `description` TEXT NULL,
+                    `group_name` TEXT NOT NULL DEFAULT 'general',
+                    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );");
+                $ins = $pdo->prepare("INSERT INTO settings_new (`key`, `value`, `group_name`) VALUES (?, ?, 'general')");
+                foreach ($rows as $r) {
+                    $ins->execute([$r['key'], $r['value']]);
+                }
+                $pdo->exec("DROP TABLE settings;");
+                $pdo->exec("ALTER TABLE settings_new RENAME TO settings;");
+                $log[] = "Rebuilt settings table from " . count($rows) . " valid rows.";
+            } catch (\Throwable $e) {
+                $log[] = "Settings table rebuild error: " . $e->getMessage();
+            }
+
+            // 3. VACUUM
+            try {
+                $pdo->exec("VACUUM;");
+                $log[] = "VACUUM success";
+            } catch (\Throwable $e) {
+                $log[] = "VACUUM failed: " . $e->getMessage();
+            }
+
+            $integrity = $db->fetchAll("PRAGMA integrity_check");
+            echo json_encode([
+                'status' => 'completed',
+                'log' => $log,
+                'integrity' => $integrity
+            ], JSON_PRETTY_PRINT);
+        } catch (\Throwable $e) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()], JSON_PRETTY_PRINT);
+        }
+        exit;
     } elseif ($_POST['action'] === 'test_order_insert_json') {
         header('Content-Type: application/json');
         try {

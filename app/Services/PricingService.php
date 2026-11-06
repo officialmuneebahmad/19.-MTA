@@ -110,7 +110,7 @@ class PricingService
         }
 
         $marginMode = (string)mta_setting('pricing_margin_mode', 'Tiered');
-        $threshold = (int)mta_setting('pricing_tier_threshold', 2000);
+        $threshold = (int)mta_setting('pricing_threshold', mta_setting('pricing_tier_threshold', 2000));
         $tier1Add = (int)mta_setting('pricing_tier1_add', 100);
         $tier1Mode = (string)mta_setting('pricing_tier1_mode', 'nearest');
         $tier1Ending = (int)mta_setting('pricing_tier1_ending', 99);

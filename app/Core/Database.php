@@ -302,8 +302,6 @@ class Database
                         $ins->execute([$sKey, $sData['value'], $sData['desc'], $sData['group']]);
                     } elseif ($sKey === 'social_tiktok' && str_contains((string)$row['value'], 'TODO')) {
                         $this->pdo->prepare("UPDATE settings SET value = '', updated_at = CURRENT_TIMESTAMP WHERE `key` = ?")->execute([$sKey]);
-                    } elseif (in_array($sKey, ['announcement_strip', 'announcement_text', 'announcement_marquee', 'pricing_margin_mode', 'show_wa_on_product_cards', 'social_facebook', 'social_instagram', 'admin_portal_url', 'show_admin_link_in_footer'], true)) {
-                        $this->pdo->prepare("UPDATE settings SET value = ?, updated_at = CURRENT_TIMESTAMP WHERE `key` = ?")->execute([$sData['value'], $sKey]);
                     }
                 } catch (\Throwable) {}
             }
