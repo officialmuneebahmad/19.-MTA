@@ -29,7 +29,7 @@ class PageController
         return $resp->html(View::render('storefront/pages/about', [
             'breadcrumbs' => $breadcrumbs,
             'meta_title' => SeoService::title('About Multan Tech Accessories'),
-            'meta_description' => 'Learn about Multan Tech Accessories, founded and developed by Muneeb Ahmad in Multan, Pakistan. Authentic hardware, transparent pricing.',
+            'meta_description' => 'Learn about Multan Tech Accessories, founded by Muneeb Ahmad in Multan, Pakistan. 100% authentic computer accessories, transparent prices and fast delivery.',
             'canonical' => mta_url('/about'),
         ]));
     }
@@ -44,8 +44,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/contact', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Contact Us & Store Location'),
-            'meta_description' => 'Contact Multan Tech Accessories on Sher Shah Road, Multan. Direct WhatsApp: 0307-0655275. Fast customer support for Pakistani buyers.',
+            'meta_title' => SeoService::title('Contact Us and Store Location'),
+            'meta_description' => 'Contact Multan Tech Accessories on Sher Shah Road, Multan. Fast customer support via WhatsApp at 0307-0655275 and nationwide Cash on Delivery service.',
             'canonical' => mta_url('/contact'),
         ]));
     }
@@ -111,8 +111,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/shipping', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Shipping & Delivery Policy'),
-            'meta_description' => 'Delivery details: Rs. 100 in Multan, Rs. 250 across Pakistan. Free delivery on orders above Rs. 5,000 and on second orders.',
+            'meta_title' => SeoService::title('Shipping and Delivery Policy'),
+            'meta_description' => 'Delivery rates: Rs. 100 in Multan, Rs. 250 across Pakistan. Enjoy free shipping on orders above Rs. 5,000 and second orders with fast courier delivery.',
             'canonical' => mta_url('/shipping-and-delivery'),
         ]));
     }
@@ -127,8 +127,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/returns', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('3-Day Checking Warranty & Returns'),
-            'meta_description' => 'Our 3-day checking warranty and hassle-free returns policy for tech accessories at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('3-Day Checking Warranty and Returns'),
+            'meta_description' => 'Read our 3-day checking warranty and hassle-free returns policy for tech accessories at Multan Tech Accessories. Easy returns and customer satisfaction.',
             'canonical' => mta_url('/returns-and-refunds'),
         ]));
     }
@@ -143,8 +143,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/editorial', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Editorial & Pricing Policy'),
-            'meta_description' => 'Editorial integrity, supplier pricing transparency, and honest testing standards at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('Editorial and Pricing Policy'),
+            'meta_description' => 'Explore our editorial integrity, supplier pricing transparency, and honest testing standards at Multan Tech Accessories. Reliable tech shopping in Pakistan.',
             'canonical' => mta_url('/editorial-and-pricing-policy'),
         ]));
     }
@@ -159,8 +159,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/faq', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Frequently Asked Questions (FAQ)'),
-            'meta_description' => 'Common questions about delivery times, COD, warranty, and authentic tech accessories in Pakistan.',
+            'meta_title' => SeoService::title('Frequently Asked Questions FAQ'),
+            'meta_description' => 'Find clear answers to common questions about delivery times, Cash on Delivery, warranty claims, and authentic computer accessories at Multan Tech Accessories.',
             'canonical' => mta_url('/faq'),
         ]));
     }
@@ -175,8 +175,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/privacy', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Privacy Policy'),
-            'meta_description' => 'How Multan Tech Accessories protects your customer privacy, phone numbers, and delivery data.',
+            'meta_title' => SeoService::title('Privacy and Data Protection Policy'),
+            'meta_description' => 'Learn how Multan Tech Accessories protects your customer privacy, contact details, phone numbers, and delivery data with strict security and confidentiality.',
             'canonical' => mta_url('/privacy-policy'),
         ]));
     }
@@ -191,8 +191,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/terms', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Terms & Conditions'),
-            'meta_description' => 'Terms of service and customer conditions for purchasing tech accessories at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('Customer Terms and Conditions Policy'),
+            'meta_description' => 'Read the official terms of service and customer conditions for purchasing computer and smartphone accessories at Multan Tech Accessories with confidence.',
             'canonical' => mta_url('/terms-and-conditions'),
         ]));
     }
@@ -207,8 +207,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/cookie', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Cookie Policy'),
-            'meta_description' => 'Our minimal, privacy-first cookie policy at Multan Tech Accessories. No intrusive third-party ad trackers.',
+            'meta_title' => SeoService::title('Minimal Cookie and Privacy Policy'),
+            'meta_description' => 'Review our minimal, privacy-first cookie policy at Multan Tech Accessories. We use essential session cookies only with zero intrusive third-party ad trackers.',
             'canonical' => mta_url('/cookie-policy'),
         ]));
     }
@@ -254,8 +254,8 @@ class PageController
             'brands' => $brands,
             'guides' => $guides,
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('HTML Sitemap — All Categories, Brands & Pages'),
-            'meta_description' => 'Complete navigational directory of all products, categories, brands, guides, and store policies at Multan Tech Accessories.',
+            'meta_title' => SeoService::title('HTML Sitemap and Complete Directory'),
+            'meta_description' => 'Browse the complete navigational directory of all verified products, hardware categories, brand hubs, buying guides, and policies at Multan Tech Accessories.',
             'canonical' => mta_url('/sitemap'),
         ]));
     }

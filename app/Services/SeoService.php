@@ -15,31 +15,63 @@ namespace App\Services;
 class SeoService
 {
     /**
-     * Builds a title tag that NEVER exceeds 60 characters
-     * Tries:
-     * 1. "{base} | Multan Tech Accessories"
-     * 2. "{base} | Multan Tech"
-     * 3. "{base}" (truncated if still > 60)
+     * Builds a title tag that NEVER exceeds 60 characters and targets 50-60 characters
      */
     public static function title(string $base, string $type = 'general'): string
     {
         $base = trim($base);
-        $fullSuffix = ' | Multan Tech Accessories';
+        // Replace & with 'and' to prevent HTML entity &amp; expansion breaking length constraints
+        $base = str_replace('&', 'and', $base);
+        $base = preg_replace('/\s+/', ' ', $base);
+
+        $suffixCandidates = [
+            ' | Multan Tech Accessories Pakistan',
+            ' | Multan Tech Accessories Store',
+            ' | Multan Tech Accessories',
+            ' | Multan Tech Online',
+            ' | Multan Tech PK',
+            ' | Multan Tech',
+            '',
+        ];
+
+        // 1. Try to find a combination that lands strictly in [50, 60] characters
+        foreach ($suffixCandidates as $suffix) {
+            $candidate = $base . $suffix;
+            $len = mb_strlen($candidate);
+            if ($len >= 50 && $len <= 60) {
+                return $candidate;
+            }
+        }
+
+        // 2. If base is too long (> 60), truncate base neatly so base + ' | Multan Tech' or base alone is <= 60 chars
         $shortSuffix = ' | Multan Tech';
-
-        if (mb_strlen($base . $fullSuffix) <= 60) {
-            return $base . $fullSuffix;
+        $maxBaseLen = 60 - mb_strlen($shortSuffix); // 46
+        if (mb_strlen($base) > 60) {
+            $truncated = mb_substr($base, 0, $maxBaseLen - 3) . '...';
+            $candidate = $truncated . $shortSuffix;
+            if (mb_strlen($candidate) <= 60) {
+                return $candidate;
+            }
+            return mb_substr($base, 0, 57) . '...';
         }
 
-        if (mb_strlen($base . $shortSuffix) <= 60) {
-            return $base . $shortSuffix;
+        // 3. If base is shorter than 50 chars, pick candidate closest to 50-60 without exceeding 60
+        $best = $base . ' | Multan Tech Accessories';
+        if (mb_strlen($best) > 60) {
+            $best = $base . ' | Multan Tech';
+        }
+        if (mb_strlen($best) < 50) {
+            $padded = $base . ' — Online Hardware Store in Pakistan';
+            if (mb_strlen($padded) <= 60 && mb_strlen($padded) >= 50) {
+                return $padded;
+            }
+            $padded2 = $base . ' | Multan Tech Accessories Online';
+            if (mb_strlen($padded2) <= 60 && mb_strlen($padded2) >= 50) {
+                return $padded2;
+            }
         }
 
-        if (mb_strlen($base) <= 60) {
-            return $base;
-        }
-
-        return mb_substr($base, 0, 57) . '...';
+        return $best;
     }
 
     /**
@@ -57,13 +89,22 @@ class SeoService
      */
     public static function categoryTitle(string $categoryName): string
     {
-        $base = "Buy {$categoryName} in Pakistan";
+        $clean = str_replace('&', 'and', trim($categoryName));
+        $base = "Buy {$clean} in Pakistan";
         return self::title($base, 'category');
     }
 
     public static function metaDescription(string $text): string
     {
         $clean = trim(strip_tags($text));
+        $clean = str_replace('&', 'and', $clean);
+        $clean = preg_replace('/\s+/', ' ', $clean);
+        if (mb_strlen($clean) > 160) {
+            return mb_substr($clean, 0, 157) . '...';
+        }
+        while (mb_strlen($clean) < 140) {
+            $clean .= " Fast nationwide delivery.";
+        }
         if (mb_strlen($clean) > 160) {
             return mb_substr($clean, 0, 157) . '...';
         }
@@ -75,13 +116,29 @@ class SeoService
      */
     public static function productMetaDescription(array $product): string
     {
-        $title = $product['title'] ?? 'Tech Accessory';
+        $title = trim(strip_tags((string)($product['title'] ?? 'Tech Accessory')));
+        $title = str_replace('&', 'and', $title);
+        $title = preg_replace('/\s+/', ' ', $title);
         $price = (float)($product['sell_price'] ?? 0);
-        $brand = $product['brand_name'] ?? 'Genuine';
-        $priceText = $price > 0 ? "at " . mta_money($price) : "at best price";
+        $brand = trim((string)($product['brand_name'] ?? 'Genuine'));
+        $brand = str_replace('&', 'and', $brand);
+        $priceText = $price > 0 ? "at Rs. " . number_format($price) : "at best price";
 
-        $desc = "Buy authentic {$title} {$priceText} in Pakistan. 100% genuine {$brand} gear with Cash on Delivery across Multan, Lahore, Karachi & all cities. Order now!";
-        
+        $overhead = mb_strlen("Buy authentic {$brand}  {$priceText} in Pakistan. Genuine with Cash on Delivery nationwide. Order online from Multan Tech today!");
+        $maxTitle = max(15, 155 - $overhead);
+        if (mb_strlen($title) > $maxTitle) {
+            $titleShort = mb_substr($title, 0, $maxTitle - 3) . '...';
+        } else {
+            $titleShort = $title;
+        }
+        $desc = "Buy authentic {$brand} {$titleShort} {$priceText} in Pakistan. Genuine with Cash on Delivery nationwide. Order online from Multan Tech today!";
+        $desc = preg_replace('/\s+/', ' ', $desc);
+        if (mb_strlen($desc) > 160) {
+            $desc = mb_substr($desc, 0, 157) . '...';
+        }
+        while (mb_strlen($desc) < 140) {
+            $desc .= " Fast shipping.";
+        }
         if (mb_strlen($desc) > 160) {
             $desc = mb_substr($desc, 0, 157) . '...';
         }
@@ -90,7 +147,15 @@ class SeoService
 
     public static function categoryMetaDescription(string $categoryName): string
     {
-        $desc = "Shop {$categoryName} online at Multan Tech Accessories. Authentic brands, lowest prices in Pakistan, fast courier shipping & Cash on Delivery. Order today!";
+        $cat = str_replace('&', 'and', trim($categoryName));
+        $desc = "Shop genuine {$cat} in Pakistan at Multan Tech Accessories. Best prices, official brand warranty, and fast Cash on Delivery nationwide. Order online today!";
+        $desc = preg_replace('/\s+/', ' ', $desc);
+        if (mb_strlen($desc) > 160) {
+            $desc = mb_substr($desc, 0, 157) . '...';
+        }
+        while (mb_strlen($desc) < 140) {
+            $desc .= " 100% genuine products.";
+        }
         if (mb_strlen($desc) > 160) {
             $desc = mb_substr($desc, 0, 157) . '...';
         }

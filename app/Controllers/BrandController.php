@@ -33,8 +33,8 @@ class BrandController
         ];
 
         $html = View::render('storefront/brands', [
-            'meta_title' => SeoService::title('Featured Hardware & Accessory Brands in Pakistan'),
-            'meta_description' => 'Explore tech accessory brands available at Multan Tech Accessories. Anker, Baseus, Ugreen, A4Tech, Kingston & more with Cash on Delivery.',
+            'meta_title' => SeoService::title('Featured Tech and Hardware Brands in Pakistan'),
+            'meta_description' => 'Explore authentic tech accessory brands at Multan Tech Accessories. Original Anker, Baseus, Ugreen, A4Tech, Kingston and more with Cash on Delivery.',
             'canonical_url' => mta_url('/brands'),
             'brands' => $brands,
             'breadcrumbs' => $breadcrumbs,
@@ -77,8 +77,8 @@ class BrandController
         // Section 5 rule: Brand indexable only if at least 4 products and unique intro text
         $isIndexable = ($pagination['total'] >= 4) && !empty($brand['intro_html']);
 
-        $metaTitle = SeoService::title("{$brand['name']} Accessories in Pakistan Price & Buy Online");
-        $metaDescription = "Buy original {$brand['name']} accessories in Pakistan. Authentic chargers, cables, audio and computer gear with Cash on Delivery across Multan & nationwide.";
+        $metaTitle = SeoService::title("{$brand['name']} Accessories in Pakistan");
+        $metaDescription = SeoService::metaDescription("Buy original {$brand['name']} accessories in Pakistan. Authentic computer peripherals and mobile gear with Cash on Delivery nationwide.");
 
         $brandOgImage = null;
         if (!empty($brand['logo_path'])) {

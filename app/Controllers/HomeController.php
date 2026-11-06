@@ -150,8 +150,8 @@ class HomeController
         ];
 
         $html = View::render('storefront/home', [
-            'meta_title' => SeoService::title('Multan Tech Accessories — Authentic Tech & Accessories in Pakistan'),
-            'meta_description' => 'Buy original computer & mobile accessories in Pakistan at Multan Tech Accessories. Authentic brands, fast courier delivery & Cash on Delivery nationwide.',
+            'meta_title' => 'Multan Tech Accessories | Authentic Tech in Pakistan',
+            'meta_description' => 'Buy original computer and mobile accessories in Pakistan at Multan Tech Accessories. Authentic brands, fast courier delivery and Cash on Delivery nationwide.',
             'canonical_url' => mta_canonical_base_url(),
             'og_url' => mta_canonical_base_url(),
             'og_title' => 'Multan Tech Accessories',

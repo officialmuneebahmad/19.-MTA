@@ -31,8 +31,8 @@ class CategoryController
         ];
 
         $html = View::render('storefront/categories', [
-            'meta_title' => SeoService::title('Shop Computer & Mobile Accessories by Category'),
-            'meta_description' => 'Browse all tech accessory categories at Multan Tech Accessories. Chargers, cables, audio, storage & gaming gear in Pakistan.',
+            'meta_title' => SeoService::title('Shop Computer and Mobile Accessories by Category'),
+            'meta_description' => 'Browse all tech accessory categories at Multan Tech Accessories. Original chargers, cables, audio, storage and gaming gear in Pakistan.',
             'canonical_url' => mta_url('/categories'),
             'categories' => $categories,
             'breadcrumbs' => $breadcrumbs,
