@@ -305,8 +305,20 @@ class ProductController
             [$priceOverride, $sellPrice, $pinned, $isActive, date('Y-m-d H:i:s'), $id]
         );
 
+        try {
+            \App\Core\Cache::flush();
+        } catch (\Throwable) {}
+
+        $returnQuery = trim((string)$request->post('return_query', ''));
+        $redirectUrl = $adminPath . '/products';
+        if ($returnQuery !== '') {
+            $redirectUrl .= '?' . ltrim($returnQuery, '?');
+        } elseif (!empty($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], $adminPath . '/products')) {
+            $redirectUrl = $_SERVER['HTTP_REFERER'];
+        }
+
         Session::flash('success', $msg);
-        return $resp->redirect($adminPath . '/products');
+        return $resp->redirect($redirectUrl);
     }
 
     public function destroy(int $id, Request $request): Response

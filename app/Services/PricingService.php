@@ -133,6 +133,11 @@ class PricingService
         return $cfg;
     }
 
+    public static function resetConfigCache(): void
+    {
+        self::getConfig(true);
+    }
+
     /**
      * Compute a deterministic pricing settings signature for the sync content hash.
      */

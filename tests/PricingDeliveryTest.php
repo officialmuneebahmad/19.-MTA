@@ -43,6 +43,13 @@ class PricingDeliveryTest
     {
         echo "Testing PricingService::sellPrice() required test cases... ";
 
+        // Reset to standard baseline settings for deterministic verification
+        $this->db->execute("UPDATE settings SET value = '100' WHERE key = 'pricing_tier1_add'");
+        $this->db->execute("UPDATE settings SET value = '300' WHERE key = 'pricing_tier2_add'");
+        $this->db->execute("UPDATE settings SET value = '2000' WHERE key = 'pricing_threshold'");
+        $this->db->execute("UPDATE settings SET value = '2000' WHERE key = 'pricing_tier_threshold'");
+        PricingService::resetConfigCache();
+
         $cases = [
             160 => 399,
             250 => 499,

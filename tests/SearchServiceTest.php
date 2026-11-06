@@ -100,10 +100,24 @@ assertCondition($resTypeC['total'] > 0, 'Query "type c fast charger" finds match
 $resPowerBank = SearchService::search('power bank 20000', 5);
 assertCondition($resPowerBank['total'] > 0, 'Query "power bank 20000" finds 20000mAh power banks in catalog');
 
-// Test Suggestions Endpoint structure
+// Test Suggestions Endpoint structure & Price Snapping
 $suggestions = SearchService::suggestions('power bank', 4);
 assertCondition(!empty($suggestions), 'SearchService::suggestions returns items');
 assertCondition(isset($suggestions[0]['image'], $suggestions[0]['title'], $suggestions[0]['sell_price'], $suggestions[0]['slug']), 'Suggestions items include image, title, sell_price, and slug');
+assertCondition(isset($suggestions[0]['sell_price_formatted']) && str_starts_with($suggestions[0]['sell_price_formatted'], 'Rs. '), 'Suggestions items include formatted sell price');
+assertCondition($suggestions[0]['sell_price'] > 0 && (((int)$suggestions[0]['sell_price']) % 100 === 99), 'Suggestions items sell_price is positive and strictly snapped to end in 99');
+
+// Test Search Results Price Snapping
+$resSearch = SearchService::search('power bank', 5);
+assertCondition(!empty($resSearch['items']), 'SearchService::search returns items for power bank');
+$allEnded99 = true;
+foreach ($resSearch['items'] as $sIt) {
+    if ((int)$sIt['sell_price'] % 100 !== 99) {
+        $allEnded99 = false;
+        break;
+    }
+}
+assertCondition($allEnded99, 'All items returned by SearchService::search have sell_price ending in 99');
 
 echo "\n============================================\n";
 echo "TOTAL: " . ($passCount + $failCount) . " | PASSED: {$passCount} | FAILED: {$failCount}\n";

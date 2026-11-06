@@ -99,7 +99,10 @@ function initSearchAutocomplete() {
 
       timeout = setTimeout(async () => {
         try {
-          const res = await fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}`);
+          const res = await fetch(`/api/search-suggestions?q=${encodeURIComponent(query)}&_t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: { 'Accept': 'application/json' }
+          });
           if (!res.ok) return;
           const items = await res.json();
 
@@ -108,12 +111,13 @@ function initSearchAutocomplete() {
           } else {
             suggestionsBox.innerHTML = items.map(item => {
               const imgUrl = item.image || item.primary_image_url || '/assets/images/placeholder.svg';
+              const displayPrice = item.sell_price_formatted || (item.sell_price > 0 ? ('Rs. ' + Number(item.sell_price).toLocaleString()) : 'Ask Price');
               return `
               <a href="/products/${item.slug}" class="search-item">
                 <img src="${imgUrl}" onerror="this.onerror=null;this.src='/assets/images/placeholder.svg';" alt="${escapeHtml(item.title)}" class="search-item-img" width="48" height="48" loading="lazy" referrerpolicy="no-referrer">
                 <div style="flex:1;overflow:hidden;">
                   <div class="search-item-title">${escapeHtml(item.title)}</div>
-                  <div class="search-item-price">Rs. ${Number(item.sell_price).toLocaleString()}</div>
+                  <div class="search-item-price">${displayPrice}</div>
                 </div>
               </a>
             `;

@@ -33,6 +33,10 @@ class SearchController
         ];
 
         $resp = new Response();
+        $resp->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+        $resp->header('Pragma', 'no-cache');
+        $resp->header('Expires', '0');
+
         $seoTitle = $query !== '' ? "Search: {$query}" : 'Search Products';
 
         return $resp->html(View::render('storefront/search', [
@@ -55,6 +59,9 @@ class SearchController
     {
         $query = trim((string)$request->get('q', ''));
         $resp = new Response();
+        $resp->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+        $resp->header('Pragma', 'no-cache');
+        $resp->header('Expires', '0');
 
         if (mb_strlen($query) < 2) {
             return $resp->json([]);

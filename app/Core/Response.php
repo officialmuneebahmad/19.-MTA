@@ -44,6 +44,11 @@ class Response
     {
         $this->statusCode = $status;
         $this->header('Content-Type', 'application/json; charset=UTF-8');
+        if (!isset($this->headers['Cache-Control'])) {
+            $this->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+            $this->header('Pragma', 'no-cache');
+            $this->header('Expires', '0');
+        }
         $this->content = (string)json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         return $this;
     }

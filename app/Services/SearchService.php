@@ -110,6 +110,18 @@ class SearchService
         $total = count($scored);
         $items = array_slice($scored, $offset, $limit);
 
+        // Guarantee all search result items reflect the freshest snapped selling price
+        foreach ($items as &$it) {
+            if (!empty($it['price_override']) && (float)$it['price_override'] > 0) {
+                $it['sell_price'] = (float)\App\Services\PricingService::snapPrice((float)$it['price_override']);
+            } elseif (!empty($it['sell_price']) && (float)$it['sell_price'] > 0) {
+                $it['sell_price'] = (float)\App\Services\PricingService::snapPrice((float)$it['sell_price']);
+            } elseif (!empty($it['supplier_price']) && (float)$it['supplier_price'] > 0) {
+                $it['sell_price'] = (float)\App\Services\PricingService::sellPrice((int)round((float)$it['supplier_price']));
+            }
+        }
+        unset($it);
+
         return [
             'items' => $items,
             'total' => $total,
@@ -138,11 +150,22 @@ class SearchService
                 ? (string)$item['image_400']
                 : (!empty($item['primary_image_url']) ? (string)$item['primary_image_url'] : '/assets/images/placeholder.svg');
 
+            // Compute current, authoritative snapped price
+            $price = 0;
+            if (!empty($item['price_override']) && (float)$item['price_override'] > 0) {
+                $price = (float)\App\Services\PricingService::snapPrice((float)$item['price_override']);
+            } elseif (!empty($item['sell_price']) && (float)$item['sell_price'] > 0) {
+                $price = (float)\App\Services\PricingService::snapPrice((float)$item['sell_price']);
+            } elseif (!empty($item['supplier_price']) && (float)$item['supplier_price'] > 0) {
+                $price = (float)\App\Services\PricingService::sellPrice((int)round((float)$item['supplier_price']));
+            }
+
             $output[] = [
                 'id' => (int)$item['id'],
                 'title' => (string)$item['title'],
                 'slug' => (string)$item['slug'],
-                'sell_price' => (float)$item['sell_price'],
+                'sell_price' => $price,
+                'sell_price_formatted' => $price > 0 ? ('Rs. ' . number_format($price)) : 'Ask Price',
                 'primary_image_url' => (string)($item['primary_image_url'] ?? ''),
                 'image_400' => (string)($item['image_400'] ?? ''),
                 'image' => $img,

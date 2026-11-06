@@ -140,6 +140,7 @@ $adminPath = mta_admin_path();
               <!-- Quick Inline Override Form -->
               <form action="<?= e($adminPath) ?>/products/quick-override" method="POST" style="display: flex; align-items: center; gap: 0.35rem;">
                 <?= mta_csrf_field() ?>
+                <input type="hidden" name="return_query" value="<?= e($_SERVER['QUERY_STRING'] ?? '') ?>">
                 <input type="hidden" name="product_id" value="<?= (int)$p['id'] ?>">
                 <input type="number" name="price_override" placeholder="Override" value="<?= $p['price_override'] ? (int)$p['price_override'] : '' ?>" style="width: 75px; padding: 0.25rem 0.35rem; font-size: 0.775rem; border: 1px solid #ccc; border-radius: 4px;">
                 <input type="hidden" name="pinned" value="<?= $p['pinned'] ? 0 : 1 ?>">
