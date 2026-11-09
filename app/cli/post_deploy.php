@@ -332,7 +332,7 @@ try {
     $pd_log("Task 4: Brand Hubs: {$bIntroUpdated} brand intros populated with authentic editorial text.");
 
     // 2b. Seed Editorial Buying Guides
-    require_once MTA_APP . '/Database/seed_guides.php';
+    require_once MTA_APP . '/database/seed_guides.php';
     $guidesSeeded = mta_seed_buying_guides();
     $pd_log("Task 4: Editorial Buying Guides: {$guidesSeeded} buying guides verified and seeded.");
 
