@@ -17,12 +17,17 @@ function mta_seed_buying_guides(): int
 {
     $db = Database::getInstance();
 
+    // 1. Ensure author avatar is set to the uploaded photo
+    try {
+        $db->execute("UPDATE authors SET avatar = '/assets/images/muneeb-ahmad.jpg' WHERE id = 1 OR slug = 'muneeb-ahmad'");
+    } catch (\Throwable $e) {}
+
     $guides = [
         [
             'slug' => 'fast-chargers-buying-guide-pakistan',
             'title' => 'Fast Chargers Buying Guide (2026): GaN, Wattage & Safe Charging in Pakistan',
             'author_id' => 1,
-            'featured_image' => '/assets/images/og-banner.jpg',
+            'featured_image' => '/assets/images/guides/gan-vs-silicon-charger-comparison.jpg',
             'excerpt' => 'Complete 2026 guide to choosing fast chargers in Pakistan. Understand GaN technology, Power Delivery vs Quick Charge, voltage fluctuation protection, and real prices in PKR.',
             'target_keyword' => 'fast chargers buying guide pakistan',
             'meta_title' => 'Fast Chargers Guide: GaN, Wattage & Safe Charging in Pakistan',
@@ -48,6 +53,13 @@ function mta_seed_buying_guides(): int
 <h2>2. Why GaN (Gallium Nitride) Matters in Pakistan's Climate</h2>
 <p>Traditional silicon-based chargers convert excess electrical energy into heat. During Pakistani summers, when ambient room temperatures in cities like Multan, Lahore, Faisalabad, and Sukkur easily cross 42°C to 47°C, traditional chargers overheat quickly, forcing their internal safety circuits to throttle charging speeds.</p>
 
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/gan-vs-silicon-charger-comparison.jpg" alt="Silicon vs GaN USB-C Chargers Size Comparison" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Physical size comparison: Traditional silicon 30W charger (left) compared to a compact GaN 30W adapter (right), demonstrating the drastic size reduction and superior heat dissipation of Gallium Nitride.
+  </figcaption>
+</figure>
+
 <p><strong>GaN (Gallium Nitride)</strong> is a next-generation semiconductor material. GaN chips conduct electrons 1,000 times more efficiently than silicon, which translates directly to:</p>
 <ul>
   <li><strong>Up to 50% smaller footprint:</strong> A 65W GaN adapter fits easily in your pocket, whereas an old silicon 65W laptop brick resembles a literal brick.</li>
@@ -72,6 +84,13 @@ function mta_seed_buying_guides(): int
   <li><strong>Smart Trickle Handshake:</strong> Once your battery reaches 80%, the charger automatically drops voltage to prevent lithium dendrite formation and battery swelling.</li>
 </ul>
 
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/fast-charger-multiport-adapter.jpg" alt="Modern Multi-Port GaN Fast Charger" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    A modern multi-port GaN wall adapter featuring simultaneous USB-C and USB-A charging ports with intelligent power negotiation and flame-retardant casing.
+  </figcaption>
+</figure>
+
 <h2>5. Pricing Tiers & Spotting Fakes in Pakistani Markets</h2>
 <p>In wholesale tech markets like Hafeez Centre (Lahore), Hall Road, Saddar (Karachi), or Multan electronics plazas, counterfeit "Original 25W Samsung" and "20W Apple" adapters abound for Rs. 400 to Rs. 800. Here is how to evaluate authentic hardware:</p>
 <ol>
@@ -80,7 +99,37 @@ function mta_seed_buying_guides(): int
   <li><strong>Legitimate Brand Alternatives:</strong> Instead of chasing fake "first copy" Apple or Samsung chargers, invest in reputable certified third-party accessory brands like SpeedX, Remax, Faster, Baseus, and UGREEN. You receive verified circuit protection and authentic warranties at half the OEM price.</li>
 </ol>
 
-<p>Explore our full range of certified <a href="/categories/power-and-charging">Fast Chargers & Power Adapters</a> and pair them with durable <a href="/categories/cables-and-converters">Fast Charging Type-C Cables</a> backed by our 3-Day Checking Warranty and nationwide Cash on Delivery.</p>
+<!-- Featured Recommended Categories Block -->
+<div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin: 3.5rem 0 2rem;">
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
+    <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Fast Chargers & Adapters</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">GaN chargers, dual-port wall adapters, and high-wattage laptop adapters from 20W to 65W+.</p>
+      </div>
+      <a href="/categories/power-and-charging" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Chargers &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Fast Charging Cables</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Braided Type-C to Type-C, Lightning, and multi-pin pure copper charging cables.</p>
+      </div>
+      <a href="/categories/cables-and-converters" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Cables &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Mobile Accessories</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Car chargers, desktop docks, OTG adapters, and essential smartphone accessories.</p>
+      </div>
+      <a href="/categories/mobile-accessories" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Mobile Gear &rarr;</a>
+    </div>
+  </div>
+</div>
 HTML
         ],
 
@@ -88,7 +137,7 @@ HTML
             'slug' => 'how-to-choose-the-right-power-bank-pakistan',
             'title' => 'How to Choose the Best Power Bank in Pakistan: Real Capacity, Fast Charging & Load Shedding Survival',
             'author_id' => 1,
-            'featured_image' => '/assets/images/og-banner.jpg',
+            'featured_image' => '/assets/images/guides/portable-power-bank-external-battery.jpg',
             'excerpt' => 'Learn how to calculate real usable power bank mAh, evaluate fast charging protocols, and choose the best backup battery for load shedding in Pakistan.',
             'target_keyword' => 'best power bank in pakistan',
             'meta_title' => 'Power Bank Buying Guide: Real mAh Capacity & Charging Speeds in Pakistan',
@@ -118,6 +167,13 @@ For a genuine 10,000mAh power bank:<br>
 <h2>2. Two-Way Fast Charging: Why Recharging Speed Matters</h2>
 <p>Many budget power banks offer fast output (discharging power into your phone at 18W or 22.5W) but only support slow 10W input through an outdated Micro-USB port. In a load shedding scenario where electricity returns for only 2 hours, a 20,000mAh power bank charging at 10W will take <strong>10 to 12 hours</strong> to reach full capacity!</p>
 
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/portable-power-bank-external-battery.jpg" alt="High Capacity Fast Charging Portable Power Bank" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Portable high-capacity fast charging power bank providing essential backup power during load shedding and intercity travel in Pakistan.
+  </figcaption>
+</figure>
+
 <p>Always verify that your power bank supports <strong>Two-Way Fast Charging (18W to 22.5W input via USB Type-C)</strong>. This cuts total recharge time down to 3.5 hours for a 10,000mAh unit and under 6 hours for a 20,000mAh unit.</p>
 
 <h2>3. Li-Ion 18650 Cylindrical Cells vs. Li-Polymer Pouch Cells</h2>
@@ -144,6 +200,13 @@ For a genuine 10,000mAh power bank:<br>
   </tbody>
 </table>
 
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/inside-power-bank-battery-cells.jpg" alt="Inside a Power Bank Internal Battery Cells and Circuit" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Internal view of a power bank: showing cylindrical lithium battery cells connected to the charge controller IC, step-up boost converter, and over-current protection circuitry.
+  </figcaption>
+</figure>
+
 <h2>4. Airline Travel Restrictions (PIA & International Flights)</h2>
 <p>If you travel frequently from Multan International Airport, Allama Iqbal Lahore, or Jinnah International Karachi, be aware of international civil aviation (ICAO) rules:</p>
 <ul>
@@ -158,10 +221,40 @@ For a genuine 10,000mAh power bank:<br>
 <ol>
   <li><strong>Price Check:</strong> Authentic lithium cells have raw commodity costs. A genuine 20,000mAh 22.5W power bank cannot legitimately retail below Rs. 3,500 to Rs. 4,500 in Pakistan once shipping and customs duties are accounted for.</li>
   <li><strong>Digital LED Display:</strong> Prefer units with numeric battery percentage readouts (0%–100%) rather than 4 simple LED dots that mask cell degradation.</li>
-  <li><strong>Integrated Cables:</strong> Models with built-in Type-C, Lightning, and Micro-USB cables (such as the <a href="/products/speedx-sp-s188l-3in1-225w-10000mah-fast-charging-power-bank">SpeedX SP-S188L 3-in-1 22.5W Power Bank</a>) eliminate the need to carry separate cords.</li>
+  <li><strong>Integrated Cables:</strong> Models with built-in Type-C, Lightning, and Micro-USB cables (such as the <a href="/products/speed-x-sx-d25c-60w-usb-c-to-usb-c-braided-fast-charging-100-pure-copper-cable-1m-02116">SpeedX 3-in-1 Fast Power Series</a>) eliminate the need to carry separate cords.</li>
 </ol>
 
-<p>Check out our catalog of <a href="/categories/power-and-charging">Tested & Certified Power Banks</a> available with prompt Cash on Delivery and a 3-Day Inspection Warranty across Pakistan.</p>
+<!-- Featured Recommended Categories Block -->
+<div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin: 3.5rem 0 2rem;">
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
+    <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Fast Power Banks</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">10,000mAh and 20,000mAh high-density power banks with 22.5W fast output and LED percentage displays.</p>
+      </div>
+      <a href="/categories/power-and-charging" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Power Banks &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Short & Long Charging Cables</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Durable 1m and 2m braided copper cables ideal for power bank travel and daily charging.</p>
+      </div>
+      <a href="/categories/cables-and-converters" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Cables &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Mobile Travel Accessories</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Protective cases, pouches, car mounts, and mobile stands for travelers.</p>
+      </div>
+      <a href="/categories/mobile-accessories" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Accessories &rarr;</a>
+    </div>
+  </div>
+</div>
 HTML
         ],
 
@@ -169,7 +262,7 @@ HTML
             'slug' => 'how-to-spot-counterfeit-tech-accessories-pakistan',
             'title' => 'How to Spot Counterfeit Cables, Chargers and Tech Accessories in Pakistani Markets',
             'author_id' => 1,
-            'featured_image' => '/assets/images/og-banner.jpg',
+            'featured_image' => '/assets/images/guides/usb-charger-circuit-board-teardown.jpg',
             'excerpt' => 'Practical guide to identifying fake chargers, counterfeit USB cables, and cloned earphones in Hall Road, Hafeez Centre, and online marketplaces in Pakistan.',
             'target_keyword' => 'spot counterfeit tech accessories pakistan',
             'meta_title' => 'How to Spot Fake Tech Accessories in Pakistan: Practical Inspection Guide',
@@ -183,6 +276,13 @@ HTML
 <h2>1. Inspecting Charging Cables: The Copper and Pin Test</h2>
 <p>A fast-charging cable must carry up to 3 to 5 Amperes of electric current. Counterfeit manufacturers cut costs by using thin copper-clad aluminum (CCA) or recycled iron wires instead of pure oxygen-free copper cores.</p>
 
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/usb-cable-connectors-inspection.jpg" alt="Close-up Inspection of USB-C Connector Pins and Shell" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Close inspection of a genuine one-piece stamped USB Type-C connector shell with smooth chamfered edges and gold-plated contact pins, contrasted with rough-welded counterfeits.
+  </figcaption>
+</figure>
+
 <h3>A. The Magnet Test</h3>
 <p>Pure copper, aluminum, and genuine gold-plated connector pins are non-magnetic. Carry a small neodymium fridge magnet when shopping. If the USB plug pins or the cable jacket attract the magnet strongly, the manufacturer has substituted cheap iron wire. Iron has significantly higher internal resistance, leading to slow charging, severe heat buildup, and fire hazards.</p>
 
@@ -191,6 +291,13 @@ HTML
 
 <h2>2. Wall Adapters: Weight, Seams & Component Quality</h2>
 <p>High-voltage AC mains power (220V in Pakistan) must be safely isolated from the low-voltage DC output (5V–20V). The international standard requires at least 4mm to 6mm of physical air and creepage distance between the primary and secondary stages on the circuit board.</p>
+
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/usb-charger-circuit-board-teardown.jpg" alt="USB Charger Internal Circuit Board Teardown" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Teardown of an authentic charging adapter: showing heavy isolation transformer, high-voltage filtering capacitors, optocoupler feedback loop, and thermal heat sinking absent in counterfeit units.
+  </figcaption>
+</figure>
 
 <ul>
   <li><strong>Weighing the Charger:</strong> A certified 20W to 30W charger requires heavy transformers, solid capacitor arrays, and thermal potting compound. An authentic adapter weighs at least 50 to 65 grams. Counterfeit units strip out filtering capacitors and MOVs, frequently weighing under 30 grams.</li>
@@ -216,7 +323,37 @@ HTML
   <li><strong>Inspect Upon Delivery:</strong> When receiving parcels via Cash on Delivery, check the packaging seal, serial numbers, and physical heft immediately.</li>
 </ol>
 
-<p>At <strong>Multan Tech Accessories</strong>, we source directly from authorized computer distribution channels and enforce our transparent <a href="/returns-and-refunds">3-Day Checking Warranty</a> on every product. Read about our sourcing principles on our <a href="/about">About Us page</a>.</p>
+<!-- Featured Recommended Categories Block -->
+<div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin: 3.5rem 0 2rem;">
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
+    <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Certified Fast Chargers</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Tested original wall chargers with over-voltage IC protection and flame-retardant enclosures.</p>
+      </div>
+      <a href="/categories/power-and-charging" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Chargers &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Pure Copper USB Cables</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Reinforced braided cables with verified copper wiring and precision molded plugs.</p>
+      </div>
+      <a href="/categories/cables-and-converters" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Cables &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Authentic Audio Gear</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Genuine earbuds, wired earphones, and Bluetooth speakers with verified sound quality.</p>
+      </div>
+      <a href="/categories/audio-and-speakers" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Audio &rarr;</a>
+    </div>
+  </div>
+</div>
 HTML
         ],
 
@@ -224,7 +361,7 @@ HTML
             'slug' => 'budget-gaming-peripherals-setup-guide-pakistan',
             'title' => 'Budget Gaming Setup Guide: Mice, Mechanical Keyboards & Headsets for Pakistani Gamers',
             'author_id' => 1,
-            'featured_image' => '/assets/images/og-banner.jpg',
+            'featured_image' => '/assets/images/guides/cherry-mx-mechanical-keyboard-switches.jpg',
             'excerpt' => 'Build a high-performance PC gaming setup in Pakistan without overspending. Real advice on optical sensors, mechanical switches, low latency, and prices in PKR.',
             'target_keyword' => 'budget gaming peripherals pakistan',
             'meta_title' => 'Budget Gaming Setup Guide: Mice, Keyboards & Audio in Pakistan',
@@ -237,6 +374,13 @@ HTML
 
 <h2>1. Gaming Mice: Sensors Over Gimmicks</h2>
 <p>Many budget mice market astronomical numbers like "12,800 DPI" alongside aggressive angular plastic designs and rainbow lighting. In competitive esports, 95% of professional players use between <strong>400 and 1,600 DPI</strong>. High DPI is a marketing gimmick; what truly matters are sensor stability and tracking accuracy.</p>
+
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/optical-gaming-mouse-sensor.jpg" alt="Optical Gaming Mouse Sensor and Lens" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Underside view of a gaming mouse showcasing the optical tracking sensor lens and low-friction PTFE glide feet that ensure smooth tracking without spin-outs in competitive esports.
+  </figcaption>
+</figure>
 
 <h3>A. Optical Sensor & IPS (Inches Per Second)</h3>
 <p>Look for mice utilizing proven optical sensors (such as PixArt 3325, 3327, 3389, or equivalent gaming-grade sensors). A capable mouse must have an IPS rating of at least <strong>100 to 220 IPS</strong>. When you execute a rapid reflex flick in Valorant or CS2, a cheap office sensor will spin out into the floor or sky. A gaming-grade sensor tracks accurately regardless of hand acceleration.</p>
@@ -254,6 +398,13 @@ HTML
   <li><strong>Membrane / "Semi-Mechanical":</strong> Membrane boards use rubber dome sheets under the keycaps. They are spill-resistant and quiet, but keys must be bottomed out completely to register. Over time, the rubber degrades and keystrokes feel mushy.</li>
   <li><strong>True Mechanical Keyboards:</strong> Each key has its own dedicated physical micro-switch rated for 50 million keystrokes. They provide consistent actuation points and full N-Key Rollover (NKRO / Anti-Ghosting), meaning you can press W + Shift + Space + C simultaneously without dropped inputs.</li>
 </ul>
+
+<figure style="margin: 2.75rem 0; text-align: center;">
+  <img src="/assets/images/guides/cherry-mx-mechanical-keyboard-switches.jpg" alt="Mechanical Gaming Keyboard Keycaps and Switches" loading="lazy" style="width: 100%; max-height: 440px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">
+  <figcaption style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.65rem; font-style: italic;">
+    Mechanical keyboard switches under keycaps: individual micro-switches provide consistent actuation, rapid double-tapping response, and full anti-ghosting N-key rollover.
+  </figcaption>
+</figure>
 
 <h3>Which Switch Color is Right for You?</h3>
 <ol>
@@ -279,7 +430,37 @@ HTML
   <li><strong>Competitive Enthusiast (Rs. 12,000 – 18,000 Total):</strong> PixArt optical gaming mouse (sub-75g) + 60% or TKL mechanical keyboard with hot-swappable red switches + 50mm driver stereo gaming headset.</li>
 </ul>
 
-<p>Explore our curated <a href="/categories/gaming">Gaming Accessories Catalog</a> and <a href="/categories/audio-and-speakers">Gaming Audio Headsets</a> with fast delivery and a 3-Day Inspection Warranty across all cities in Pakistan.</p>
+<!-- Featured Recommended Categories Block -->
+<div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 2rem; margin: 3.5rem 0 2rem;">
+  <div style="text-align: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
+    <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Gaming Peripherals</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">RGB mechanical keyboards, high-precision optical mice, extended desk pads, and controllers.</p>
+      </div>
+      <a href="/categories/gaming" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Gaming Gear &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Gaming Audio & Headsets</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Over-ear stereo gaming headsets with boom mics and surround sound gaming earbuds.</p>
+      </div>
+      <a href="/categories/audio-and-speakers" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Audio &rarr;</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Computer Accessories</h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">High-speed flash drives, USB hubs, cooling pads, and PC connectivity hardware.</p>
+      </div>
+      <a href="/categories/computer-accessories" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse PC Accessories &rarr;</a>
+    </div>
+  </div>
+</div>
 HTML
         ],
     ];

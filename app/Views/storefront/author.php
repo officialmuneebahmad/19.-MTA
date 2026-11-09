@@ -6,10 +6,8 @@
 <div class="container" style="padding: 2.5rem 1.25rem; max-width: 800px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 2.5rem;" class="author-card">
-    <div style="width: 100px; height: 100px; border-radius: var(--radius-pill); background: var(--surface-2); border: 2px solid var(--accent-strong); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; color: var(--accent-strong); flex-shrink: 0;">
-      MA
-    </div>
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; display: flex; gap: 2rem; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap;" class="author-card">
+    <img src="/assets/images/muneeb-ahmad.jpg" alt="Muneeb Ahmad" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: var(--shadow-md); flex-shrink: 0;">
 
     <div>
       <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-strong); letter-spacing: 0.5px;">Founder & Full-Stack Developer</span>
