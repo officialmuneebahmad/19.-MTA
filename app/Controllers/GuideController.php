@@ -111,18 +111,22 @@ class GuideController
             ],
         ];
 
-        $metaDesc = $guide['excerpt'] ?? substr(strip_tags($guide['content_html']), 0, 155);
+        $metaDesc = !empty($guide['meta_description']) 
+            ? $guide['meta_description'] 
+            : ($guide['excerpt'] ?? substr(strip_tags($guide['content_html']), 0, 155));
 
         $guideOgImage = null;
         if (!empty($guide['cover_image'])) {
             $guideOgImage = mta_url($guide['cover_image']);
+        } elseif (!empty($guide['featured_image'])) {
+            $guideOgImage = mta_url($guide['featured_image']);
         }
 
         return $resp->html(View::render('storefront/guides/show', [
             'guide' => $guide,
             'author' => $author,
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title($guide['title']),
+            'meta_title' => SeoService::title(!empty($guide['meta_title']) ? $guide['meta_title'] : $guide['title']),
             'meta_description' => SeoService::metaDescription($metaDesc),
             'canonical' => mta_url('/guides/' . $guide['slug']),
             'structured_data' => $structuredData,

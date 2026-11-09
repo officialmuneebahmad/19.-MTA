@@ -99,6 +99,58 @@ $authorImg = '/assets/images/muneeb-ahmad.jpg';
         width: 100%;
         border-collapse: collapse;
         margin: 2.25rem 0;
+        font-size: 0.95rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+      }
+      .guide-content th {
+        background: var(--surface-2);
+        color: var(--text);
+        font-weight: 700;
+        text-align: left;
+        padding: 0.85rem 1.15rem;
+        border-bottom: 2px solid var(--border);
+      }
+      .guide-content td {
+        padding: 0.85rem 1.15rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .guide-content tr:last-child td {
+        border-bottom: none;
+      }
+      .guide-content tr:hover td {
+        background: var(--surface-2);
+      }
+      .guide-content a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        transition: color 0.15s ease;
+      }
+      .guide-content a:hover {
+        color: var(--primary-hover, var(--accent-strong));
+      }
+      .guide-content .source-tag {
+        font-size: 0.775rem;
+        font-weight: 600;
+        padding: 0.15rem 0.45rem;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        text-decoration: none !important;
+        vertical-align: baseline;
+        position: relative;
+        top: -1px;
+        margin-left: 0.25rem;
+        color: var(--text-muted) !important;
+      }
+      .guide-content .source-tag:hover {
+        border-color: var(--primary);
+        color: var(--primary) !important;
       }
       @media (max-width: 640px) {
         .guide-content h2 {
