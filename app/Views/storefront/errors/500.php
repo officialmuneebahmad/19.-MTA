@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en-PK">
 <head>
+  <!-- Google tag (gtag.js) - GTM-NSR7DDL8 -->
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NSR7DDL8"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Temporary System Error — Multan Tech Accessories</title>

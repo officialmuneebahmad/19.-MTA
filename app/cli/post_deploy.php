@@ -185,6 +185,19 @@ try {
     $pd_log("Supplier API settings error: " . $e->getMessage());
 }
 
+// Google Tag Manager / Analytics Settings Migration
+try {
+    $existingGtm = $db->fetch("SELECT `key`, `value` FROM settings WHERE `key` = 'google_analytics_id' LIMIT 1");
+    if (!$existingGtm) {
+        $db->execute("INSERT INTO settings (`key`, value, description, group_name) VALUES ('google_analytics_id', 'GTM-NSR7DDL8', 'Google Tag Manager / Analytics Container ID', 'integrations')");
+    } elseif (empty($existingGtm['value'])) {
+        $db->execute("UPDATE settings SET value = 'GTM-NSR7DDL8' WHERE `key` = 'google_analytics_id'");
+    }
+    $pd_log("Integrations: google_analytics_id confirmed set to GTM-NSR7DDL8.");
+} catch (\Throwable $e) {
+    $pd_log("Integrations settings error: " . $e->getMessage());
+}
+
 // Domain Migration: Ensure robots.txt points to https://multantech.pk/sitemap.xml
 try {
     $robotsPath = dirname($appDir) . '/robots.txt';
