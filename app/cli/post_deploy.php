@@ -331,6 +331,11 @@ try {
     }
     $pd_log("Task 4: Brand Hubs: {$bIntroUpdated} brand intros populated with authentic editorial text.");
 
+    // 2b. Seed Editorial Buying Guides
+    require_once MTA_APP . '/Database/seed_guides.php';
+    $guidesSeeded = mta_seed_buying_guides();
+    $pd_log("Task 4: Editorial Buying Guides: {$guidesSeeded} buying guides verified and seeded.");
+
     // 3. Generate static sitemaps atomically
     $sitemapReport = \App\Services\SitemapService::generateAll();
     $totalUrls = $sitemapReport['total_urls'] ?? 0;

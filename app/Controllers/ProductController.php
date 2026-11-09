@@ -146,6 +146,8 @@ class ProductController
             default => 'in stock',
         };
 
+        $faqs = SeoService::productFaqs($product);
+
         $html = View::render('storefront/product', [
             'product' => $product,
             'images' => $images,
@@ -157,6 +159,7 @@ class ProductController
             'noindex' => !$isIndexable,
             'product_id' => $product['id'],
             'structured_data' => $structuredData,
+            'faqs' => $faqs,
             'og_title' => $ogTitle,
             'og_description' => $ogDescription,
             'og_url' => $canonicalUrl,

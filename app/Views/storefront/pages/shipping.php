@@ -17,6 +17,7 @@
         <li>&#10003; <strong>FREE DELIVERY ON YOUR 2ND ORDER</strong>: Returning customers who have placed at least one non-cancelled order receive complimentary delivery.</li>
         <li>&#10003; <strong>Multan Local Delivery:</strong> Lowest local delivery fee of <strong>Rs. 100</strong> or free store pickup at Al-Quresh Phase 3, Sher Shah Road, Multan.</li>
         <li>&#10003; <strong>Standard Courier Fee:</strong> <strong>Rs. 250</strong> across all other cities in Pakistan.</li>
+        <li>&#10003; <strong>Order Booking Deposit:</strong> A nominal <strong>Rs. 100/- Advance</strong> is collected for security verification, with the remaining balance payable on delivery.</li>
       </ul>
     </div>
 

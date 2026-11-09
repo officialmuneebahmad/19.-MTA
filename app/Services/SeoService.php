@@ -222,9 +222,9 @@ class SeoService
                     '@type' => 'MerchantReturnPolicy',
                     'applicableCountry' => 'PK',
                     'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
-                    'merchantReturnDays' => 7,
+                    'merchantReturnDays' => 3,
                     'returnMethod' => 'https://schema.org/ReturnByMail',
-                    'returnFees' => 'https://schema.org/FreeReturn',
+                    'returnFees' => 'https://schema.org/ReturnFeesCustomerResponsibility',
                 ],
             ],
         ];
@@ -233,7 +233,137 @@ class SeoService
             $schema['image'] = count($imageUrls) === 1 ? $imageUrls[0] : $imageUrls;
         }
 
+        // Add dynamic Product & Store FAQs in @graph
+        $faqs = self::productFaqs($product);
+        $allFaqs = array_merge($faqs['product_faqs'] ?? [], $faqs['store_faqs'] ?? []);
+        if (!empty($allFaqs)) {
+            $faqEntities = [];
+            foreach ($allFaqs as $f) {
+                $faqEntities[] = [
+                    '@type' => 'Question',
+                    'name' => $f['q'],
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $f['a'],
+                    ],
+                ];
+            }
+            return [
+                '@context' => 'https://schema.org',
+                '@graph' => [
+                    $schema,
+                    [
+                        '@type' => 'FAQPage',
+                        'mainEntity' => $faqEntities,
+                    ],
+                ],
+            ];
+        }
+
         return $schema;
+    }
+
+    /**
+     * Generate dynamic, product-specific FAQs and separated store warranty/shipping FAQs.
+     */
+    public static function productFaqs(array $product): array
+    {
+        $title = (string)($product['title'] ?? '');
+        $brand = (string)($product['brand_name'] ?? 'Genuine');
+        $catSlug = strtolower((string)($product['category_slug'] ?? ''));
+        $catName = (string)($product['category_name'] ?? 'Accessories');
+        $t = strtolower($title);
+
+        $productFaqs = [];
+
+        if (str_contains($t, 'power bank') || str_contains($t, 'powerbank') || str_contains($t, 'mah') || str_contains($catSlug, 'power')) {
+            $mah = '';
+            if (preg_match('/(\d+)\s*mah/i', $title, $m)) {
+                $mah = $m[1] . 'mAh ';
+            }
+            $productFaqs[] = [
+                'q' => "How many smartphone recharges does this {$brand} {$mah}power bank provide?",
+                'a' => "Depending on your smartphone's battery capacity (standard 4,500mAh to 5,000mAh), this {$mah}power bank delivers between 1.5 to 3.5 complete recharges under normal operating conditions with high power conversion efficiency.",
+            ];
+            $productFaqs[] = [
+                'q' => "Does this {$brand} power bank support fast charging for Samsung, iPhone, and Android?",
+                'a' => "Yes, this power bank is engineered to negotiate current safely with modern iOS and Android smartphones, delivering high-speed charging via supported Quick Charge (QC) or Power Delivery (PD) protocols.",
+            ];
+        } elseif (str_contains($t, 'charger') || str_contains($t, 'adapter') || str_contains($t, 'fast charging') || str_contains($t, 'pd ') || str_contains($t, 'watt') || str_contains($t, '20w') || str_contains($t, '22.5w') || str_contains($t, '65w')) {
+            $productFaqs[] = [
+                'q' => "Is this {$brand} fast charger safe for sensitive smartphone and laptop batteries?",
+                'a' => "Yes. Genuine {$brand} chargers include built-in multi-protection against over-voltage, short-circuit, and overheating, automatically switching to trickle charging once your device reaches 80-100%.",
+            ];
+            $productFaqs[] = [
+                'q' => "Which cable should I pair with this {$brand} charger for maximum speed?",
+                'a' => "We recommend using a certified Type-C to Type-C or Type-C to Lightning cable rated for fast charging wattage to ensure optimum performance.",
+            ];
+        } elseif (str_contains($t, 'cable') || str_contains($t, 'converter') || str_contains($t, 'hub') || str_contains($t, 'otg') || str_contains($catSlug, 'cable')) {
+            $productFaqs[] = [
+                'q' => "Does this {$brand} cable support both fast charging and high-speed data transfer?",
+                'a' => "Yes, this cable supports high-speed data synchronization alongside high-amperage fast charging when paired with a compatible charging adapter.",
+            ];
+            $productFaqs[] = [
+                'q' => "Will this cable connector fit with protective phone cases attached?",
+                'a' => "The connector plug features a slim, precision-molded housing designed to fit standard smartphone cases without loose connections.",
+            ];
+        } elseif (str_contains($t, 'earbud') || str_contains($t, 'airpod') || str_contains($t, 'headphone') || str_contains($t, 'headset') || str_contains($t, 'speaker') || str_contains($t, 'audio') || str_contains($catSlug, 'audio')) {
+            $productFaqs[] = [
+                'q' => "What is the sound quality and microphone performance of this {$brand} audio gear?",
+                'a' => "This device offers rich, balanced stereo sound with clear vocal clarity and built-in noise-canceling microphone hardware suitable for WhatsApp calls, Zoom meetings, and mobile gaming.",
+            ];
+            $productFaqs[] = [
+                'q' => "Is this audio accessory compatible with iPhone, Android, and Windows PC?",
+                'a' => "Yes, it supports universal Bluetooth / 3.5mm connectivity across all modern iOS, Android, and Windows devices.",
+            ];
+        } elseif (str_contains($t, 'gaming') || str_contains($t, 'mouse') || str_contains($t, 'keyboard') || str_contains($catSlug, 'gaming')) {
+            $productFaqs[] = [
+                'q' => "Does this {$brand} gaming peripheral require special drivers on Windows 10/11?",
+                'a' => "No, it features plug-and-play USB functionality with standard Windows and Mac drivers for immediate responsiveness.",
+            ];
+            $productFaqs[] = [
+                'q' => "Is this suitable for competitive FPS and MOBA games?",
+                'a' => "Yes, it is built with durable switches and a reliable sensor providing low click latency for games like CS2, Valorant, and Dota.",
+            ];
+        } elseif (str_contains($t, 'drive') || str_contains($t, 'flash') || str_contains($t, 'card') || str_contains($t, 'ssd') || str_contains($catSlug, 'storage')) {
+            $productFaqs[] = [
+                'q' => "Can this {$brand} storage drive connect to Android phones via OTG?",
+                'a' => "Yes, when formatted in exFAT or FAT32, it connects smoothly with Android smartphones, tablets, PC laptops, and smart TVs.",
+            ];
+            $productFaqs[] = [
+                'q' => "What transfer speeds can I expect during large file copies?",
+                'a' => "It delivers stable, high-speed read/write performance suitable for photos, HD videos, documents, and software installation media.",
+            ];
+        } else {
+            $productFaqs[] = [
+                'q' => "Is this {$title} authentic, brand new, and factory sealed?",
+                'a' => "Yes, every unit dispatched by Multan Tech Accessories is 100% brand new, authentic, and inspected prior to dispatch.",
+            ];
+            $productFaqs[] = [
+                'q' => "What is included inside the retail packaging?",
+                'a' => "The package includes the original factory retail box, the {$title} main unit, and standard manufacturer documentation/accessories.",
+            ];
+        }
+
+        $storeFaqs = [
+            [
+                'q' => "How does MultanTech's 3-Day Checking Warranty work?",
+                'a' => "We offer a strict 3-Day (72 hours) checking warranty starting from the moment your parcel is delivered by the courier. You must inspect and test the accessory within this window. Any technical defects must be reported to our WhatsApp helpline at 0307-0655275 for exchange assistance.",
+            ],
+            [
+                'q' => "What are the shipping charges and delivery timelines across Pakistan?",
+                'a' => "Delivery is Rs. 250 nationwide, or completely FREE on orders over Rs. 5,000. Orders inside Multan arrive in 24–48 hours; shipments to Lahore, Karachi, Islamabad, Rawalpindi, and other cities take 2–4 working days via Trax, Leopards, PostEx, or TCS.",
+            ],
+            [
+                'q' => "Can I pay Cash on Delivery (COD) or order via WhatsApp?",
+                'a' => "Yes, Cash on Delivery is available nationwide. You can also order directly by clicking the WhatsApp button or messaging 0307-0655275 with your name, address, and the product title for direct agent booking.",
+            ],
+        ];
+
+        return [
+            'product_faqs' => $productFaqs,
+            'store_faqs' => $storeFaqs,
+        ];
     }
 
     private static function shortenProductTitle(string $title): string

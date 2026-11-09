@@ -25,7 +25,7 @@ if (!defined('MTA_STORAGE')) {
     define('MTA_STORAGE', MTA_APP . '/storage');
 }
 if (!defined('MTA_BUILD_VERSION')) {
-    define('MTA_BUILD_VERSION', '2026.11.06-v4.0.0-sitemap-indexing-engine');
+    define('MTA_BUILD_VERSION', '2026.11.09-v5.0.0-adsense-consent-compliance');
 }
 
 // ----------------------------------------------------------------------

@@ -207,8 +207,8 @@ class PageController
         $resp = new Response();
         return $resp->html(View::render('storefront/pages/cookie', [
             'breadcrumbs' => $breadcrumbs,
-            'meta_title' => SeoService::title('Minimal Cookie and Privacy Policy'),
-            'meta_description' => 'Review our minimal, privacy-first cookie policy at Multan Tech Accessories. We use essential session cookies only with zero intrusive third-party ad trackers.',
+            'meta_title' => SeoService::title('Cookie Policy & Privacy Preferences'),
+            'meta_description' => 'Learn how Multan Tech Accessories uses cookies, Google Consent Mode v2, and privacy controls to deliver a safe e-commerce shopping experience in Pakistan.',
             'canonical' => mta_url('/cookie-policy'),
         ]));
     }

@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 <html lang="en-PK" data-theme="light">
 <head>
-  <!-- Google tag (gtag.js) - GTM-NSR7DDL8 -->
-  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NSR7DDL8"></script>
+  <!-- Google Consent Mode v2 & Google Tag Manager - GTM-NSR7DDL8 -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+
+    // Google Consent Mode v2: initialize defaults immediately before GTM loads
+    (function(){
+      var saved = null;
+      try {
+        var raw = localStorage.getItem('mta_cookie_consent_v1');
+        if (raw) saved = JSON.parse(raw);
+      } catch(e){}
+
+      // Default to 'denied' for optional storage unless explicitly granted in saved consent
+      gtag('consent', 'default', {
+        'analytics_storage': (saved && saved.analytics) ? 'granted' : 'denied',
+        'ad_storage': (saved && saved.advertising) ? 'granted' : 'denied',
+        'ad_user_data': (saved && saved.advertising) ? 'granted' : 'denied',
+        'ad_personalization': (saved && saved.advertising) ? 'granted' : 'denied',
+        'wait_for_update': 500
+      });
+      gtag('js', new Date());
+    })();
   </script>
+  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NSR7DDL8"></script>
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -543,7 +561,9 @@
             <li><a href="/track-order" class="footer-link">Track Your Order</a></li>
             <li><a href="/faq" class="footer-link">Frequently Asked Questions</a></li>
             <li><a href="/privacy-policy" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/cookie-policy" class="footer-link">Cookie Policy</a></li>
             <li><a href="/terms-and-conditions" class="footer-link">Terms & Conditions</a></li>
+            <li><button type="button" class="footer-link" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;text-align:left;color:inherit;" data-open-cookie-settings onclick="if(window.mtaCookieConsent){window.mtaCookieConsent.openPreferences();}return false;">Cookie Settings</button></li>
           </ul>
         </div>
 
@@ -585,6 +605,7 @@
     </div>
   </footer>
 
+  <?php require MTA_APP . '/Views/partials/cookie-consent.php'; ?>
   <script src="/assets/js/main.js?v=<?= @filemtime(MTA_ROOT . '/assets/js/main.js') ?: time() ?>" defer></script>
 </body>
 </html>

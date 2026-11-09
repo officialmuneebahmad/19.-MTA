@@ -51,12 +51,12 @@ class SecurityHeadersMiddleware
             // CSP (Allow self, inlined SVGs/CSS, and Google services when configured)
             $csp = [
                 "default-src 'self'",
-                "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com",
+                "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://tpc.googlesyndication.com https://adservice.google.com",
                 "style-src 'self' 'unsafe-inline'",
-                "img-src 'self' data: https: blob: https://www.googletagmanager.com https://www.google-analytics.com",
+                "img-src 'self' data: https: blob: https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://*.doubleclick.net",
                 "font-src 'self' data:",
-                "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.googletagmanager.com https://stats.g.doubleclick.net",
-                "frame-src 'self' https://googleads.g.doubleclick.net",
+                "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://*.googletagmanager.com https://stats.g.doubleclick.net https://pagead2.googlesyndication.com",
+                "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com",
                 "base-uri 'self'",
                 "form-action 'self' https://wa.me",
             ];

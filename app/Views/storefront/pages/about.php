@@ -31,10 +31,10 @@
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Customer First Guarantees</h2>
     <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
-      <li><strong>Cash on Delivery:</strong> No advance payments required for standard orders across Pakistan. Pay only when your package arrives.</li>
+      <li><strong>Cash on Delivery:</strong> Available across Pakistan. A minimal Rs. 100/- advance booking deposit is collected for order security, with the full remaining balance payable on delivery.</li>
       <li><strong>Delivery Benefits:</strong> Free delivery on all orders above Rs. 5,000, and 100% free delivery on your second order.</li>
       <li><strong>Multan Local Rates:</strong> Customers in Multan receive our lowest local delivery charge (Rs. 100) or can opt for direct store pickup.</li>
-      <li><strong>3-Day Checking Warranty:</strong> Defective items are replaced promptly without hassle.</li>
+      <li><strong>3-Day Checking Warranty:</strong> Defective items are replaced promptly without hassle under our 72-hour inspection window.</li>
     </ul>
   </div>
 </div>

@@ -233,53 +233,78 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
         </div>
       </div>
 
-      <!-- FAQ Accordion (<details> tags stay in DOM for technical SEO & Accessibility) -->
-      <h3 style="font-size:1.3rem; margin-bottom:1rem; font-family:var(--font-heading);">Frequently Asked Questions (FAQs)</h3>
-      <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:3rem;">
-        
-        <details class="product-card-padded" style="padding:1rem 1.25rem;" open>
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Is this product original or copy?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            The product is <strong>Original</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance, making your everyday life easier and convenient.
-          </p>
-        </details>
-
-        <details class="product-card-padded" style="padding:1rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">What warranty is provided with this item?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            <strong>We Offer 3 Days Check Warranty Only.</strong> Customers must thoroughly inspect and test the accessory within 3 days (72 hours) of parcel delivery. Any genuine technical or functional defect must be reported to our WhatsApp support team within this 3-day window.
-          </p>
-        </details>
-
-        <details class="product-card-padded" style="padding:1rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Can I get a refund or exchange?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            <strong>No Refund. Exchange can be made only for certain circumstances.</strong> If the delivered product is genuinely defective, damaged in transit, or incorrect, we will promptly process an exchange for an identical or equivalent replacement. Change of mind is not accepted.
-          </p>
-        </details>
-
-        <details class="product-card-padded" style="padding:1rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">Who pays for the courier fee if I need to return an item?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            <strong>The Customer has to Return parcel with their own money & courier.</strong> If a replacement or exchange is approved under our 3 Days Check Warranty, the return courier expense is borne by the customer, and MTA ships the tested replacement back to your doorstep.
-          </p>
-        </details>
-
-        <details class="product-card-padded" style="padding:1rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">How many days does delivery take across Pakistan?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            Local Multan deliveries usually take <strong>24 to 48 hours</strong>. Nationwide shipments to Lahore, Karachi, Islamabad, Rawalpindi, Faisalabad, and other cities take <strong>2 to 4 working days</strong> via premier courier partners (Trax, Call Courier, Leopards, M&P).
-          </p>
-        </details>
-
-        <details class="product-card-padded" style="padding:1rem 1.25rem;">
-          <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);">What payment methods are supported?</summary>
-          <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
-            We primarily support <strong>Cash on Delivery (COD)</strong> across all cities of Pakistan. Customers can also pay in advance via JazzCash, EasyPaisa, or direct Bank Transfer for instant priority dispatch.
-          </p>
-        </details>
-
+      <!-- Key Specifications & Authenticity Table -->
+      <h3 style="font-size:1.3rem; margin-bottom:1rem; font-family:var(--font-heading);">Key Specifications & Authenticity</h3>
+      <div class="product-card-padded" style="margin-bottom:2.5rem; overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; width:35%; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Product Condition</th>
+              <td style="padding:0.75rem 1rem; font-weight:700; color:var(--accent-strong);">100% Brand New, Sealed Box</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Brand / Manufacturer</th>
+              <td style="padding:0.75rem 1rem; font-weight:600;"><?= e($product['brand_name'] ?? 'Multan Tech Accessories') ?></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Category</th>
+              <td style="padding:0.75rem 1rem;"><?= e($product['category_name'] ?? 'Computer & Mobile Accessories') ?></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">SKU / Item Code</th>
+              <td style="padding:0.75rem 1rem; font-family:monospace;"><?= e($product['sku'] ?? ('MTA-' . $product['id'])) ?></td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Store Warranty</th>
+              <td style="padding:0.75rem 1rem; font-weight:700;">3 Days Check Warranty (Strict 72-Hour Inspection)</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Package Contents</th>
+              <td style="padding:0.75rem 1rem;">Original Factory Retail Packaging &bull; <?= e($title) ?> &bull; Standard Accessories / Documentation</td>
+            </tr>
+            <tr>
+              <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Delivery & Payment</th>
+              <td style="padding:0.75rem 1rem;">Cash on Delivery (COD) Nationwide &bull; Rs. 100 Advance Booking Fee &bull; 24-48h Multan, 2-4 Days Nationwide</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <?php
+        $faqsData = $faqs ?? \App\Services\SeoService::productFaqs($product);
+        $prodFaqs = $faqsData['product_faqs'] ?? [];
+        $storeFaqs = $faqsData['store_faqs'] ?? [];
+      ?>
+
+      <!-- Dynamic Product-Specific Technical & Compatibility FAQs -->
+      <?php if (!empty($prodFaqs)): ?>
+        <h3 style="font-size:1.3rem; margin-bottom:1rem; font-family:var(--font-heading);">Product Specifications & Compatibility FAQs</h3>
+        <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:2.5rem;">
+          <?php foreach ($prodFaqs as $idx => $f): ?>
+            <details class="product-card-padded" style="padding:1rem 1.25rem;" <?= $idx === 0 ? 'open' : '' ?>>
+              <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);"><?= e($f['q']) ?></summary>
+              <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+                <?= e($f['a']) ?>
+              </p>
+            </details>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
+
+      <!-- Store-Level Ordering, Warranty & Delivery FAQs (Clearly Separated) -->
+      <?php if (!empty($storeFaqs)): ?>
+        <h3 style="font-size:1.3rem; margin-bottom:1rem; font-family:var(--font-heading);">MultanTech Ordering, Warranty & Delivery FAQs</h3>
+        <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:3rem;">
+          <?php foreach ($storeFaqs as $idx => $f): ?>
+            <details class="product-card-padded" style="padding:1rem 1.25rem;">
+              <summary style="font-weight:700; cursor:pointer; font-size:0.95rem; color:var(--text);"><?= e($f['q']) ?></summary>
+              <p style="margin-top:0.6rem; font-size:0.875rem; color:var(--text-muted); line-height:1.6;">
+                <?= e($f['a']) ?>
+              </p>
+            </details>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
 
     </div>
   </section>

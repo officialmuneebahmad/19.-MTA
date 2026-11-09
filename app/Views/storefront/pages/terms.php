@@ -23,7 +23,17 @@
       All prices are stated in <strong>Pakistani Rupees (PKR)</strong>. If a technical error causes a product to display a price of zero, it represents an unpriced feed item ("Ask for Price") and cannot be purchased as a free item.
     </p>
 
-    <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">3. Governing Law</h2>
+    <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">3. Order Booking & Security Deposit</h2>
+    <p style="margin-bottom: 1.25rem;">
+      To prevent fraudulent submissions and ensure serious parcel delivery commitments, a nominal <strong>Rs. 100/- Advance Booking Deposit</strong> is collected via JazzCash, EasyPaisa, or direct Bank Transfer prior to courier dispatch. The remaining balance is collected via Cash on Delivery (COD).
+    </p>
+
+    <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">4. Warranty & Returns</h2>
+    <p style="margin-bottom: 1.25rem;">
+      All hardware items are covered strictly by our <strong>3-Day Checking Warranty</strong> (72 hours from parcel delivery). No cash refunds are issued; exchanges are granted exclusively for verified transit damage or manufacturing defects. In approved exchange cases, the customer is responsible for returning the parcel via courier at their own expense.
+    </p>
+
+    <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">5. Governing Law</h2>
     <p>
       These terms are governed by the laws of Punjab, Islamic Republic of Pakistan. Any commercial disputes shall be subject to the exclusive jurisdiction of the courts of Multan.
     </p>
