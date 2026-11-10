@@ -1,9 +1,9 @@
 {
     "status": "success",
-    "generated_at": "2026-11-06T19:05:47+05:00",
+    "generated_at": "2026-11-10T14:11:51+05:00",
     "base_url": "https://multantech.pk",
-    "total_urls": 958,
-    "indexable_urls": 958,
+    "total_urls": 1042,
+    "indexable_urls": 1042,
     "files": {
         "sitemap-pages.xml": {
             "path": "/sitemap-pages.xml",
@@ -11,7 +11,7 @@
             "size_bytes": 2077,
             "size_kb": 2.03,
             "url_count": 17,
-            "last_modified": "2026-11-06 19:05:47",
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap-categories.xml": {
@@ -20,43 +20,43 @@
             "size_bytes": 1285,
             "size_kb": 1.25,
             "url_count": 9,
-            "last_modified": "2026-11-06 19:05:47",
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap-brands.xml": {
             "path": "/sitemap-brands.xml",
             "sub_path": "/sitemaps/sitemap-brands.xml",
-            "size_bytes": 2459,
-            "size_kb": 2.4,
-            "url_count": 20,
-            "last_modified": "2026-11-06 19:05:47",
+            "size_bytes": 2577,
+            "size_kb": 2.52,
+            "url_count": 21,
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap-guides.xml": {
             "path": "/sitemap-guides.xml",
             "sub_path": "/sitemaps/sitemap-guides.xml",
-            "size_bytes": 109,
-            "size_kb": 0.11,
-            "url_count": 0,
-            "last_modified": "2026-11-06 19:05:47",
+            "size_bytes": 726,
+            "size_kb": 0.71,
+            "url_count": 4,
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap-products-1.xml": {
             "path": "/sitemap-products-1.xml",
             "sub_path": "/sitemaps/sitemap-products-1.xml",
-            "size_bytes": 207162,
-            "size_kb": 202.31,
+            "size_bytes": 207313,
+            "size_kb": 202.45,
             "url_count": 500,
-            "last_modified": "2026-11-06 19:05:47",
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap-products-2.xml": {
             "path": "/sitemap-products-2.xml",
             "sub_path": "/sitemaps/sitemap-products-2.xml",
-            "size_bytes": 171028,
-            "size_kb": 167.02,
-            "url_count": 412,
-            "last_modified": "2026-11-06 19:05:47",
+            "size_bytes": 203623,
+            "size_kb": 198.85,
+            "url_count": 491,
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         },
         "sitemap.xml": {
@@ -65,15 +65,15 @@
             "size_bytes": 912,
             "size_kb": 0.89,
             "url_count": 6,
-            "last_modified": "2026-11-06 19:05:47",
+            "last_modified": "2026-11-10 14:11:51",
             "status": "active"
         }
     },
     "exclusions": {
-        "total_excluded": 180,
+        "total_excluded": 21,
         "reasons": {
             "content_not_approved": {
-                "count": 79,
+                "count": 0,
                 "label": "Content Not Approved",
                 "description": "Supplier-raw products awaiting editorial AI rewrite/approval (Content Gate)"
             },
@@ -83,19 +83,19 @@
                 "description": "De-listed or archived products removed from active catalog"
             },
             "out_of_stock_products": {
-                "count": 79,
+                "count": 0,
                 "label": "Out of Stock Products",
                 "description": "Products with status 2 excluded to protect search crawl budget"
             },
             "thin_categories": {
                 "count": 4,
-                "label": "Thin Categories",
-                "description": "Categories with fewer than 4 items or missing unique editorial introduction"
+                "label": "Empty Categories",
+                "description": "Categories with zero active products excluded until products are added"
             },
             "thin_brands": {
-                "count": 9,
-                "label": "Thin Brands",
-                "description": "Brands with fewer than 4 products or lacking authentic brand intro copy"
+                "count": 8,
+                "label": "Empty Brands",
+                "description": "Brands with zero active products excluded until products are added"
             },
             "utility_routes": {
                 "count": 9,

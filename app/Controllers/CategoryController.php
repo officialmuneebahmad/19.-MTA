@@ -19,10 +19,13 @@ class CategoryController
     {
         $db = Database::getInstance();
         $categories = $db->fetchAll(
-            "SELECT id, slug, name, intro_html, product_count 
-             FROM categories 
-             WHERE parent_id IS NULL AND is_active = 1 
-             ORDER BY sort_order ASC, name ASC"
+            "SELECT c.id, c.slug, c.name, c.intro_html, COUNT(p.id) AS product_count 
+             FROM categories c
+             JOIN products p ON p.category_id = c.id AND p.is_active = 1
+             WHERE c.parent_id IS NULL AND c.is_active = 1 
+             GROUP BY c.id
+             HAVING product_count > 0
+             ORDER BY c.sort_order ASC, c.name ASC"
         );
 
         $breadcrumbs = [

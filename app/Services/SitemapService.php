@@ -252,10 +252,9 @@ class SitemapService
         $latestLastmod = '2026-10-30T12:00:00+05:00';
 
         foreach ($cats as $c) {
-            // Rule: Must have at least 4 products and unique intro text
-            $hasIntro = !empty(trim((string)$c['intro_html']));
-            if ((int)$c['prod_count'] < 4 || !$hasIntro) {
-                continue; // Exclude thin or noindex categories
+            // Rule: Exclude empty categories (0 active products)
+            if ((int)$c['prod_count'] < 1) {
+                continue; // Exclude empty categories until products are added
             }
 
             $dateRaw = $c['max_prod_updated'] ?: ($c['updated_at'] ?: $c['created_at']);
@@ -304,10 +303,9 @@ class SitemapService
         $latestLastmod = '2026-10-30T12:00:00+05:00';
 
         foreach ($brands as $b) {
-            // Rule: Must have at least 4 products and unique intro text
-            $hasIntro = !empty(trim((string)$b['intro_html']));
-            if ((int)$b['prod_count'] < 4 || !$hasIntro) {
-                continue; // Exclude thin or noindex brands
+            // Rule: Exclude empty brands (0 active products)
+            if ((int)$b['prod_count'] < 1) {
+                continue; // Exclude empty brands until products are added
             }
 
             $dateRaw = $b['max_prod_updated'] ?: ($b['updated_at'] ?: $b['created_at']);
@@ -380,14 +378,13 @@ class SitemapService
      */
     private static function buildProductSitemaps(string $baseUrl, Database $db): array
     {
-        // Query approved, active, published, in-stock/preorder products
+        // Query approved, active, published products (including in-stock, out-of-stock, preorder)
         $products = $db->fetchAll("
             SELECT id, slug, title, primary_image_url, updated_at, created_at
             FROM products
             WHERE is_active = 1 
               AND is_published = 1 
               AND content_state = 'approved'
-              AND status != 2
             ORDER BY id ASC
         ");
 
@@ -530,32 +527,30 @@ class SitemapService
             "SELECT COUNT(*) FROM products WHERE is_active = 0"
         );
 
-        // 3. Out of stock products (status = 2)
-        $outOfStock = (int)$db->fetchColumn(
-            "SELECT COUNT(*) FROM products WHERE status = 2 AND is_active = 1"
-        );
+        // 3. Out of stock products (status = 2) - now included in sitemaps and indexable
+        $outOfStock = 0;
 
-        // 4. Thin Categories (< 4 products or empty intro_html)
+        // 4. Empty Categories (0 active products)
         $thinCats = (int)$db->fetchColumn("
             SELECT COUNT(*) FROM (
-                SELECT c.id, c.intro_html, COUNT(p.id) as p_count
+                SELECT c.id, COUNT(p.id) as p_count
                 FROM categories c
                 LEFT JOIN products p ON p.category_id = c.id AND p.is_active = 1
                 WHERE c.is_active = 1
                 GROUP BY c.id
-                HAVING p_count < 4 OR c.intro_html IS NULL OR TRIM(c.intro_html) = ''
+                HAVING p_count < 1
             )
         ");
 
-        // 5. Thin Brands (< 4 products or empty intro_html)
+        // 5. Empty Brands (0 active products)
         $thinBrands = (int)$db->fetchColumn("
             SELECT COUNT(*) FROM (
-                SELECT b.id, b.intro_html, COUNT(p.id) as p_count
+                SELECT b.id, COUNT(p.id) as p_count
                 FROM brands b
                 LEFT JOIN products p ON p.brand_id = b.id AND p.is_active = 1
                 WHERE b.is_active = 1
                 GROUP BY b.id
-                HAVING p_count < 4 OR b.intro_html IS NULL OR TRIM(b.intro_html) = ''
+                HAVING p_count < 1
             )
         ");
 
@@ -594,13 +589,13 @@ class SitemapService
                 ],
                 'thin_categories' => [
                     'count' => $thinCats,
-                    'label' => 'Thin Categories',
-                    'description' => 'Categories with fewer than 4 items or missing unique editorial introduction',
+                    'label' => 'Empty Categories',
+                    'description' => 'Categories with zero active products excluded until products are added',
                 ],
                 'thin_brands' => [
                     'count' => $thinBrands,
-                    'label' => 'Thin Brands',
-                    'description' => 'Brands with fewer than 4 products or lacking authentic brand intro copy',
+                    'label' => 'Empty Brands',
+                    'description' => 'Brands with zero active products excluded until products are added',
                 ],
                 'utility_routes' => [
                     'count' => count($utilityRoutes),
