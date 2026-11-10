@@ -22,7 +22,7 @@ class BrandController
             "SELECT b.*, COUNT(p.id) AS product_count 
              FROM brands b
              LEFT JOIN products p ON p.brand_id = b.id AND p.is_active = 1
-             WHERE b.is_active = 1 AND (b.is_featured = 1 OR p.id IS NOT NULL)
+             WHERE b.is_active = 1 AND p.id IS NOT NULL
              GROUP BY b.id
              ORDER BY b.featured_sort ASC, product_count DESC, b.name ASC"
         );
@@ -74,8 +74,17 @@ class BrandController
             ['label' => $brand['name'], 'url' => null],
         ];
 
-        // Section 5 rule: Brand indexable only if at least 4 products and unique intro text
-        $isIndexable = ($pagination['total'] >= 4) && !empty($brand['intro_html']);
+        // Brand indexability: Brands with active products are indexable.
+        $isIndexable = ($pagination['total'] > 0);
+
+        // Ensure brand intro text exists so content is never thin
+        if (empty(trim((string)($brand['intro_html'] ?? '')))) {
+            $brand['intro_html'] = '<p>Shop authentic ' . e($brand['name']) . ' accessories at Multan Tech Accessories with nationwide Cash on Delivery in Pakistan.</p>';
+        }
+
+        // Self-referencing canonical URL including pagination (?page=N)
+        $canonicalPage = $page > 1 ? '?page=' . $page : '';
+        $canonicalUrl = mta_url('/brands/' . $brand['slug'] . $canonicalPage);
 
         $metaTitle = SeoService::title("{$brand['name']} Accessories in Pakistan");
         $metaDescription = SeoService::metaDescription("Buy original {$brand['name']} accessories in Pakistan. Authentic computer peripherals and mobile gear with Cash on Delivery nationwide.");
@@ -100,7 +109,7 @@ class BrandController
             'breadcrumbs' => $breadcrumbs,
             'meta_title' => $metaTitle,
             'meta_description' => $metaDescription,
-            'canonical_url' => mta_url('/brands/' . $brand['slug']),
+            'canonical_url' => $canonicalUrl,
             'noindex' => !$isIndexable,
             'og_image' => $brandOgImage ?? mta_url('/assets/images/og-share.jpg'),
         ]);

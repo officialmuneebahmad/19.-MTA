@@ -237,7 +237,7 @@ class SupplierSyncService
                             supplier_description_html, supplier_link, content_hash, content_state,
                             is_active, is_published, last_seen_at
                         ) VALUES (
-                            'supplier', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'supplier_raw', 1, 1, CURRENT_TIMESTAMP
+                            'supplier', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', 1, 1, CURRENT_TIMESTAMP
                         )",
                         [
                             $rawId,

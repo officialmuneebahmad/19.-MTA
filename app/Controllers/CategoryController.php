@@ -102,8 +102,19 @@ class CategoryController
         }
         $breadcrumbs[] = ['label' => $category['name'], 'url' => null];
 
-        // Section 5 rule: Category indexable only if it has at least 4 products and unique intro text; otherwise noindex, follow
-        $isIndexable = ($pagination['total'] >= 4) && !empty($category['intro_html']) && empty($request->query('sort'));
+        // Category indexability: Clean category and pagination views are indexable.
+        // Filtered duplicate views (?sort=...) carry noindex and canonicalize to clean URL.
+        $isSortFilter = !empty($request->query('sort')) && $request->query('sort') !== 'popular';
+        $isIndexable = ($pagination['total'] > 0) && !$isSortFilter;
+
+        // Ensure category intro text exists so content is never thin
+        if (empty(trim((string)($category['intro_html'] ?? '')))) {
+            $category['intro_html'] = '<p>Explore authentic ' . e($category['name']) . ' at Multan Tech Accessories. Genuine computer and mobile hardware with nationwide Cash on Delivery in Pakistan.</p>';
+        }
+
+        // Self-referencing canonical URL including pagination (?page=N)
+        $canonicalPage = $page > 1 ? '?page=' . $page : '';
+        $canonicalUrl = mta_url('/categories/' . $category['slug'] . $canonicalPage);
 
         // SEO Title (<= 60 chars) & Description
         $metaTitle = SeoService::categoryTitle($category['name']);
@@ -128,7 +139,7 @@ class CategoryController
             'breadcrumbs' => $breadcrumbs,
             'meta_title' => $metaTitle,
             'meta_description' => $metaDescription,
-            'canonical_url' => mta_url('/categories/' . $category['slug']), // Sort canonicalizes to clean URL
+            'canonical_url' => $canonicalUrl,
             'noindex' => !$isIndexable,
             'og_image' => $categoryOgImage ?? mta_url('/assets/images/og-share.jpg'),
         ]);

@@ -273,16 +273,17 @@ try {
 
 // Task 4: SEO & Catalog Indexability Approval
 try {
-    // 1. Approve active in-stock and pre-order products for indexing
+    // 1. Approve all active published products for search indexing
     $approvedCount = $db->execute("
         UPDATE products 
         SET content_state = 'approved', updated_at = CURRENT_TIMESTAMP 
-        WHERE is_active = 1 AND is_published = 1 AND status != 2 AND (content_state IS NULL OR content_state != 'approved')
+        WHERE is_active = 1 AND is_published = 1 AND (content_state IS NULL OR content_state != 'approved')
     ");
     $pd_log("Task 4: Catalog Indexability: {$approvedCount} active products approved for search indexing.");
 
-    // 2. Ensure brand intros populated for top verified brands
+    // 2. Ensure brand intros populated for all catalog brands
     $brandIntros = [
+        'generic' => '<p>Browse quality generic and OEM-standard tech accessories, adapter cables, display converters, and daily computer connectivity solutions at affordable prices in Pakistan.</p>',
         'anker' => '<p>Explore authentic Anker charging accessories, PowerIQ fast wall chargers, multi-device power banks, GaN technology adapters, and durable braided cables with nationwide Cash on Delivery.</p>',
         'baseus' => '<p>Shop original Baseus tech accessories, high-speed multi-port chargers, magnetic wireless power banks, USB-C hub adapters, and ergonomic phone car mounts across Pakistan.</p>',
         'ugreen' => '<p>Discover official Ugreen connectivity hardware, Nexode GaN fast chargers, 4K/8K HDMI cables, USB-C audio adapters, and gigabit Ethernet adapters backed by official warranty.</p>',

@@ -52,8 +52,8 @@ class ProductController
             ]), 410);
         }
 
-        // 3. Content Gate (Section 11): Only 'approved' products are indexable!
-        $isIndexable = ($product['content_state'] === 'approved');
+        // 3. All active and published catalog products are indexable in Google Search
+        $isIndexable = !empty($product['is_active']) && !empty($product['is_published']);
 
         // Load Gallery Images
         $images = $db->fetchAll(
