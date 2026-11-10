@@ -18,19 +18,29 @@
   <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured Accessories">
     <div class="carousel-track">
       
-      <!-- Slide 1 (Micro SD Cards) -->
-      <a href="/categories/storage-and-memory" class="carousel-slide" aria-label="Shop Micro SD and Storage Cards">
-        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282104/Micro_SD_card_product_advertisement_9d33082f_2K_hujze7.jpg" alt="High-Speed Micro SD Cards" class="carousel-img" width="2752" height="1536" fetchpriority="high">
+      <!-- Slide 1 (Store Migration & New Products Announcement) -->
+      <a href="/about" class="carousel-slide" aria-label="multantech.store is now multantech.pk - 500+ New Products">
+        <img src="/assets/images/banners/banner-store-to-pk-migration.webp" alt="multantech.store is now officially multantech.pk - 500+ New Exciting Products" class="carousel-img" width="1024" height="571" fetchpriority="high" loading="eager">
       </a>
 
-      <!-- Slide 2 (Keyboards) -->
-      <a href="/categories/gaming" class="carousel-slide" aria-label="Shop RGB Gaming Keyboards">
-        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282102/Keyboard_product_advertisement_l__d263c809_2K_ojl0mo.jpg" alt="RGB Gaming and Office Keyboards" class="carousel-img" width="2752" height="1536" loading="lazy">
+      <!-- Slide 2 (One-Stop Tech Accessories Store) -->
+      <a href="/categories" class="carousel-slide" aria-label="Your One-Stop Tech Accessories Store">
+        <img src="/assets/images/banners/banner-one-stop-tech-store.webp" alt="Multan Tech Accessories - Your One-Stop Tech Accessories Store in Pakistan" class="carousel-img" width="1024" height="571" loading="eager">
       </a>
 
-      <!-- Slide 3 (WiFi Repeaters) -->
-      <a href="/categories/networking" class="carousel-slide" aria-label="Shop WiFi Repeaters and Extenders">
-        <img src="https://res.cloudinary.com/dyrncibsu/image/upload/v1793282107/WiFi_repeater_product_advertisement_fb0e0390_2K_xbo6gs.jpg" alt="WiFi Signal Repeaters and Extenders" class="carousel-img" width="2752" height="1536" loading="lazy">
+      <!-- Slide 3 (Xiaomi Mi WiFi Repeater Pro 300M) -->
+      <a href="/categories/networking" class="carousel-slide" aria-label="Xiaomi Mi WiFi Repeater Pro 300M - Rs. 3,399">
+        <img src="/assets/images/banners/banner-xiaomi-wifi-repeater.webp" alt="Xiaomi Mi WiFi Repeater Pro 300M - 300 Mbps Range Extender in Stock - Rs. 3,399" class="carousel-img" width="1024" height="571" loading="eager">
+      </a>
+
+      <!-- Slide 4 (Xtrike Me KB-512 Keyboard) -->
+      <a href="/categories/gaming" class="carousel-slide" aria-label="Xtrike Me KB-512 Mechanical Feel Keyboard - Rs. 2,999">
+        <img src="/assets/images/banners/banner-xtrike-me-kb512-keyboard.webp" alt="Xtrike Me KB-512 Mechanical Feel Keyboard - 108 Keys USB-C Wired - Rs. 2,999" class="carousel-img" width="1024" height="571" loading="eager">
+      </a>
+
+      <!-- Slide 5 (Aspor 8GB Class 10 Micro SD Card) -->
+      <a href="/categories/storage-and-memory" class="carousel-slide" aria-label="Aspor 8GB Class 10 Micro SD Card - Rs. 999">
+        <img src="/assets/images/banners/banner-aspor-8gb-microsd.webp" alt="Aspor 8GB Class 10 High Speed Micro SD Card with SD Adapter - Rs. 999" class="carousel-img" width="1024" height="571" loading="eager">
       </a>
 
     </div>
@@ -40,6 +50,8 @@
       <button class="carousel-dot active" aria-label="Slide 1"></button>
       <button class="carousel-dot" aria-label="Slide 2"></button>
       <button class="carousel-dot" aria-label="Slide 3"></button>
+      <button class="carousel-dot" aria-label="Slide 4"></button>
+      <button class="carousel-dot" aria-label="Slide 5"></button>
     </div>
   </div>
 </div>

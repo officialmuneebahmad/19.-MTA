@@ -200,8 +200,14 @@
 
       <!-- Brand Logo (Day & Night Adaptive) -->
       <a href="/" class="header-logo" aria-label="Multan Tech Accessories Homepage">
-        <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="165" height="42">
-        <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="165" height="42">
+        <picture class="mta-logo mta-logo-day">
+          <source srcset="/assets/images/logo-day.webp" type="image/webp">
+          <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo" width="165" height="42">
+        </picture>
+        <picture class="mta-logo mta-logo-night">
+          <source srcset="/assets/images/logo-night.webp" type="image/webp">
+          <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo" width="165" height="42">
+        </picture>
       </a>
 
       <!-- Desktop Search -->
@@ -371,10 +377,16 @@
   <div class="mobile-drawer" id="mobile-drawer" aria-label="Mobile Navigation">
     <div class="drawer-header">
       <div style="display:flex; align-items:center;">
-        <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="130" height="34">
-        <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="130" height="34">
+        <picture class="mta-logo mta-logo-day">
+          <source srcset="/assets/images/logo-day.webp" type="image/webp">
+          <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo" width="130" height="34">
+        </picture>
+        <picture class="mta-logo mta-logo-night">
+          <source srcset="/assets/images/logo-night.webp" type="image/webp">
+          <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo" width="130" height="34">
+        </picture>
       </div>
-      <button id="mobile-drawer-close" aria-label="Close Menu" style="padding: 0.5rem; color: var(--text);">
+      <button id="mobile-drawer-close" aria-label="Close Menu" style="min-width: 48px; min-height: 48px; padding: 0.75rem; color: var(--text); display: inline-flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
@@ -514,8 +526,14 @@
         <!-- About Blurb -->
         <div>
           <div style="margin-bottom: 1rem;">
-            <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-day" width="150" height="38">
-            <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo mta-logo-night" width="150" height="38">
+            <picture class="mta-logo mta-logo-day">
+              <source srcset="/assets/images/logo-day.webp" type="image/webp">
+              <img src="/assets/images/logo-day.png" alt="Multan Tech Accessories" class="mta-logo" width="150" height="38">
+            </picture>
+            <picture class="mta-logo mta-logo-night">
+              <source srcset="/assets/images/logo-night.webp" type="image/webp">
+              <img src="/assets/images/logo-night.png" alt="Multan Tech Accessories" class="mta-logo" width="150" height="38">
+            </picture>
           </div>
           <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
             Your trusted destination for genuine computer hardware, mobile accessories, chargers, cables, and gaming gear in Pakistan. Shipped across Multan and nationwide with Cash on Delivery.
