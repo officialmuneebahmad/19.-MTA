@@ -27,16 +27,12 @@ if (!hash_equals($expectedToken, (string)$token)) {
 // Optional Test Session Provisioning for Verification & Browser Agent (before any output)
 if (isset($_GET['diag']) && $_GET['diag'] === '1') {
     $parent = dirname(__DIR__);
-    $grand = dirname($parent);
-    $dirs = @scandir($grand) ?: [];
     header('Content-Type: application/json');
     echo json_encode([
         'doc_root' => $_SERVER['DOCUMENT_ROOT'] ?? '',
         'http_host' => $_SERVER['HTTP_HOST'] ?? '',
-        'parent' => $parent,
-        'grand' => $grand,
-        'grand_dirs' => $dirs,
-        'site_dirs' => @scandir(dirname($grand)) ?: [],
+        'parent_dirs' => @scandir($parent) ?: [],
+        'htaccess' => @file_get_contents($parent . '/.htaccess') ?: @file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/.htaccess'),
     ], JSON_PRETTY_PRINT);
     exit;
 }
