@@ -34,8 +34,37 @@ AddDefaultCharset UTF-8
     RewriteRule ^storage/ - [F,L]
 
     # ------------------------------------------------------------
-    # 1. Canonical Domain Migration: multantech.store -> multantech.pk
-    # Redirect all traffic from old domain (HTTP/HTTPS, www/non-www)
+    # 1. Specific Legacy 301 Redirects (Domain Migration & Old URLs)
+    # Direct single-hop 301 mapping to active canonical .pk landing pages
+    # ------------------------------------------------------------
+    # Legacy Landing Pages (matched on both .store and .pk)
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.(store|pk)$ [NC]
+    RewriteRule ^mobile-accessories-multan\.html$ https://multantech.pk/categories/mobile-accessories [R=301,L]
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.(store|pk)$ [NC]
+    RewriteRule ^chargers-multan\.html$ https://multantech.pk/categories/power-and-charging [R=301,L]
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.(store|pk)$ [NC]
+    RewriteRule ^cables-multan\.html$ https://multantech.pk/categories/cables-and-adapters [R=301,L]
+
+    # Legacy Discontinued Products -> Closest Active Category
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.(store|pk)$ [NC]
+    RewriteRule ^products/apple-wireless-keyboard-mouse-mini\.html$ https://multantech.pk/categories/computer-accessories [R=301,L]
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.(store|pk)$ [NC]
+    RewriteRule ^products/lenovo-lecoo-ew301-tws-wireless-earbuds\.html$ https://multantech.pk/categories/audio-and-speakers [R=301,L]
+
+    # Legacy .html URL patterns: strip .html extension to route to modern clean URLs
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+    RewriteRule ^(.*)\.html$ https://multantech.pk/$1 [R=301,L]
+
+    RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.pk$ [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)\.html$ https://multantech.pk/$1 [R=301,L]
+
+    # ------------------------------------------------------------
+    # 2. Canonical Domain Migration Catch-All: multantech.store -> multantech.pk
+    # Redirect all remaining traffic from old domain (HTTP/HTTPS, www/non-www)
     # directly to https://multantech.pk preserving URI path and query.
     # ------------------------------------------------------------
     RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]

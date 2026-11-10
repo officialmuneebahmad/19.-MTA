@@ -18,15 +18,23 @@
       Pakistani consumers often face counterfeit accessories, exaggerated wattage ratings on chargers, and unverified specifications. Multan Tech Accessories was created to solve this trust deficit. Every accessory listed in our catalog is sourced from authorized distribution feeds, thoroughly inspected for build quality, and verified for real-world compatibility.
     </p>
 
-    <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Physical Store Location</h2>
+    <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Store Headquarters &amp; Founder</h2>
     <p style="margin-bottom: 1.25rem;">
       We are proud to serve our local community and all Pakistani tech enthusiasts from our physical headquarters:
     </p>
-    <div style="background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent-strong); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem;">
-      <strong>Physical Address:</strong><br>
-      <?= e(mta_setting('store_address', 'Al-Quresh Phase 3, Sher Shah Road, Multan, Punjab, Pakistan')) ?><br><br>
-      <strong>Direct Phone / WhatsApp:</strong> 0307-0655275 (Intl: +923070655275)<br>
-      <strong>Founder & Developer:</strong> Muneeb Ahmad
+    <div style="background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent-strong); border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+      <img src="/assets/images/muneeb-ahmad.jpg" alt="Muneeb Ahmad" style="width: 84px; height: 84px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); box-shadow: var(--shadow-sm); flex-shrink: 0;">
+      <div>
+        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">
+          <a href="/author/muneeb-ahmad" style="color: var(--text); text-decoration: none;">Muneeb Ahmad</a>
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent-strong); margin-left: 0.5rem; text-transform: uppercase;">Founder &amp; Lead Hardware Developer</span>
+        </div>
+        <div style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+          <div><strong>Store Address:</strong> <?= e(mta_setting('store_address', 'Al-Quresh Phase 3, Sher Shah Road, Multan, Punjab, Pakistan')) ?></div>
+          <div><strong>Direct Phone / WhatsApp:</strong> <a href="tel:+923070655275" style="color: var(--accent-strong);">0307-0655275</a> (Intl: +923070655275)</div>
+          <div><a href="/author/muneeb-ahmad" style="color: var(--accent-strong); font-weight: 600; text-decoration: underline;">View Articles &amp; Author Bio &rarr;</a></div>
+        </div>
+      </div>
     </div>
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Customer First Guarantees</h2>

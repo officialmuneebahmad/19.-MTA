@@ -55,9 +55,9 @@ class Router
         // 1. Check Redirects Table (301 Permanent Redirects)
         try {
             $db = Database::getInstance();
-            $redirect = $db->fetch("SELECT target_url, status_code FROM redirects WHERE source_url = ? LIMIT 1", [$path]);
+            $redirect = $db->fetch("SELECT target_url, status_code FROM redirects WHERE source_url = ? OR source_url = ? LIMIT 1", [$path, trim($path, '/')]);
             if ($redirect) {
-                $db->execute("UPDATE redirects SET hits = hits + 1, last_hit_at = CURRENT_TIMESTAMP WHERE source_url = ?", [$path]);
+                $db->execute("UPDATE redirects SET hits = hits + 1, last_hit_at = CURRENT_TIMESTAMP WHERE source_url = ? OR source_url = ?", [$path, trim($path, '/')]);
                 $resp = new Response();
                 return $resp->redirect($redirect['target_url'], (int)$redirect['status_code']);
             }

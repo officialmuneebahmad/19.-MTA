@@ -213,6 +213,36 @@ try {
     $pd_log("Domain Migration error checking robots.txt: " . $e->getMessage());
 }
 
+// Domain Migration: Seed and sync 301 Permanent Redirects table
+try {
+    $migrationRedirects = [
+        '/mobile-accessories-multan.html' => 'https://multantech.pk/categories/mobile-accessories',
+        'mobile-accessories-multan.html' => 'https://multantech.pk/categories/mobile-accessories',
+        '/chargers-multan.html' => 'https://multantech.pk/categories/power-and-charging',
+        'chargers-multan.html' => 'https://multantech.pk/categories/power-and-charging',
+        '/cables-multan.html' => 'https://multantech.pk/categories/cables-and-adapters',
+        'cables-multan.html' => 'https://multantech.pk/categories/cables-and-adapters',
+        '/products/apple-wireless-keyboard-mouse-mini.html' => 'https://multantech.pk/categories/computer-accessories',
+        'products/apple-wireless-keyboard-mouse-mini.html' => 'https://multantech.pk/categories/computer-accessories',
+        '/products/lenovo-lecoo-ew301-tws-wireless-earbuds.html' => 'https://multantech.pk/categories/audio-and-speakers',
+        'products/lenovo-lecoo-ew301-tws-wireless-earbuds.html' => 'https://multantech.pk/categories/audio-and-speakers',
+    ];
+
+    $redirectCount = 0;
+    foreach ($migrationRedirects as $src => $dest) {
+        $existing = $db->fetch("SELECT id FROM redirects WHERE source_url = ? LIMIT 1", [$src]);
+        if (!$existing) {
+            $db->execute("INSERT INTO redirects (source_url, target_url, status_code, hits, created_at) VALUES (?, ?, 301, 0, CURRENT_TIMESTAMP)", [$src, $dest]);
+        } else {
+            $db->execute("UPDATE redirects SET target_url = ?, status_code = 301 WHERE source_url = ?", [$dest, $src]);
+        }
+        $redirectCount++;
+    }
+    $pd_log("Domain Migration: Synced {$redirectCount} 301 permanent redirects in database.");
+} catch (\Throwable $e) {
+    $pd_log("Domain Migration redirects seeding error: " . $e->getMessage());
+}
+
 // Task 3: Sync Verified Brand Logos (including the 5 uploaded assets)
 $verifiedLogos = [
     // 5 requested brands from uploaded assets (white background)
