@@ -252,29 +252,44 @@ try {
             $legacyBlock = <<<HTACCESS
 # Specific Legacy 301 Redirects for multantech.store (Single-Hop GSC Verification)
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^mobile-accessories-multan\.html$ https://multantech.pk/categories/mobile-accessories [R=301,L]
+RewriteCond %{REQUEST_URI} ^/mobile-accessories-multan\.html$
+RewriteRule ^ https://multantech.pk/categories/mobile-accessories [R=301,L]
 
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^chargers-multan\.html$ https://multantech.pk/categories/power-and-charging [R=301,L]
+RewriteCond %{REQUEST_URI} ^/chargers-multan\.html$
+RewriteRule ^ https://multantech.pk/categories/power-and-charging [R=301,L]
 
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^cables-multan\.html$ https://multantech.pk/categories/cables-and-adapters [R=301,L]
+RewriteCond %{REQUEST_URI} ^/cables-multan\.html$
+RewriteRule ^ https://multantech.pk/categories/cables-and-adapters [R=301,L]
 
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^products/apple-wireless-keyboard-mouse-mini\.html$ https://multantech.pk/categories/computer-accessories [R=301,L]
+RewriteCond %{REQUEST_URI} ^/products/apple-wireless-keyboard-mouse-mini\.html$
+RewriteRule ^ https://multantech.pk/categories/computer-accessories [R=301,L]
 
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^products/lenovo-lecoo-ew301-tws-wireless-earbuds\.html$ https://multantech.pk/categories/audio-and-speakers [R=301,L]
+RewriteCond %{REQUEST_URI} ^/products/lenovo-lecoo-ew301-tws-wireless-earbuds\.html$
+RewriteRule ^ https://multantech.pk/categories/audio-and-speakers [R=301,L]
 
+# General legacy .html pattern on .store: strip .html and redirect directly to .pk path
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
-RewriteRule ^(.*)\.html$ https://multantech.pk/$1 [R=301,L]
+RewriteCond %{REQUEST_URI} ^/(.*)\.html$
+RewriteRule ^ https://multantech.pk/%1 [R=301,L]
 
 # Permanent redirect: multantech.store to multantech.pk
 RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
 RewriteRule ^ https://multantech.pk%{REQUEST_URI} [R=301,L]
 HTACCESS;
 
-            if (!str_contains($parentContent, 'Specific Legacy 301 Redirects for multantech.store')) {
+            $startMarker = '# Specific Legacy 301 Redirects for multantech.store';
+            $endMarker = 'RewriteRule ^ https://multantech.pk%{REQUEST_URI} [R=301,L]';
+
+            if (str_contains($parentContent, $startMarker)) {
+                $pattern = '/' . preg_quote($startMarker, '/') . '.*?' . preg_quote($endMarker, '/') . '/s';
+                $newContent = preg_replace($pattern, $legacyBlock, $parentContent);
+                file_put_contents($parentHtaccess, $newContent);
+                $pd_log("Domain Migration: Server-level parent .htaccess synchronized with updated single-hop rules.");
+            } else {
                 $pattern = '/# Permanent redirect: multantech\.store to multantech\.pk\s*RewriteCond %\{HTTP_HOST\} \^\(www\\\.\)\?multantech\\\.store\$ \[NC\]\s*RewriteRule \^ https:\/\/multantech\.pk%\{REQUEST_URI\} \[R=301,L\]/s';
                 if (preg_match($pattern, $parentContent)) {
                     $newContent = preg_replace($pattern, $legacyBlock, $parentContent);
@@ -285,8 +300,6 @@ HTACCESS;
                     file_put_contents($parentHtaccess, $parentContent);
                     $pd_log("Domain Migration: Server-level parent .htaccess appended with single-hop 301 rules.");
                 }
-            } else {
-                $pd_log("Domain Migration: Server-level parent .htaccess already has single-hop 301 rules.");
             }
         }
     }
