@@ -243,6 +243,57 @@ try {
     $pd_log("Domain Migration redirects seeding error: " . $e->getMessage());
 }
 
+// Domain Migration: Synchronize server-level parent .htaccess for multantech.store
+try {
+    $parentHtaccess = dirname(MTA_PUBLIC) . '/.htaccess';
+    if (file_exists($parentHtaccess) && is_writable($parentHtaccess)) {
+        $parentContent = file_get_contents($parentHtaccess);
+        if (str_contains($parentContent, 'multantech.store')) {
+            $legacyBlock = <<<HTACCESS
+# Specific Legacy 301 Redirects for multantech.store (Single-Hop GSC Verification)
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^mobile-accessories-multan\.html$ https://multantech.pk/categories/mobile-accessories [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^chargers-multan\.html$ https://multantech.pk/categories/power-and-charging [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^cables-multan\.html$ https://multantech.pk/categories/cables-and-adapters [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^products/apple-wireless-keyboard-mouse-mini\.html$ https://multantech.pk/categories/computer-accessories [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^products/lenovo-lecoo-ew301-tws-wireless-earbuds\.html$ https://multantech.pk/categories/audio-and-speakers [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^(.*)\.html$ https://multantech.pk/$1 [R=301,L]
+
+# Permanent redirect: multantech.store to multantech.pk
+RewriteCond %{HTTP_HOST} ^(www\.)?multantech\.store$ [NC]
+RewriteRule ^ https://multantech.pk%{REQUEST_URI} [R=301,L]
+HTACCESS;
+
+            if (!str_contains($parentContent, 'Specific Legacy 301 Redirects for multantech.store')) {
+                $pattern = '/# Permanent redirect: multantech\.store to multantech\.pk\s*RewriteCond %\{HTTP_HOST\} \^\(www\\\.\)\?multantech\\\.store\$ \[NC\]\s*RewriteRule \^ https:\/\/multantech\.pk%\{REQUEST_URI\} \[R=301,L\]/s';
+                if (preg_match($pattern, $parentContent)) {
+                    $newContent = preg_replace($pattern, $legacyBlock, $parentContent);
+                    file_put_contents($parentHtaccess, $newContent);
+                    $pd_log("Domain Migration: Server-level parent .htaccess updated with single-hop 301 rules.");
+                } else {
+                    $parentContent .= "\n" . $legacyBlock . "\n";
+                    file_put_contents($parentHtaccess, $parentContent);
+                    $pd_log("Domain Migration: Server-level parent .htaccess appended with single-hop 301 rules.");
+                }
+            } else {
+                $pd_log("Domain Migration: Server-level parent .htaccess already has single-hop 301 rules.");
+            }
+        }
+    }
+} catch (\Throwable $e) {
+    $pd_log("Domain Migration error updating parent .htaccess: " . $e->getMessage());
+}
+
 // Task 3: Sync Verified Brand Logos (including the 5 uploaded assets)
 $verifiedLogos = [
     // 5 requested brands from uploaded assets (white background)
