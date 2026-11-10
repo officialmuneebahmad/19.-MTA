@@ -25,6 +25,21 @@ if (!hash_equals($expectedToken, (string)$token)) {
 @ini_set('memory_limit', '256M');
 
 // Optional Test Session Provisioning for Verification & Browser Agent (before any output)
+if (isset($_GET['diag']) && $_GET['diag'] === '1') {
+    $parent = dirname(__DIR__);
+    $grand = dirname($parent);
+    $dirs = @scandir($grand) ?: [];
+    header('Content-Type: application/json');
+    echo json_encode([
+        'doc_root' => $_SERVER['DOCUMENT_ROOT'] ?? '',
+        'http_host' => $_SERVER['HTTP_HOST'] ?? '',
+        'parent' => $parent,
+        'grand' => $grand,
+        'grand_dirs' => $dirs,
+        'site_dirs' => @scandir(dirname($grand)) ?: [],
+    ], JSON_PRETTY_PRINT);
+    exit;
+}
 if ((isset($_GET['test_session']) && $_GET['test_session'] === '1') || (isset($_POST['test_session']) && $_POST['test_session'] === '1')) {
     require_once __DIR__ . '/app/bootstrap.php';
     \App\Core\Session::start();
