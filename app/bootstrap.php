@@ -405,6 +405,8 @@ function mta_product_authenticity_issue(string $title, string $descriptionText =
         'grade_copy' => '/\b(?:a\+\+|aaa\+?|\d+a|1:1|super|king|oem|exact|grade[\s\-_]*a)[\s\-_]*copy\b/i',
         'copy_version' => '/\bcopy[\s\-_]*version\b/i',
         'replica_copy' => '/\b(?:1:1|aaa\+?|a\+\+|exact|high[\s\-_]*grade|super|master|first)[\s\-_]*replica\b/i',
+        'like_original' => '/\b(?:like[\s\-_]+original|same[\s\-_]+as[\s\-_]+original|look[\s\-_]*alike)\b/i',
+        'clone_chipset' => '/\b(?:hengxuan|zhongkelqnxun|jerry[\s\-_]+chipset|bluetrum)\b/i',
         'best_and_generic' => '/\bquality is best and generic\b/i',
         'fake_product' => '/\b(?:fake|counterfeit|imitation|replica)\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard|watch|power\s*bank|combo|speaker)\b/i',
     ];
@@ -415,9 +417,13 @@ function mta_product_authenticity_issue(string $title, string $descriptionText =
         }
     }
 
-    // 2. Title-only copy / clone / replica / imitation / counterfeit words
+    // 2. Title-only copy / clone / replica / imitation / counterfeit / unbranded clone AirPods
     if (preg_match('/\b(copy|clone|replica|imitation|counterfeit)\b/i', $titleSanitized, $m)) {
         return 'title:' . $m[0];
+    }
+    if (!preg_match('/\bfor\s+(?:iphone[,\s\/&]*(?:&|and)?\s*)?(?:apple\s+)?airpods\b/i', $titleSanitized)
+        && preg_match('/\b(?:apple\s+airpods|airpods\s+pro\s*(?:2|3)|airpods\s+(?:4|max))\b/i', $titleSanitized, $m)) {
+        return 'clone_airpods:' . $m[0];
     }
 
     return null;

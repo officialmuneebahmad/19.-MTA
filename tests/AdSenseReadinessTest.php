@@ -70,6 +70,15 @@ t_assert(
     mta_is_authentic_product_text('Apple Magsafe Wireless Power Bank for Iphone 5000mAh 20W Fast Charging (Without Packing)', '<p>Master Copy Grade quality power bank.</p>') === false,
     'Authenticity filter blocks Master Copy in description'
 );
+t_assert(
+    mta_is_authentic_product_text('Apple Airpods Pro 2 Hengxuan TC CHARGING ( LIKE ORIGINAL PACKING ) WHITE') === false &&
+    mta_is_authentic_product_text('APPLE AIRPODS PRO 3 (3RD GENERATION) BT 5.3 WITH USB-C CHARGING') === false,
+    'Authenticity filter blocks clone AirPods / like original packing listings'
+);
+t_assert(
+    mta_is_authentic_product_text('3-in-1 15W Fast Wireless Magnetic Charging Pad for iPhone AirPods Smartwatch') === true,
+    'Authenticity filter preserves genuine 3-in-1 wireless charger made for AirPods'
+);
 
 // 2. Consent Mode v2 Layout Fix & Privacy / Cookie Policy
 $mainPhp = file_get_contents(MTA_APP . '/Views/layouts/main.php');
