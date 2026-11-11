@@ -1,46 +1,51 @@
 <?php
 /**
- * Multan Tech Accessories — Author View for Muneeb Ahmad
+ * Multan Tech Accessories — Author Profile View
  */
 ?>
-<div class="container" style="padding: 2.5rem 1.25rem; max-width: 800px;">
+<div class="container" style="padding: 2rem 1.25rem; max-width: 900px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2.5rem; display: flex; gap: 2rem; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap;" class="author-card">
-    <img src="/assets/images/muneeb-ahmad.jpg" alt="Muneeb Ahmad" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); box-shadow: var(--shadow-md); flex-shrink: 0;">
+  <!-- Author Bio Card -->
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; margin: 1.5rem 0 2.5rem; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+    <?php if (!empty($author['avatar'])): ?>
+      <img src="<?= e($author['avatar']) ?>" alt="<?= e($author['name']) ?>" width="110" height="110" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-strong);">
+    <?php endif; ?>
 
-    <div>
-      <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--accent-strong); letter-spacing: 0.5px;">Founder & Full-Stack Developer</span>
-      <h1 style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0.75rem;">Muneeb Ahmad</h1>
-      <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1rem;">
-        Founder, lead architect, and developer of <strong>Multan Tech Accessories</strong> (MultanTech.pk). Based in Multan, Punjab, Pakistan, Muneeb is dedicated to making authentic computer hardware, fast charging gear, and durable mobile accessories accessible and transparent for Pakistani consumers.
+    <div style="flex: 1; min-width: 250px;">
+      <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-strong);">Founder &amp; Author</span>
+      <h1 class="page-title" style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0.75rem;"><?= e($author['name']) ?></h1>
+      <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin: 0;">
+        <?= e($author['bio']) ?>
       </p>
-      <div style="font-size: 0.85rem; color: var(--text); line-height: 1.6;">
-        <div><strong>Store Headquarters:</strong> Al-Quresh Phase 3, Sher Shah Road, Multan, Pakistan</div>
-        <div><strong>Direct Contact / WhatsApp:</strong> <a href="tel:+923070655275" style="color: var(--accent-strong);">0307-0655275</a></div>
-      </div>
     </div>
   </div>
 
-  <section>
-    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem;">Articles & Buying Guides by Muneeb Ahmad</h2>
-    <div style="display: flex; flex-direction: column; gap: 1rem;">
-      <?php if (!empty($authorGuides)): ?>
-        <?php foreach ($authorGuides as $guide): ?>
-          <article style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">
-                <a href="/guides/<?= e($guide['slug']) ?>"><?= e($guide['title']) ?></a>
-              </h3>
-              <p style="font-size: 0.85rem; color: var(--text-muted);"><?= e($guide['excerpt'] ?? '') ?></p>
-            </div>
-            <a href="/guides/<?= e($guide['slug']) ?>" class="btn btn-secondary btn-sm" style="flex-shrink: 0; margin-left: 1rem;">Read &rarr;</a>
-          </article>
-        <?php endforeach; ?>
-      <?php else: ?>
-        <p style="color: var(--text-muted);">Check our <a href="/guides" style="color: var(--accent-strong); text-decoration: underline;">Guides Section</a> for practical tech buying advice.</p>
-      <?php endif; ?>
+  <!-- Articles by Author -->
+  <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1.25rem;">Published Articles by <?= e($author['name']) ?> (<?= count($guides) ?>)</h2>
+  <?php if (empty($guides)): ?>
+    <p style="color: var(--text-muted);">No published articles yet.</p>
+  <?php else: ?>
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <?php foreach ($guides as $g): ?>
+        <?php $gTopic = $g['topic'] ?? mta_guide_topic((string)$g['slug'], (string)$g['title']); ?>
+        <article style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--accent-strong);"><?= e($gTopic['label']) ?></span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">
+              <?= !empty($g['published_at']) ? e(date('M j, Y', strtotime((string)$g['published_at']))) : '' ?>
+              &bull; <?= (int)($g['reading_time'] ?? 4) ?> min read
+            </span>
+          </div>
+          <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0 0 0.5rem;">
+            <a href="/guides/<?= e($g['slug']) ?>" style="color: var(--text); text-decoration: none;"><?= e($g['title']) ?></a>
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.85rem; line-height: 1.6;">
+            <?= e($g['excerpt']) ?>
+          </p>
+          <a href="/guides/<?= e($g['slug']) ?>" style="font-size: 0.85rem; font-weight: 700; color: var(--accent-strong);">Read Full Article &rarr;</a>
+        </article>
+      <?php endforeach; ?>
     </div>
-  </section>
-
+  <?php endif; ?>
 </div>

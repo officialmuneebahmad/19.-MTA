@@ -144,7 +144,7 @@ class PageController
         return $resp->html(View::render('storefront/pages/editorial', [
             'breadcrumbs' => $breadcrumbs,
             'meta_title' => SeoService::title('Editorial and Pricing Policy'),
-            'meta_description' => 'Explore our editorial integrity, supplier pricing transparency, and honest testing standards at Multan Tech Accessories. Reliable tech shopping in Pakistan.',
+            'meta_description' => 'Explore our editorial standards, supplier-sourced specification policy, and transparent pricing formula at Multan Tech Accessories in Pakistan.',
             'canonical' => mta_url('/editorial-and-pricing-policy'),
         ]));
     }

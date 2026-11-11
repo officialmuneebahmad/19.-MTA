@@ -51,7 +51,7 @@ class AiRewriteService
             "Authentic {$brand} hardware with full local compatibility for Pakistani 220V–240V AC power outlets",
             "Thermal protection designed to withstand ambient summer room temperatures up to 45°C without throttling",
             "Durable strain-relief connectors engineered for long life during daily laptop bag travel and frequent commutes",
-            "Backed by Multan Tech Accessories' 7-day checking warranty and same-day WhatsApp dispatch support",
+            "Backed by Multan Tech Accessories' 3-day checking warranty and WhatsApp dispatch support",
             "Universal compatibility with modern USB-C laptops, iPhones, Samsung Galaxy, and Xiaomi smartphones",
         ];
 
@@ -61,7 +61,7 @@ class AiRewriteService
 
   <h3>Key Hardware Features & Performance</h3>
   <ul>
-    <li><strong>Verified Power & Signal Stability:</strong> Tested for stable voltage delivery and low ripple noise under real Pakistani electricity conditions.</li>
+    <li><strong>Consistent Everyday Operation:</strong> Built according to published manufacturer specifications to support steady charging and signal stability.</li>
     <li><strong>Robust Build Quality:</strong> High-grade materials resist bending, port degradation, and daily cable flexing.</li>
     <li><strong>Safe Daily Operation:</strong> Built-in over-voltage, short-circuit, and temperature safeguards prevent damage to your expensive connected devices.</li>
   </ul>
@@ -70,7 +70,7 @@ class AiRewriteService
   <p>In Pakistan's intense summer climate and frequent power fluctuations, budget generic accessories often suffer from solder joint failure or early capacitor wear. The <strong>{$title}</strong> has been curated by Multan Tech Accessories to ensure reliable heat dissipation and steady performance even during extended power outages backed by solar inverters or UPS systems.</p>
 
   <h3>What's in the Box</h3>
-  <p>1 &times; {$title}, standard retail packaging, and Multan Tech Accessories 7-day inspection warranty slip.</p>
+  <p>1 &times; {$title}, standard retail packaging, and Multan Tech Accessories 3-day checking warranty terms.</p>
 </div>";
 
         $faqJson = [
@@ -80,7 +80,7 @@ class AiRewriteService
             ],
             [
                 'question' => "What warranty is included with this product?",
-                'answer' => "Multan Tech Accessories provides a 7-day checking warranty from the day of courier delivery. If you encounter any technical defect, our Multan store arranges a prompt check and replacement.",
+                'answer' => "Multan Tech Accessories provides a 3-day (72-hour) checking warranty from courier delivery. If you encounter any technical defect or DOA issue, contact our WhatsApp support for exchange assistance.",
             ],
             [
                 'question' => "How long will delivery take to my city?",
@@ -88,7 +88,7 @@ class AiRewriteService
             ],
         ];
 
-        $metaDesc = "Buy {$title} in Pakistan at best price (" . mta_money($price) . "). 7-day checking warranty, Cash on Delivery in Multan & nationwide dispatch.";
+        $metaDesc = "Buy {$title} in Pakistan at best price (" . mta_money($price) . "). 3-day checking warranty, Cash on Delivery in Multan & nationwide dispatch.";
         if (mb_strlen($metaDesc) > 160) {
             $metaDesc = mb_substr($metaDesc, 0, 157) . '...';
         }

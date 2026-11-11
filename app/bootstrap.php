@@ -345,3 +345,131 @@ function mta_verify_brand_logo(?string $relPath): array {
 
     return $cache[$relPath] = ['status' => 'ok', 'is_dark_needed' => $isDark];
 }
+
+// ----------------------------------------------------------------------
+// Active Non-Empty Storefront Categories Helpers
+// ----------------------------------------------------------------------
+function mta_nav_categories(): array {
+    try {
+        $db = \App\Core\Database::getInstance();
+        return $db->fetchAll(
+            "SELECT c.id, c.slug, c.name, c.intro_html, COUNT(p.id) AS product_count
+             FROM categories c
+             INNER JOIN products p ON p.category_id = c.id AND p.is_active = 1 AND p.is_published = 1
+             WHERE c.parent_id IS NULL AND c.is_active = 1
+             GROUP BY c.id
+             HAVING product_count > 0
+             ORDER BY c.sort_order ASC, c.name ASC"
+        );
+    } catch (\Throwable $e) {
+        return [];
+    }
+}
+
+function mta_category_has_products(string $slug): bool {
+    foreach (mta_nav_categories() as $cat) {
+        if (($cat['slug'] ?? '') === $slug && (int)($cat['product_count'] ?? 0) > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// ----------------------------------------------------------------------
+// Product Authenticity Filter (Single Source of Truth)
+// ----------------------------------------------------------------------
+function mta_is_authentic_product_text(string $title, string $descriptionText = ''): bool {
+    $combined = strtolower(strip_tags($title . ' ' . $descriptionText));
+    $titleLower = strtolower(strip_tags($title));
+
+    // Reject explicit imitation/copy/replica markers (while allowing legitimate currency counter "fake note deduction")
+    $blockedPhrases = [
+        '/\bhigh[\s\-_]*copy\b/i',
+        '/\bmaster[\s\-_]*copy\b/i',
+        '/\bfirst[\s\-_]*copy\b/i',
+        '/\b1st[\s\-_]*copy\b/i',
+        '/\b2nd[\s\-_]*copy\b/i',
+        '/\ba\+\+[\s\-_]*copy\b/i',
+        '/\baaa\+?[\s\-_]*copy\b/i',
+        '/\b7a[\s\-_]*copy\b/i',
+        '/\b1:1[\s\-_]*copy\b/i',
+        '/\bsuper[\s\-_]*copy\b/i',
+        '/\bking[\s\-_]*copy\b/i',
+        '/\boem[\s\-_]*copy\b/i',
+        '/\bexact[\s\-_]*copy\b/i',
+        '/\bgrade[\s\-_]*a[\s\-_]*copy\b/i',
+        '/\bcopy[\s\-_]*version\b/i',
+        '/\breplica\b/i',
+        '/\bimitation\b/i',
+        '/\bquality is best and generic\b/i',
+        '/\bfake\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard)\b/i',
+    ];
+
+    foreach ($blockedPhrases as $pattern) {
+        if (preg_match($pattern, $combined)) {
+            return false;
+        }
+    }
+
+    // Standalone "copy" or "clone" in the product title
+    if (preg_match('/\b(copy|clone)\b/i', $titleLower)) {
+        return false;
+    }
+
+    return true;
+}
+
+// ----------------------------------------------------------------------
+// Editorial Buying Guides Topic & Reading Time Helpers
+// ----------------------------------------------------------------------
+function mta_guide_topic(string $slug, string $title = ''): array {
+    $s = strtolower($slug . ' ' . $title);
+    if (str_contains($s, 'cable') || str_contains($s, 'usb-c') || str_contains($s, 'adapter')) {
+        return [
+            'slug' => 'cables-connectivity',
+            'label' => 'Cables & Connectivity',
+            'description' => 'Wattage ratings, e-marker chips, USB data speeds, and connector compatibility.',
+            'category_slug' => 'cables-and-adapters',
+            'category_name' => 'Cables and Adapters',
+        ];
+    }
+    if (str_contains($s, 'charger') || str_contains($s, 'power-bank') || str_contains($s, 'power bank') || str_contains($s, 'charging')) {
+        return [
+            'slug' => 'power-charging',
+            'label' => 'Power & Charging',
+            'description' => 'USB-C Power Delivery, PPS, battery capacity math, and safe charging advice.',
+            'category_slug' => 'power-and-charging',
+            'category_name' => 'Power and Charging',
+        ];
+    }
+    if (str_contains($s, 'gaming') || str_contains($s, 'keyboard') || str_contains($s, 'mouse') || str_contains($s, 'headset')) {
+        return [
+            'slug' => 'gaming-peripherals',
+            'label' => 'Gaming Peripherals',
+            'description' => 'Practical budget breakdowns for mice, keyboards, and gaming headsets.',
+            'category_slug' => 'gaming',
+            'category_name' => 'Gaming Accessories',
+        ];
+    }
+    if (str_contains($s, 'counterfeit') || str_contains($s, 'spot') || str_contains($s, 'authentic')) {
+        return [
+            'slug' => 'buyer-protection',
+            'label' => 'Buyer Protection & Authenticity',
+            'description' => 'How to check packaging, safety markings, and specifications before buying.',
+            'category_slug' => 'mobile-accessories',
+            'category_name' => 'Mobile Accessories',
+        ];
+    }
+    return [
+        'slug' => 'hardware-advice',
+        'label' => 'Hardware Buying Advice',
+        'description' => 'Clear buying guidance for everyday mobile and computer accessories.',
+        'category_slug' => 'computer-accessories',
+        'category_name' => 'Computer Accessories',
+    ];
+}
+
+function mta_reading_time(string $html): int {
+    $words = str_word_count(strip_tags($html));
+    return max(3, (int)ceil($words / 200));
+}

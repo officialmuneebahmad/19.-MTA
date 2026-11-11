@@ -88,6 +88,12 @@ $router->get('/track-order', [OrderController::class, 'track']);
 // 3. EDITORIAL GUIDES & AUTHOR
 // ======================================================================
 $router->get('/guides', [GuideController::class, 'index']);
+$router->get('/guides/usb-c-cable-buying-guide-charging-speed-data-transfer-and-compatibility-explained', function(): Response {
+    $r = new Response();
+    $r->status(301);
+    $r->header('Location', '/guides/usb-c-cable-buying-guide-pakistan');
+    return $r;
+});
 $router->get('/guides/{slug}', [GuideController::class, 'show']);
 $router->get('/author/{slug}', [GuideController::class, 'author']);
 

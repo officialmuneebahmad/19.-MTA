@@ -9,7 +9,7 @@
   <div style="margin: 1.5rem 0 2rem;">
     <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;">All Tech Categories</h1>
     <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-      Explore our comprehensive catalog of verified computer hardware, mobile accessories, chargers, and gaming peripherals in Pakistan.
+      Explore our catalog of computer hardware, mobile accessories, fast chargers, cables, and gaming peripherals in Pakistan.
     </p>
   </div>
 

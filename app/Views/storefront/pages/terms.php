@@ -25,7 +25,7 @@
 
     <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">3. Order Booking & Security Deposit</h2>
     <p style="margin-bottom: 1.25rem;">
-      To prevent fraudulent submissions and ensure serious parcel delivery commitments, a nominal <strong>Rs. 100/- Advance Booking Deposit</strong> is collected via JazzCash, EasyPaisa, or direct Bank Transfer prior to courier dispatch. The remaining balance is collected via Cash on Delivery (COD).
+      To prevent fraudulent submissions and reserve parcels for dispatch, a mandatory <strong>Rs. 100/- Advance Security Payment</strong> is required via JazzCash, EasyPaisa, or direct Bank Transfer before courier dispatch. The remaining amount is payable according to your selected delivery and payment arrangement (Cash on Delivery upon parcel arrival).
     </p>
 
     <h2 style="font-size: 1.4rem; margin: 1.75rem 0 0.5rem;">4. Warranty & Returns</h2>

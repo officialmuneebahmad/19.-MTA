@@ -336,8 +336,8 @@ class SeoService
             ];
         } else {
             $productFaqs[] = [
-                'q' => "Is this {$title} authentic, brand new, and factory sealed?",
-                'a' => "Yes, every unit dispatched by Multan Tech Accessories is 100% brand new, authentic, and inspected prior to dispatch.",
+                'q' => "Does this {$title} come with a checking warranty and original packaging?",
+                'a' => "Yes, Multan Tech Accessories lists genuine brand-name and standard accessories based on supplier specifications, backed by a strict 3-day checking warranty for manufacturing faults.",
             ];
             $productFaqs[] = [
                 'q' => "What is included inside the retail packaging?",

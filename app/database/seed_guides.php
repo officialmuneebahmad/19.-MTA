@@ -289,7 +289,7 @@ function mta_seed_buying_guides(): int
   <div style="text-align: center; margin-bottom: 1.5rem;">
     <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
     <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
-    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Browse accessories with Cash on Delivery &amp; 3-Day Checking Warranty across Pakistan:</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
@@ -414,7 +414,7 @@ For a genuine 10,000mAh power bank:<br>
   <div style="text-align: center; margin-bottom: 1.5rem;">
     <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
     <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
-    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Browse accessories with Cash on Delivery &amp; 3-Day Checking Warranty across Pakistan:</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
@@ -513,27 +513,27 @@ HTML
   <div style="text-align: center; margin-bottom: 1.5rem;">
     <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
     <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
-    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Browse accessories with Cash on Delivery &amp; 3-Day Checking Warranty across Pakistan:</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Certified Fast Chargers</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Tested original wall chargers with over-voltage IC protection and flame-retardant enclosures.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Branded wall chargers with built-in over-voltage protection and durable enclosures.</p>
       </div>
       <a href="/categories/power-and-charging" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Chargers &rarr;</a>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Pure Copper USB Cables</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Reinforced braided cables with verified copper wiring and precision molded plugs.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Reinforced braided cables with copper conductors and precision molded plugs.</p>
       </div>
       <a href="/categories/cables-and-converters" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Cables &rarr;</a>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
         <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text);">Authentic Audio Gear</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Genuine earbuds, wired earphones, and Bluetooth speakers with verified sound quality.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">Branded earbuds, wired earphones, and Bluetooth speakers built for daily listening.</p>
       </div>
       <a href="/categories/audio-and-speakers" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; justify-content: center;">Browse Audio &rarr;</a>
     </div>
@@ -555,7 +555,7 @@ HTML
             'content_html' => <<<HTML
 <p>PC gaming in Pakistan has experienced massive growth over the past few years, driven by competitive titles like Counter-Strike 2, Valorant, Dota 2, Tekken 8, and PUBG. However, with the rupee’s exchange rate pushing tier-one flagship peripherals (from brands like Razer, SteelSeries, or Logitech G Pro) past Rs. 35,000 to Rs. 50,000 each, building a capable gaming battlestation can seem out of reach.</p>
 
-<p>The good news is that advancements in peripheral manufacturing have made budget gaming gear better than ever. For a total budget of <strong>PKR 6,000 to 18,000</strong>, Pakistani gamers can assemble a setup with high-precision optical tracking, responsive mechanical key switches, and crystal-clear directional audio. Here is our field-tested breakdown of what to prioritize and what marketing gimmicks to ignore.</p>
+<p>The good news is that advancements in peripheral manufacturing have made budget gaming gear better than ever. For a total budget of <strong>PKR 6,000 to 18,000</strong>, Pakistani gamers can assemble a setup with high-precision optical tracking, responsive mechanical key switches, and crystal-clear directional audio. Here is our practical breakdown of what to prioritize and what marketing gimmicks to ignore.</p>
 
 <h2>1. Gaming Mice: Sensors Over Gimmicks</h2>
 <p>Many budget mice market astronomical numbers like "12,800 DPI" alongside aggressive angular plastic designs and rainbow lighting. In competitive esports, 95% of professional players use between <strong>400 and 1,600 DPI</strong>. High DPI is a marketing gimmick; what truly matters are sensor stability and tracking accuracy.</p>
@@ -620,7 +620,7 @@ HTML
   <div style="text-align: center; margin-bottom: 1.5rem;">
     <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-strong); text-transform: uppercase; letter-spacing: 1px;">Recommended Catalog</span>
     <h3 style="font-size: 1.35rem; font-weight: 800; margin: 0.35rem 0 0.5rem; color: var(--text);">Product Categories Mentioned in This Guide</h3>
-    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Shop authentic, tested hardware with Cash on Delivery & 3-Day Inspection Warranty across Pakistan:</p>
+    <p style="font-size: 0.925rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Browse accessories with Cash on Delivery &amp; 3-Day Checking Warranty across Pakistan:</p>
   </div>
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
@@ -879,7 +879,7 @@ HTML
 <!-- Suggested Product Categories Component -->
 <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 2px solid var(--border);">
   <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text);">Suggested Product Categories</h3>
-  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">Explore authentic hardware and verified accessories discussed in this guide:</p>
+  <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">Explore compatible accessories discussed in this guide:</p>
   
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
@@ -926,6 +926,24 @@ HTML
 HTML
         ],
     ];
+
+    // Deduplicate any legacy manual copy of a canonical guide slug
+    $duplicateSlugs = [
+        'usb-c-cable-buying-guide-charging-speed-data-transfer-and-compatibility-explained' => 'https://multantech.pk/guides/usb-c-cable-buying-guide-pakistan',
+    ];
+    foreach ($duplicateSlugs as $dupSlug => $canonicalDest) {
+        $db->execute("DELETE FROM posts WHERE slug = ?", [$dupSlug]);
+        try {
+            $oldPath = '/guides/' . $dupSlug;
+            $existsRedir = $db->fetch("SELECT id FROM redirects WHERE source_url = ? LIMIT 1", [$oldPath]);
+            if (!$existsRedir) {
+                $db->execute(
+                    "INSERT INTO redirects (source_url, target_url, status_code, hits, created_at) VALUES (?, ?, 301, 0, CURRENT_TIMESTAMP)",
+                    [$oldPath, $canonicalDest]
+                );
+            }
+        } catch (\Throwable) {}
+    }
 
     $count = 0;
     foreach ($guides as $g) {

@@ -72,6 +72,7 @@ class SupplierSyncService
             'updated_count' => 0,
             'unchanged_count' => 0,
             'skipped_invalid' => 0,
+            'skipped_non_authentic' => 0,
             'deactivated_count' => 0,
             'error_message' => null,
         ];
@@ -121,14 +122,31 @@ class SupplierSyncService
                     continue;
                 }
 
-                $seenSupplierIds[] = $rawId;
-
                 // Decode HTML entities in title
                 $title = html_entity_decode($rawTitle, ENT_QUOTES | ENT_HTML5, 'UTF-8');
                 $supplierPrice = (float)($p['ProductPrice'] ?? 0);
                 $supplierStatus = (int)($p['ProductStatusId'] ?? 1); // 1 InStock, 2 OutOfStock, 3 ComingSoon
                 $supplierLink = (string)($p['ProductLink'] ?? '');
                 $rawDetail = (string)($p['ProductDetail'] ?? '');
+
+                // Exclude copy/replica/imitation products while preserving historical DB records
+                if (!mta_is_authentic_product_text($title, $rawDetail)) {
+                    $existingCopy = $this->db->fetch(
+                        "SELECT id FROM products WHERE supplier_id = ? LIMIT 1",
+                        [$rawId]
+                    );
+                    if ($existingCopy) {
+                        $this->db->execute(
+                            "UPDATE products SET is_active = 0, is_published = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                            [$existingCopy['id']]
+                        );
+                        $stats['deactivated_count']++;
+                    }
+                    $stats['skipped_non_authentic']++;
+                    continue;
+                }
+
+                $seenSupplierIds[] = $rawId;
                 $cleanDetail = Security::sanitizeSupplierHtml($rawDetail);
                 $imageUrl = (string)($p['ProductImage'] ?? '');
                 $sku = !empty($p['ProductCode']) ? (string)$p['ProductCode'] : 'MTA-' . $rawId;
@@ -530,6 +548,7 @@ class SupplierSyncService
                 SELECT COUNT(*) FROM products 
                 WHERE products.category_id = categories.id 
                   AND products.is_active = 1
+                  AND products.is_published = 1
             )"
         );
     }

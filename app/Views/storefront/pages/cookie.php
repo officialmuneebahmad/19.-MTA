@@ -1,193 +1,84 @@
 <?php
 /**
  * Multan Tech Accessories — Cookie Policy View
- * Comprehensive, transparent cookie and privacy disclosure.
+ * Aligned with real Google Consent Mode v2 & localStorage/cookie implementation
  */
 ?>
-<div class="container" style="padding: 2.5rem 1.25rem 4rem; max-width: 900px;">
+<div class="container" style="padding: 2rem 1.25rem; max-width: 880px;">
   <?php require MTA_APP . '/Views/partials/breadcrumb.php'; ?>
 
-  <div style="margin: 1.5rem 0 2.5rem;">
-    <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text); line-height: 1.25; margin-bottom: 0.75rem;">
-      Cookie Policy
-    </h1>
-    <p style="font-size: 0.95rem; color: var(--text-muted);">
-      Last Updated: November 2026 &bull; Effective for all visitors of <strong>https://multantech.pk</strong>
+  <h1 class="page-title" style="font-size: 2.25rem; font-weight: 800; margin: 1rem 0 0.5rem;">Cookie Policy</h1>
+  <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 2rem;">
+    <strong>Effective Date:</strong> November 11, 2026 &bull; <strong>Last Updated:</strong> November 11, 2026 &bull; <strong>Website:</strong> https://multantech.pk/
+  </p>
+
+  <div style="font-size: 1rem; line-height: 1.8; color: var(--text);">
+
+    <p style="margin-bottom: 1.5rem;">
+      This Cookie Policy explains how <strong>Multan Tech Accessories</strong> (&ldquo;multantech.pk&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;) uses cookies, local browser storage, and consent signals when you browse our online catalog, read buying guides, or place an order.
     </p>
-  </div>
 
-  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.75rem 2rem; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 1rem; box-shadow: var(--shadow-sm);">
-    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-      <div>
-        <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem;">
-          Your Active Privacy Controls
-        </h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">
-          You can review, modify, or withdraw your cookie consent preferences at any time.
-        </p>
-      </div>
-      <button type="button" class="btn btn-primary" data-open-cookie-settings onclick="if(window.mtaCookieConsent){window.mtaCookieConsent.openPreferences();}return false;" style="font-weight: 600; padding: 0.65rem 1.25rem;">
-        Open Cookie Settings
-      </button>
+    <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem;">
+      <strong style="display: block; margin-bottom: 0.4rem;">Manage Your Consent Preferences</strong>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin: 0 0 0.75rem;">
+        Analytics and Advertising storage are <strong>denied by default</strong> until you choose to enable them. Update your choices anytime below:
+      </p>
+      <button type="button" class="btn btn-primary btn-sm" data-open-cookie-settings>Open Privacy Preference Center</button>
     </div>
-  </div>
 
-  <div class="prose" style="font-size: 1rem; line-height: 1.85; color: var(--text);">
-    
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        1. What Are Cookies?
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        Cookies are small text files placed on your computer, smartphone, or tablet when you visit websites. They are widely used to make websites work properly, improve user navigation, preserve shopping cart contents across page loads, and provide website owners with aggregated traffic telemetry.
-      </p>
-      <p>
-        In addition to standard HTTP cookies, modern web browsers utilize related storage technologies such as <code>localStorage</code>, <code>sessionStorage</code>, and secure tokens. Throughout this policy, references to "cookies" encompass all such web storage technologies.
-      </p>
-    </section>
+    <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">1. What Are Cookies &amp; Browser Storage?</h2>
+    <p style="margin-bottom: 1.25rem;">
+      Cookies are small text files stored in your web browser, and <code>localStorage</code> is browser-side key-value storage used to remember settings on your device. They keep your shopping cart active, protect forms against Cross-Site Request Forgery (CSRF), remember light/dark theme preferences, and save your privacy consent choices.
+    </p>
 
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        2. Why Does MultanTech.pk Use Cookies?
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        <strong>Multan Tech Accessories</strong> uses cookies and browser storage strictly to:
-      </p>
-      <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-        <li><strong>Ensure Essential E-Commerce Operations:</strong> Maintain your active shopping session, persist products in your shopping basket, process checkout securely, and defend against Cross-Site Request Forgery (CSRF).</li>
-        <li><strong>Preserve Visual Preferences:</strong> Remember your selected Light Mode or Dark Mode theme choice via local browser storage.</li>
-        <li><strong>Understand Website Performance:</strong> Measure traffic volume, identify popular hardware categories, and optimize store loading speed through Google Analytics 4 (only when consented).</li>
-        <li><strong>Support Advertising (When Active):</strong> Measure advertisement effectiveness and serve relevant tech hardware promotions when Google AdSense or advertising partner networks are enabled.</li>
-      </ul>
-    </section>
+    <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">2. How Google Consent Mode v2 Works on This Site</h2>
+    <p style="margin-bottom: 1rem;">
+      Before optional tags run, our page header initializes <strong>Google Consent Mode v2</strong> via Google Tag Manager (container <code>GTM-NSR7DDL8</code>) by reading your saved preferences from <code>mta_cookie_consent_v2</code> (or fallback cookie <code>mta_cookie_consent</code>).
+    </p>
+    <p style="margin-bottom: 1.5rem;">
+      If you have not made a choice or selected <em>Reject Optional</em>, the signals <code>analytics_storage</code>, <code>ad_storage</code>, <code>ad_user_data</code>, and <code>ad_personalization</code> remain set to <code>denied</code>. When you click <em>Accept All</em> or enable specific optional categories inside the Preference Center, <code>gtag('consent', 'update', ...)</code> updates only the categories you permitted.
+    </p>
 
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        3. First-Party vs. Third-Party Cookies
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        <strong>First-Party Cookies:</strong> Set directly by <code>multantech.pk</code>. These are strictly used for your secure shopping session, CSRF security verification, and remembering your consent status. No third party can read or access these cookies.
-      </p>
-      <p>
-        <strong>Third-Party Cookies:</strong> Set by trusted third-party service providers such as Google (for Google Analytics 4 and Google AdSense). These third parties may process device identifiers, IP addresses, and browsing activity subject to their independent privacy policies and your explicit consent choice on our website.
-      </p>
-    </section>
+    <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">3. Categories of Storage &amp; Cookies We Use</h2>
 
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        4. Cookie Categories on MultanTech.pk
-      </h2>
-      <p style="margin-bottom: 1.25rem;">
-        We group the cookies and storage mechanisms used on our website into three distinct categories:
-      </p>
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem;">3.1 Strictly Necessary Cookies &amp; Storage (Always Active)</h3>
+    <p style="margin-bottom: 0.75rem;">
+      Required for core shopping cart state, security validation, theme display, and saving your privacy preferences. These do not track you across third-party websites.
+    </p>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.45rem;">
+      <li><code>mta_session</code> (Cookie): Maintains your active shopping cart, flash alerts, and session state.</li>
+      <li><code>csrf_token</code> / session CSRF state: Protects checkout, cart, and contact forms against unauthorized submissions.</li>
+      <li><code>mta_cookie_consent_v2</code> (localStorage) &amp; <code>mta_cookie_consent</code> (Cookie): Stores your consent selections for up to 365 days so the banner does not repeatedly interrupt you.</li>
+      <li><code>mta_theme</code> (localStorage): Remembers your Day or Night display mode preference.</li>
+    </ul>
 
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <!-- Category A -->
-        <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0;">A. Strictly Necessary Cookies</h3>
-            <span style="background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px;">Always Active</span>
-          </div>
-          <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-            These cookies and storage items are fundamental to the operation of the e-commerce store. They enable you to move around the website, add tech accessories to your cart, and place Cash on Delivery orders safely. Without them, the shopping service cannot be provided.
-          </p>
-          <ul style="font-size: 0.875rem; color: var(--text); padding-left: 1.25rem; margin: 0;">
-            <li><strong>mta_session:</strong> Secure PHP session identifier used to maintain active shopping cart items and user state (Duration: Session / 2 hours).</li>
-            <li><strong>csrf_token:</strong> Cryptographic token preventing unauthorized cross-site requests and protecting checkout forms (Duration: Session).</li>
-            <li><strong>mta_cookie_consent_v1:</strong> Stores your chosen privacy preferences so you are not prompted repeatedly (Duration: 365 days).</li>
-            <li><strong>mta_theme:</strong> Local storage setting storing your preference between light and dark theme (Duration: Persistent).</li>
-          </ul>
-        </div>
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem;">3.2 Analytics Cookies (Optional &mdash; Consent Required)</h3>
+    <p style="margin-bottom: 0.75rem;">
+      Enabled only when <code>analytics_storage</code> is granted by your choice. Used via Google Tag Manager / Google Analytics 4 to understand popular pages, device types, and overall traffic.
+    </p>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.45rem;">
+      <li><code>_ga</code> / <code>_ga_*</code> (Google Analytics 4): Distinguishes aggregated site visits and session counts (typically up to 2 years when consented).</li>
+    </ul>
 
-        <!-- Category B -->
-        <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0;">B. Analytics Cookies</h3>
-            <span style="background: var(--surface); color: var(--text); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px;">Optional</span>
-          </div>
-          <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-            Analytics cookies allow us to collect aggregated, anonymous statistics about how visitors interact with our product pages, categories, and buying guides. This data helps us discover broken links, speed up slow product listings, and understand which computer accessories are most popular in Pakistan.
-          </p>
-          <ul style="font-size: 0.875rem; color: var(--text); padding-left: 1.25rem; margin: 0;">
-            <li><strong>_ga, _ga_*:</strong> Google Analytics 4 cookies utilized to distinguish unique visitors and measure page sessions without recording personally identifiable information (Duration: Up to 2 years, subject to consent).</li>
-          </ul>
-        </div>
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem;">3.3 Advertising Cookies (Optional &amp; Currently Inactive)</h3>
+    <p style="margin-bottom: 0.75rem;">
+      <strong>Current Status:</strong> Google AdSense is <strong>not currently active</strong> on <strong>multantech.pk</strong>, so advertising cookies are dormant at this time. If and when Google AdSense is enabled on our site and you grant Advertising consent (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>), Google and its advertising partners may set cookies or read identifiers such as:
+    </p>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.45rem;">
+      <li><code>__gads</code> / <code>__gpi</code> / <code>IDE</code> (Google AdSense / DoubleClick): Used when AdSense is active to serve ads, cap frequency, measure performance, and&mdash;where consented&mdash;personalize advertising.</li>
+    </ul>
 
-        <!-- Category C -->
-        <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
-            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text); margin: 0;">C. Advertising Cookies</h3>
-            <span style="background: var(--surface); color: var(--text); border: 1px solid var(--border); font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px;">Optional</span>
-          </div>
-          <p style="font-size: 0.925rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-            These cookies are deployed by Google AdSense and authorized advertising networks when advertising integrations are active. They help measure ad performance, prevent repetitive ad impressions, and display advertisements relevant to tech enthusiasts.
-          </p>
-          <ul style="font-size: 0.875rem; color: var(--text); padding-left: 1.25rem; margin: 0;">
-            <li><strong>__gads, __gpi, IDE:</strong> Third-party Google advertising cookies used to measure ad impressions and personalize ads where consented (Duration: Up to 13 months).</li>
-            <li><em>Note:</em> In strict compliance with transparency standards, advertising storage remains dormant unless you grant explicit Advertising consent and Google AdSense is fully activated on our domain.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">4. Managing Cookies &amp; Ad Personalization</h2>
+    <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+      <li><strong>On-Site Preference Center:</strong> Click <a href="javascript:void(0)" data-open-cookie-settings style="color: var(--accent-strong); font-weight: 600; text-decoration: underline;">Open Privacy Preference Center</a> at any time to allow or reject Analytics and Advertising categories.</li>
+      <li><strong>Google Ads Settings:</strong> Control ad personalization across Google services via <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" style="color: var(--accent-strong); text-decoration: underline;">https://adssettings.google.com/</a>.</li>
+      <li><strong>Google Partner Sites Information:</strong> Review how Google handles information from partner websites at <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" style="color: var(--accent-strong); text-decoration: underline;">https://policies.google.com/technologies/partner-sites</a>.</li>
+      <li><strong>Browser Controls:</strong> You can delete or block cookies directly inside Chrome, Firefox, Safari, or Edge settings.</li>
+    </ul>
 
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        5. Google Consent Mode v2 Integration
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        MultanTech.pk has integrated <strong>Google Consent Mode v2</strong>. When you visit our website for the first time, all optional consent parameters (<code>analytics_storage</code>, <code>ad_storage</code>, <code>ad_user_data</code>, and <code>ad_personalization</code>) are configured to <strong>denied</strong> by default before any Google tags are triggered.
-      </p>
-      <p>
-        Only when you select "Accept All" or selectively enable categories in our Privacy Preference Center are these signals updated to <strong>granted</strong>. If you click "Reject Optional", all optional storage parameters remain strictly denied.
-      </p>
-    </section>
-
-    <section style="margin-bottom: 2.5rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        6. How You Can Manage or Change Your Cookie Consent
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        You maintain complete control over how cookies are used during your visits to MultanTech.pk:
-      </p>
-      <ol style="padding-left: 1.5rem; margin-bottom: 1.25rem;">
-        <li style="margin-bottom: 0.75rem;">
-          <strong>On-Site Privacy Preference Center:</strong> Click the <a href="#" data-open-cookie-settings onclick="if(window.mtaCookieConsent){window.mtaCookieConsent.openPreferences();}return false;" style="color:var(--primary);font-weight:600;text-decoration:underline;">Cookie Settings</a> link located in our website footer or the button at the top of this page to adjust your preferences at any time.
-        </li>
-        <li style="margin-bottom: 0.75rem;">
-          <strong>Google Personalized Ads Opt-Out:</strong> You can manage or disable personalized advertising across Google services by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:underline;">Google Ads Settings</a>.
-        </li>
-        <li style="margin-bottom: 0.75rem;">
-          <strong>Industry Opt-Out Tools:</strong> You can opt out of collection and use of information for ad targeting from participating companies via <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:underline;">AboutAds Choices</a> or <a href="https://www.youronlinechoices.com/" target="_blank" rel="noopener noreferrer" style="color:var(--primary);text-decoration:underline;">Your Online Choices</a>.
-        </li>
-        <li>
-          <strong>Browser Controls:</strong> Most modern web browsers allow you to manage cookie settings directly in their options:
-          <ul style="padding-left: 1.25rem; margin-top: 0.5rem;">
-            <li><strong>Google Chrome:</strong> Settings &gt; Privacy and Security &gt; Third-party cookies.</li>
-            <li><strong>Mozilla Firefox:</strong> Settings &gt; Privacy &amp; Security &gt; Enhanced Tracking Protection.</li>
-            <li><strong>Apple Safari:</strong> Preferences &gt; Privacy &gt; Manage Website Data.</li>
-            <li><strong>Microsoft Edge:</strong> Settings &gt; Cookies and site permissions.</li>
-          </ul>
-        </li>
-      </ol>
-      <p style="font-size: 0.9rem; color: var(--text-muted);">
-        Please note that disabling strictly necessary cookies in your browser settings will prevent you from adding items to your shopping cart or completing checkout on MultanTech.pk.
-      </p>
-    </section>
-
-    <section style="margin-bottom: 2rem;">
-      <h2 style="font-size: 1.45rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-        7. Contact Us Regarding Cookies & Privacy
-      </h2>
-      <p style="margin-bottom: 1rem;">
-        If you have questions about our use of cookies or privacy practices, please contact our team:
-      </p>
-      <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;">
-        <p style="margin: 0 0 0.5rem;"><strong>Business Name:</strong> Multan Tech Accessories</p>
-        <p style="margin: 0 0 0.5rem;"><strong>Address:</strong> <?= e(mta_setting('store_address', 'Al-Quresh Phase 3, Sher Shah Road, Multan, Punjab, Pakistan')) ?></p>
-        <p style="margin: 0 0 0.5rem;"><strong>Phone / WhatsApp:</strong> <a href="https://wa.me/923070655275" target="_blank" rel="noopener noreferrer" style="color:var(--primary);font-weight:600;">0307-0655275</a></p>
-        <p style="margin: 0;"><strong>Founder / Developer:</strong> <?= e(mta_setting('founder_credit', 'Muneeb Ahmad')) ?></p>
-      </div>
-    </section>
+    <p style="font-size: 0.92rem; color: var(--text-muted);">
+      See also our full <a href="/privacy-policy" style="color: var(--accent-strong); text-decoration: underline;">Privacy Policy</a> or reach out via our <a href="/contact" style="color: var(--accent-strong); text-decoration: underline;">Contact Page</a> if you have questions.
+    </p>
 
   </div>
 </div>

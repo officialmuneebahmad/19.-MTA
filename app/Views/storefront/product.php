@@ -206,7 +206,7 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
         <div>&#10003; <strong>Warranty:</strong> <span style="color:var(--text); font-weight:700;">We Offer 3 Days Check Warranty Only</span> (Test upon arrival).</div>
         <div>&#10003; <strong>Returns & Refunds:</strong> <span style="color:var(--text); font-weight:700;">No Refund, Exchange can be made only for certain circumstances</span>.</div>
         <div>&#10003; <strong>Courier Charges:</strong> <span style="color:var(--text); font-weight:700;">The Customer has to Return parcel with their own money & courier</span>.</div>
-        <div>&#10003; <strong>Payment:</strong> Cash on Delivery (COD) &bull; <strong style="color: var(--danger, #DC2626);">Rs. 100/- Advance for Booking</strong> (Security Purpose).</div>
+        <div>&#10003; <strong>Payment:</strong> Cash on Delivery (COD) &bull; <strong style="color: var(--danger, #DC2626);">Rs. 100/- Advance Security Payment Required</strong> (Order Confirmation).</div>
         <div>&#10003; <strong>Store Pickup:</strong> Al-Quresh Phase 3, Sher Shah Road, Multan.</div>
       </div>
 
@@ -264,7 +264,7 @@ $shareWaUrl = mta_share_whatsapp_url($title, $sellPrice, $cleanProductUrl);
             </tr>
             <tr>
               <th style="padding:0.75rem 1rem; color:var(--text-muted); font-weight:600; background:var(--surface-2);">Delivery & Payment</th>
-              <td style="padding:0.75rem 1rem;">Cash on Delivery (COD) Nationwide &bull; Rs. 100 Advance Booking Fee &bull; 24-48h Multan, 2-4 Days Nationwide</td>
+              <td style="padding:0.75rem 1rem;">Cash on Delivery (COD) Nationwide &bull; Rs. 100/- Advance Security Payment &bull; 24-48h Multan, 2-4 Days Nationwide</td>
             </tr>
           </tbody>
         </table>

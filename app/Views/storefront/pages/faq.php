@@ -19,9 +19,9 @@
     </details>
 
     <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
-      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Do I need to pay an advance deposit?</summary>
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Do I need to pay an advance payment?</summary>
       <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-        We require a nominal <strong>Rs. 100/- Advance Booking Deposit</strong> (payable via JazzCash, EasyPaisa, or direct Bank Transfer) for security and order confirmation. The remaining balance is paid directly via <strong>Cash on Delivery (COD)</strong> when the courier brings the parcel to your doorstep.
+        Yes. To confirm and reserve your order and prevent fake bookings, a mandatory <strong>Rs. 100/- Advance Security Payment</strong> (via JazzCash, EasyPaisa, or direct Bank Transfer) is required. The remaining amount is paid per your selected delivery arrangement (typically via <strong>Cash on Delivery (COD)</strong> when the courier brings your parcel).
       </p>
     </details>
 
@@ -63,9 +63,9 @@
     </details>
 
     <details style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
-      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Is this product original or copy?</summary>
+      <summary style="font-size: 1.05rem; font-weight: 700; cursor: pointer; color: var(--text);">Are your products authentic and original?</summary>
       <p style="margin-top: 0.75rem; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6;">
-        The product is <strong>Original</strong>. We ensure its <strong>Quality is Best and Generic</strong>, offering you identical form factor, robust build materials, and smooth daily performance, making your everyday life easier and convenient.
+        Multan Tech Accessories focuses on <strong>authentic, original branded hardware and standard accessories</strong> sourced from distributor feeds, and we do not list &ldquo;high copy,&rdquo; &ldquo;master copy,&rdquo; or replica items in our store catalog. Product specifications reflect published manufacturer and supplier data curated by our team. Every eligible item carries a <strong>3-Day Checking Warranty</strong> for manufacturing faults or model mismatches.
       </p>
     </details>
 

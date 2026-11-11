@@ -10,7 +10,11 @@
     (function(){
       var saved = null;
       try {
-        var raw = localStorage.getItem('mta_cookie_consent_v1');
+        var raw = localStorage.getItem('mta_cookie_consent_v2') || localStorage.getItem('mta_cookie_consent_v1');
+        if (!raw && document.cookie) {
+          var m = document.cookie.match(/(?:^|;\s*)mta_cookie_consent=([^;]+)/);
+          if (m) raw = decodeURIComponent(m[1]);
+        }
         if (raw) saved = JSON.parse(raw);
       } catch(e){}
 
@@ -46,7 +50,7 @@
   <meta name="description" content="<?= e($meta_description ?? 'Buy authentic computer and mobile accessories in Pakistan. Cash on Delivery across Multan, Lahore, Karachi & all cities. Free delivery over Rs. 5,000.') ?>">
   <meta name="theme-color" content="#FAF9F5">
   <meta name="mta-build" content="<?= defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0' ?>">
-  <link rel="canonical" href="<?= e($canonical_url ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
+  <link rel="canonical" href="<?= e($canonical_url ?? $canonical ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
 
   <!-- Favicon (Circular) -->
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png?v=3">
@@ -274,7 +278,9 @@
             <li><a href="/categories/storage-and-memory" class="dropdown-item">Storage & Memory</a></li>
             <li><a href="/categories/networking" class="dropdown-item">Networking</a></li>
             <li><a href="/categories/cables-and-adapters" class="dropdown-item">Cables & Adapters</a></li>
+<?php if (mta_category_has_products('smart-and-cctv')): ?>
             <li><a href="/categories/smart-and-cctv" class="dropdown-item">Smart & CCTV</a></li>
+<?php endif; ?>
           </ul>
         </li>
 
@@ -454,10 +460,12 @@
             <span class="drawer-cat-icon"><?= mta_category_icon('cables-and-adapters') ?></span>
             <span class="drawer-cat-name">Cables &amp; Adapters</span>
           </a>
+<?php if (mta_category_has_products('smart-and-cctv')): ?>
           <a href="/categories/smart-and-cctv" class="drawer-category-item">
             <span class="drawer-cat-icon"><?= mta_category_icon('smart-and-cctv') ?></span>
             <span class="drawer-cat-name">Smart &amp; CCTV</span>
           </a>
+<?php endif; ?>
         </div>
       </div>
 

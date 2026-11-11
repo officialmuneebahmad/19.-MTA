@@ -18,13 +18,8 @@ class HomeController
     {
         $db = Database::getInstance();
 
-        // Active Parent Categories
-        $categories = $db->fetchAll(
-            "SELECT id, slug, name, intro_html, product_count 
-             FROM categories 
-             WHERE parent_id IS NULL AND is_active = 1 
-             ORDER BY sort_order ASC, name ASC"
-        );
+        // Active Non-Empty Parent Categories
+        $categories = mta_nav_categories();
 
         // Self-healing: Zero out popularity for industrial spare parts
         try {
@@ -106,9 +101,13 @@ class HomeController
              LIMIT 18"
         );
 
-        // Latest Guides
+        // Latest Unique Guides
         $latestGuides = $db->fetchAll(
-            "SELECT id, slug, title, excerpt, content_html FROM posts WHERE status = 'published' ORDER BY id DESC LIMIT 3"
+            "SELECT id, slug, title, excerpt, content_html, featured_image, published_at, updated_at
+             FROM posts
+             WHERE status = 'published'
+             ORDER BY COALESCE(published_at, created_at) DESC, id DESC
+             LIMIT 3"
         );
 
         // Homepage Structured Data (Organization + WebSite with SearchAction)

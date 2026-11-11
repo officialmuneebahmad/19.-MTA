@@ -210,8 +210,17 @@
 
       <div class="home-guides-grid">
         <?php foreach ($latestGuides as $guide): ?>
+          <?php
+            $gTopic = mta_guide_topic((string)$guide['slug'], (string)$guide['title']);
+            $gPubDate = !empty($guide['published_at']) ? date('M j, Y', strtotime((string)$guide['published_at'])) : '';
+          ?>
           <article class="home-guide-card">
-            <span style="font-size:0.75rem; font-weight:700; color:var(--accent-strong); text-transform:uppercase; margin-bottom:0.5rem;">Buying Guide</span>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.5rem;">
+              <span style="font-size:0.75rem; font-weight:700; color:var(--accent-strong); text-transform:uppercase;"><?= e($gTopic['label']) ?></span>
+              <?php if ($gPubDate !== ''): ?>
+                <span style="font-size:0.75rem; color:var(--text-muted);"><?= e($gPubDate) ?></span>
+              <?php endif; ?>
+            </div>
             <h3 style="font-size:1.1rem; margin-bottom:0.5rem; line-height:1.35;">
               <a href="/guides/<?= e($guide['slug']) ?>"><?= e($guide['title']) ?></a>
             </h3>
@@ -233,7 +242,7 @@
         <strong>Multan Tech Accessories</strong> was founded and developed by <strong>Muneeb Ahmad</strong> with a single mission: to provide authentic, high-quality computer and mobile accessories to Pakistani consumers without the guesswork or inflated prices.
       </p>
       <p style="margin-bottom:1rem;">
-        Operating from our physical location at <em>Al-Quresh Phase 3, Sher Shah Road, Multan</em>, we source authentic hardware and accessories including GaN fast chargers, heavy-duty braided USB-C cables, Bluetooth speakers, gaming peripherals, and high-speed storage memory. Every product undergoes strict quality inspection to verify authentic specifications and durability.
+        Operating from our physical location at <em>Al-Quresh Phase 3, Sher Shah Road, Multan</em>, we curate branded and reliable tech accessories including GaN fast chargers, braided USB-C cables, Bluetooth speakers, gaming peripherals, and storage memory. Product listings combine supplier specifications with Multan Tech Accessories editorial formatting, backed by our 3-day checking warranty and nationwide delivery with Rs. 100/- Advance Security Payment confirmation.
       </p>
       <p>
         Whether you are setting up an office workstation, building a gaming battle station, or looking for reliable mobile accessories, we deliver promptly with <strong>Cash on Delivery</strong> across all of Pakistan. For orders in Multan, we provide the lowest local delivery charges and direct store pickup.

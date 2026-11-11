@@ -1,9 +1,9 @@
 {
     "status": "success",
-    "generated_at": "2026-11-10T14:11:51+05:00",
+    "generated_at": "2026-11-11T11:00:59+05:00",
     "base_url": "https://multantech.pk",
-    "total_urls": 1042,
-    "indexable_urls": 1042,
+    "total_urls": 1043,
+    "indexable_urls": 1043,
     "files": {
         "sitemap-pages.xml": {
             "path": "/sitemap-pages.xml",
@@ -11,7 +11,7 @@
             "size_bytes": 2077,
             "size_kb": 2.03,
             "url_count": 17,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap-categories.xml": {
@@ -20,7 +20,7 @@
             "size_bytes": 1285,
             "size_kb": 1.25,
             "url_count": 9,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap-brands.xml": {
@@ -29,16 +29,16 @@
             "size_bytes": 2577,
             "size_kb": 2.52,
             "url_count": 21,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap-guides.xml": {
             "path": "/sitemap-guides.xml",
             "sub_path": "/sitemaps/sitemap-guides.xml",
-            "size_bytes": 726,
-            "size_kb": 0.71,
-            "url_count": 4,
-            "last_modified": "2026-11-10 14:11:51",
+            "size_bytes": 870,
+            "size_kb": 0.85,
+            "url_count": 5,
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap-products-1.xml": {
@@ -47,7 +47,7 @@
             "size_bytes": 207313,
             "size_kb": 202.45,
             "url_count": 500,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap-products-2.xml": {
@@ -56,7 +56,7 @@
             "size_bytes": 203623,
             "size_kb": 198.85,
             "url_count": 491,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         },
         "sitemap.xml": {
@@ -65,7 +65,7 @@
             "size_bytes": 912,
             "size_kb": 0.89,
             "url_count": 6,
-            "last_modified": "2026-11-10 14:11:51",
+            "last_modified": "2026-11-11 11:00:59",
             "status": "active"
         }
     },

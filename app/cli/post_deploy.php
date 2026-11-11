@@ -47,6 +47,23 @@ $pd_log("==================================================");
 $db = Database::getInstance();
 $pd_log("Database connected successfully (driver: " . $db->getDriver() . ").");
 
+// 1b. Take pre-migration SQLite backup snapshot on live/local if sqlite
+if ($db->getDriver() === 'sqlite') {
+    try {
+        $sqliteSrc = MTA_STORAGE . '/database.sqlite';
+        $backupDir = MTA_STORAGE . '/backups';
+        if (!is_dir($backupDir)) {
+            @mkdir($backupDir, 0755, true);
+        }
+        $backupSnap = $backupDir . '/database_pre_' . date('Ymd_His') . '.sqlite';
+        if (file_exists($sqliteSrc) && @copy($sqliteSrc, $backupSnap)) {
+            $pd_log("Backup snapshot saved to {$backupSnap}");
+        }
+    } catch (\Throwable $be) {
+        $pd_log("Backup snapshot warning: " . $be->getMessage());
+    }
+}
+
 // SQLite Automated Health Check & Table Self-Repair
 if ($db->getDriver() === 'sqlite') {
     try {
@@ -425,6 +442,59 @@ try {
         }
     }
     $pd_log("Task 4: Brand Hubs: {$bIntroUpdated} brand intros populated with authentic editorial text.");
+
+    // 2a. Authentic-Only Catalog Audit (Deactivate any copy/replica/imitation items; preserve orders)
+    try {
+        $allProds = $db->fetchAll(
+            "SELECT id, title, is_active, is_published, supplier_description_html, description_html, short_description, key_features, specs, faq_json FROM products"
+        );
+        $deactivatedCopies = [];
+        $cleanedBoilerplate = 0;
+        foreach ($allProds as $pr) {
+            $blob = implode(' ', [
+                (string)($pr['supplier_description_html'] ?? ''),
+                (string)($pr['description_html'] ?? ''),
+                (string)($pr['short_description'] ?? ''),
+                (string)($pr['key_features'] ?? ''),
+                (string)($pr['specs'] ?? ''),
+                (string)($pr['faq_json'] ?? ''),
+            ]);
+            if (!mta_is_authentic_product_text((string)$pr['title'], $blob)) {
+                if ((int)$pr['is_active'] === 1 || (int)$pr['is_published'] === 1) {
+                    $db->execute(
+                        "UPDATE products SET is_active = 0, is_published = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                        [$pr['id']]
+                    );
+                    $deactivatedCopies[] = "#{$pr['id']} {$pr['title']}";
+                }
+            }
+            if (stripos($blob, 'Quality is Best and Generic') !== false) {
+                $db->execute(
+                    "UPDATE products
+                     SET description_html = REPLACE(REPLACE(COALESCE(description_html,''), 'We ensure its Quality is Best and Generic, ', ''), 'Quality is Best and Generic', 'standard build quality'),
+                         supplier_description_html = REPLACE(REPLACE(COALESCE(supplier_description_html,''), 'We ensure its Quality is Best and Generic, ', ''), 'Quality is Best and Generic', 'standard build quality'),
+                         updated_at = CURRENT_TIMESTAMP
+                     WHERE id = ?",
+                    [$pr['id']]
+                );
+                $cleanedBoilerplate++;
+            }
+        }
+        $db->execute(
+            "UPDATE categories SET product_count = (
+                SELECT COUNT(*) FROM products
+                WHERE products.category_id = categories.id
+                  AND products.is_active = 1
+                  AND products.is_published = 1
+            )"
+        );
+        $pd_log("Task 4: Authenticity Audit: Deactivated " . count($deactivatedCopies) . " non-authentic items; cleaned {$cleanedBoilerplate} generic boilerplate rows.");
+        if (!empty($deactivatedCopies)) {
+            $pd_log("Deactivated non-authentic IDs: " . implode(' | ', $deactivatedCopies));
+        }
+    } catch (\Throwable $ae) {
+        $pd_log("Task 4 Authenticity Audit error: " . $ae->getMessage());
+    }
 
     // 2b. Seed Editorial Buying Guides
     require_once MTA_APP . '/database/seed_guides.php';

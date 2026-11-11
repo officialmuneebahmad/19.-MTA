@@ -15,7 +15,7 @@
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Our Origin & Mission</h2>
     <p style="margin-bottom: 1.25rem;">
-      Pakistani consumers often face counterfeit accessories, exaggerated wattage ratings on chargers, and unverified specifications. Multan Tech Accessories was created to solve this trust deficit. Every accessory listed in our catalog is sourced from authorized distribution feeds, thoroughly inspected for build quality, and verified for real-world compatibility.
+      Pakistani consumers often face counterfeit accessories, exaggerated wattage ratings on chargers, and unclear specifications. Multan Tech Accessories was created to offer clearer product details and original accessories. Our catalog focuses on genuine branded hardware and standard accessories sourced from wholesale distributor feeds, with product titles and technical specifications edited by our team for clarity. Every eligible order is covered by our 3-day checking warranty for manufacturing defects or model mismatches.
     </p>
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Store Headquarters &amp; Founder</h2>
@@ -39,7 +39,7 @@
 
     <h2 style="font-size: 1.5rem; margin: 2rem 0 1rem;">Customer First Guarantees</h2>
     <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
-      <li><strong>Cash on Delivery:</strong> Available across Pakistan. A minimal Rs. 100/- advance booking deposit is collected for order security, with the full remaining balance payable on delivery.</li>
+      <li><strong>Order Confirmation &amp; Payment:</strong> Cash on Delivery (COD) is available across Pakistan. To confirm and reserve an order against fake bookings, an <strong>Rs. 100/- Advance Security Payment</strong> is required (via JazzCash, EasyPaisa, or direct bank transfer), with the remaining order amount payable per the selected delivery/payment arrangement upon parcel arrival.</li>
       <li><strong>Delivery Benefits:</strong> Free delivery on all orders above Rs. 5,000, and 100% free delivery on your second order.</li>
       <li><strong>Multan Local Rates:</strong> Customers in Multan receive our lowest local delivery charge (Rs. 100) or can opt for direct store pickup.</li>
       <li><strong>3-Day Checking Warranty:</strong> Defective items are replaced promptly without hassle under our 72-hour inspection window.</li>
