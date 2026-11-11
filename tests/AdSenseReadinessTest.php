@@ -55,16 +55,20 @@ t_assert(
     'Authenticity filter blocks Quality is Best and Generic boilerplate'
 );
 t_assert(
-    mta_is_authentic_product_text('SPEEDX SP-620 SIDE DIGITAL DISPLAY ADVANCED CASH COUNTER MACHINE WITH FAKE NOTE DEDUCTION') === true,
-    'Authenticity filter preserves legitimate cash counter with fake note deduction'
+    mta_is_authentic_product_text('SPEEDX SP-620 SIDE DIGITAL DISPLAY ADVANCED CASH COUNTER MACHINE WITH FAKE NOTE DEDUCTION', '<p>Automatic UV and MG counterfeit note detection and fake bill alert.</p>') === true,
+    'Authenticity filter preserves legitimate cash counter with counterfeit note detection'
 );
 t_assert(
     mta_is_authentic_product_text('Ugreen Nexode 65W GaN Fast Charger') === true,
     'Authenticity filter allows genuine branded charger'
 );
 t_assert(
-    mta_is_authentic_product_text('XTRIKE ME GP-903 RACING WHEEL WITH DUAL VIBRATION MOTORS REALISTIC GAMING EXPERIENCE', '<p>Ergonomic grip with imitation leather finish and responsive pedals.</p>') === true,
-    'Authenticity filter preserves XTRIKE ME racing wheel describing imitation leather finish'
+    mta_is_authentic_product_text('XTRIKE ME GP-903 RACING WHEEL WITH DUAL VIBRATION MOTORS REALISTIC GAMING EXPERIENCE', '<p>Ergonomic grip with imitation finish, vibration feedback and responsive pedals.</p>') === true,
+    'Authenticity filter preserves XTRIKE ME racing wheel even if description mentions imitation finish'
+);
+t_assert(
+    mta_is_authentic_product_text('Apple Magsafe Wireless Power Bank for Iphone 5000mAh 20W Fast Charging (Without Packing)', '<p>Master Copy Grade quality power bank.</p>') === false,
+    'Authenticity filter blocks Master Copy in description'
 );
 
 // 2. Consent Mode v2 Layout Fix & Privacy / Cookie Policy

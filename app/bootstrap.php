@@ -380,21 +380,33 @@ function mta_category_has_products(string $slug): bool {
 // ----------------------------------------------------------------------
 function mta_product_authenticity_issue(string $title, string $descriptionText = ''): ?string {
     $titleLower = strtolower(strip_tags($title));
-    // Remove harmless material/simulation phrases in descriptions before checking
-    $descSanitized = strtolower(strip_tags($descriptionText));
-    $descSanitized = preg_replace('/\b(?:imitation\s+leather|leather\s+imitation|pu\s+imitation|imitation\s+wood|racing\s+wheel\s+replica)\b/i', ' ', $descSanitized);
-    $combined = $titleLower . ' ' . $descSanitized;
+    $descSanitized = strtolower(html_entity_decode(strip_tags($descriptionText), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    // Normalize non-breaking spaces before sanitizing harmless phrases
+    $titleSanitized = preg_replace('/\x{00A0}/u', ' ', $titleLower);
+    $descSanitized = preg_replace('/\x{00A0}/u', ' ', $descSanitized);
 
-    // 1. Explicit counterfeit / imitation / copy patterns across title or description
+    // Preserve cash/currency counting machines that mention counterfeit banknote detection
+    $currencyDetectionPattern = '/\b(?:anti[\-\s]*counterfeit|counterfeit[\s\-_]*(?:note|notes|bill|bills|currency|money|banknote|banknotes|detect\w*|check\w*|sensor\w*|alert\w*|alarm\w*|function\w*|protection\w*|scan\w*)|(?:detect\w*|identif\w*|check\w*|spot\w*|reject\w*|catch\w*|deduct\w*|verif\w*|uv|mg|ir)\s+(?:of\s+|for\s+)?(?:fake|forged|counterfeit)(?:\s+(?:note|notes|bill|bills|currency|money|banknote|banknotes))?)\b/i';
+    $titleSanitized = preg_replace($currencyDetectionPattern, ' ', $titleSanitized);
+    $descSanitized = preg_replace($currencyDetectionPattern, ' ', $descSanitized);
+    if (preg_match('/\b(?:cash|money|currency|note|bill)\s+count(?:er|ing)\b/i', $titleLower)) {
+        $descSanitized = preg_replace('/\bcounterfeit\b/i', ' ', $descSanitized);
+    }
+
+    // Preserve harmless material/simulation phrases (e.g., imitation leather grip, racing wheel)
+    $descSanitized = preg_replace('/\b(?:imitation[\s\-]+(?:leather|suede|wood|metal|rubber|carbon|texture|finish|feel|skin|pedal\w*|shifter\w*|racing|wheel)|racing\s+wheel\s+replica)\b/i', ' ', $descSanitized);
+    $combined = $titleSanitized . ' ' . $descSanitized;
+
+    // 1. Explicit counterfeit / copy phrases across title or description
     $blockedPatterns = [
         'high_copy' => '/\bhigh[\s\-_]*copy\b/i',
         'master_copy' => '/\bmaster[\s\-_]*copy\b/i',
         'first_copy' => '/\b(?:first|1st|2nd)[\s\-_]*copy\b/i',
         'grade_copy' => '/\b(?:a\+\+|aaa\+?|\d+a|1:1|super|king|oem|exact|grade[\s\-_]*a)[\s\-_]*copy\b/i',
         'copy_version' => '/\bcopy[\s\-_]*version\b/i',
+        'replica_copy' => '/\b(?:1:1|aaa\+?|a\+\+|exact|high[\s\-_]*grade|super|master|first)[\s\-_]*replica\b/i',
         'best_and_generic' => '/\bquality is best and generic\b/i',
-        'fake_product' => '/\bfake\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard)\b/i',
-        'counterfeit_word' => '/\b(?:replica|imitation|counterfeit)\b/i',
+        'fake_product' => '/\b(?:fake|counterfeit|imitation|replica)\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard|watch|power\s*bank|combo|speaker)\b/i',
     ];
 
     foreach ($blockedPatterns as $label => $pattern) {
@@ -403,8 +415,8 @@ function mta_product_authenticity_issue(string $title, string $descriptionText =
         }
     }
 
-    // 2. Title-only copy/clone words
-    if (preg_match('/\b(copy|clone)\b/i', $titleLower, $m)) {
+    // 2. Title-only copy / clone / replica / imitation / counterfeit words
+    if (preg_match('/\b(copy|clone|replica|imitation|counterfeit)\b/i', $titleSanitized, $m)) {
         return 'title:' . $m[0];
     }
 
