@@ -378,45 +378,41 @@ function mta_category_has_products(string $slug): bool {
 // ----------------------------------------------------------------------
 // Product Authenticity Filter (Single Source of Truth)
 // ----------------------------------------------------------------------
-function mta_is_authentic_product_text(string $title, string $descriptionText = ''): bool {
-    $combined = strtolower(strip_tags($title . ' ' . $descriptionText));
+function mta_product_authenticity_issue(string $title, string $descriptionText = ''): ?string {
     $titleLower = strtolower(strip_tags($title));
+    // Remove harmless material/simulation phrases in descriptions before checking
+    $descSanitized = strtolower(strip_tags($descriptionText));
+    $descSanitized = preg_replace('/\b(?:imitation\s+leather|leather\s+imitation|pu\s+imitation|imitation\s+wood|racing\s+wheel\s+replica)\b/i', ' ', $descSanitized);
+    $combined = $titleLower . ' ' . $descSanitized;
 
-    // Reject explicit imitation/copy/replica markers (while allowing legitimate currency counter "fake note deduction")
-    $blockedPhrases = [
-        '/\bhigh[\s\-_]*copy\b/i',
-        '/\bmaster[\s\-_]*copy\b/i',
-        '/\bfirst[\s\-_]*copy\b/i',
-        '/\b1st[\s\-_]*copy\b/i',
-        '/\b2nd[\s\-_]*copy\b/i',
-        '/\ba\+\+[\s\-_]*copy\b/i',
-        '/\baaa\+?[\s\-_]*copy\b/i',
-        '/\b7a[\s\-_]*copy\b/i',
-        '/\b1:1[\s\-_]*copy\b/i',
-        '/\bsuper[\s\-_]*copy\b/i',
-        '/\bking[\s\-_]*copy\b/i',
-        '/\boem[\s\-_]*copy\b/i',
-        '/\bexact[\s\-_]*copy\b/i',
-        '/\bgrade[\s\-_]*a[\s\-_]*copy\b/i',
-        '/\bcopy[\s\-_]*version\b/i',
-        '/\breplica\b/i',
-        '/\bimitation\b/i',
-        '/\bquality is best and generic\b/i',
-        '/\bfake\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard)\b/i',
+    // 1. Explicit counterfeit / imitation / copy patterns across title or description
+    $blockedPatterns = [
+        'high_copy' => '/\bhigh[\s\-_]*copy\b/i',
+        'master_copy' => '/\bmaster[\s\-_]*copy\b/i',
+        'first_copy' => '/\b(?:first|1st|2nd)[\s\-_]*copy\b/i',
+        'grade_copy' => '/\b(?:a\+\+|aaa\+?|\d+a|1:1|super|king|oem|exact|grade[\s\-_]*a)[\s\-_]*copy\b/i',
+        'copy_version' => '/\bcopy[\s\-_]*version\b/i',
+        'best_and_generic' => '/\bquality is best and generic\b/i',
+        'fake_product' => '/\bfake\s+(?:product|item|version|earbuds|airpods|charger|mouse|keyboard)\b/i',
+        'counterfeit_word' => '/\b(?:replica|imitation|counterfeit)\b/i',
     ];
 
-    foreach ($blockedPhrases as $pattern) {
-        if (preg_match($pattern, $combined)) {
-            return false;
+    foreach ($blockedPatterns as $label => $pattern) {
+        if (preg_match($pattern, $combined, $m)) {
+            return $label . ':' . $m[0];
         }
     }
 
-    // Standalone "copy" or "clone" in the product title
-    if (preg_match('/\b(copy|clone)\b/i', $titleLower)) {
-        return false;
+    // 2. Title-only copy/clone words
+    if (preg_match('/\b(copy|clone)\b/i', $titleLower, $m)) {
+        return 'title:' . $m[0];
     }
 
-    return true;
+    return null;
+}
+
+function mta_is_authentic_product_text(string $title, string $descriptionText = ''): bool {
+    return mta_product_authenticity_issue($title, $descriptionText) === null;
 }
 
 // ----------------------------------------------------------------------

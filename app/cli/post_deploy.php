@@ -449,8 +449,11 @@ try {
             "SELECT id, title, is_active, is_published, supplier_description_html, description_html, short_description, key_features, specs, faq_json FROM products"
         );
         $deactivatedCopies = [];
+        $restoredFalsePositives = [];
         $cleanedBoilerplate = 0;
+        $auditWatchIds = [108, 121, 124, 446, 530, 607, 726];
         foreach ($allProds as $pr) {
+            $pid = (int)$pr['id'];
             $blob = implode(' ', [
                 (string)($pr['supplier_description_html'] ?? ''),
                 (string)($pr['description_html'] ?? ''),
@@ -459,14 +462,21 @@ try {
                 (string)($pr['specs'] ?? ''),
                 (string)($pr['faq_json'] ?? ''),
             ]);
-            if (!mta_is_authentic_product_text((string)$pr['title'], $blob)) {
+            $issue = mta_product_authenticity_issue((string)$pr['title'], $blob);
+            if ($issue !== null) {
                 if ((int)$pr['is_active'] === 1 || (int)$pr['is_published'] === 1) {
                     $db->execute(
                         "UPDATE products SET is_active = 0, is_published = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                        [$pr['id']]
+                        [$pid]
                     );
-                    $deactivatedCopies[] = "#{$pr['id']} {$pr['title']}";
                 }
+                $deactivatedCopies[] = "#{$pid} ({$issue}) {$pr['title']}";
+            } elseif (in_array($pid, $auditWatchIds, true) && ((int)$pr['is_active'] === 0 || (int)$pr['is_published'] === 0)) {
+                $db->execute(
+                    "UPDATE products SET is_active = 1, is_published = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+                    [$pid]
+                );
+                $restoredFalsePositives[] = "#{$pid} {$pr['title']}";
             }
             if (stripos($blob, 'Quality is Best and Generic') !== false) {
                 $db->execute(
@@ -488,9 +498,12 @@ try {
                   AND products.is_published = 1
             )"
         );
-        $pd_log("Task 4: Authenticity Audit: Deactivated " . count($deactivatedCopies) . " non-authentic items; cleaned {$cleanedBoilerplate} generic boilerplate rows.");
+        $pd_log("Task 4: Authenticity Audit: Flagged " . count($deactivatedCopies) . " non-authentic items; restored " . count($restoredFalsePositives) . " false positives; cleaned {$cleanedBoilerplate} generic boilerplate rows.");
         if (!empty($deactivatedCopies)) {
-            $pd_log("Deactivated non-authentic IDs: " . implode(' | ', $deactivatedCopies));
+            $pd_log("Flagged non-authentic items: " . implode(' | ', $deactivatedCopies));
+        }
+        if (!empty($restoredFalsePositives)) {
+            $pd_log("Restored items: " . implode(' | ', $restoredFalsePositives));
         }
     } catch (\Throwable $ae) {
         $pd_log("Task 4 Authenticity Audit error: " . $ae->getMessage());

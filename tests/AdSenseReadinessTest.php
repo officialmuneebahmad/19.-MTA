@@ -62,6 +62,10 @@ t_assert(
     mta_is_authentic_product_text('Ugreen Nexode 65W GaN Fast Charger') === true,
     'Authenticity filter allows genuine branded charger'
 );
+t_assert(
+    mta_is_authentic_product_text('XTRIKE ME GP-903 RACING WHEEL WITH DUAL VIBRATION MOTORS REALISTIC GAMING EXPERIENCE', '<p>Ergonomic grip with imitation leather finish and responsive pedals.</p>') === true,
+    'Authenticity filter preserves XTRIKE ME racing wheel describing imitation leather finish'
+);
 
 // 2. Consent Mode v2 Layout Fix & Privacy / Cookie Policy
 $mainPhp = file_get_contents(MTA_APP . '/Views/layouts/main.php');
