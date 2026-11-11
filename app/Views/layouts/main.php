@@ -31,9 +31,13 @@
   </script>
   <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-NSR7DDL8"></script>
 
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011306066788565"
+       crossorigin="anonymous"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="no-referrer">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
 
   <!-- Blocking Theme Script (Prevents flash of light/dark mode) -->
   <script>

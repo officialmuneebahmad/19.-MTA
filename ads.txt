@@ -1,3 +1,2 @@
-# Multan Tech Accessories — AdSense Verification
-# The publisher ID is managed via Admin Settings once approved by Google AdSense
-# Example: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# Multan Tech Accessories — Google AdSense Authorized Digital Sellers
+google.com, pub-6011306066788565, DIRECT, f08c47fec0942fa0

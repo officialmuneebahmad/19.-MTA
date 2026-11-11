@@ -99,7 +99,7 @@
               <span class="mta-cookie-badge-optional">Optional</span>
             </div>
             <p class="mta-cookie-category-desc">
-              Used by Google and advertising partners to measure campaign effectiveness and deliver relevant ads when enabled. (Note: Advertising cookies are strictly dormant and will only activate once Google AdSense integration is live).
+              Used by Google AdSense and advertising partners to measure campaign effectiveness and deliver relevant ads. Remains denied by default unless you enable Advertising Cookies under Google Consent Mode v2.
             </p>
           </div>
           <div class="mta-cookie-switch-wrap">

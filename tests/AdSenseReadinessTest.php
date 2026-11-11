@@ -86,6 +86,21 @@ t_assert(
     str_contains($mainPhp, "localStorage.getItem('mta_cookie_consent_v2')"),
     'Layout main.php reads mta_cookie_consent_v2 matching cookie-consent.php'
 );
+$adsenseSnippetPos = strpos($mainPhp, 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011306066788565');
+$consentInitPos = strpos($mainPhp, "gtag('consent', 'default'");
+t_assert(
+    $adsenseSnippetPos !== false && $consentInitPos !== false && $consentInitPos < $adsenseSnippetPos && str_contains($mainPhp, 'crossorigin="anonymous"'),
+    'Layout main.php embeds Google AdSense script ca-pub-6011306066788565 after Consent Mode v2 initialization'
+);
+t_assert(
+    str_contains($mainPhp, '<meta name="referrer" content="strict-origin-when-cross-origin">'),
+    'Layout main.php uses strict-origin-when-cross-origin referrer meta for AdSense & security compatibility'
+);
+$adsTxt = @file_get_contents(MTA_ROOT . '/ads.txt') ?: '';
+t_assert(
+    str_contains($adsTxt, 'google.com, pub-6011306066788565, DIRECT, f08c47fec0942fa0'),
+    'Root ads.txt declares authorized Google AdSense seller pub-6011306066788565'
+);
 
 $pageCtrl = new PageController();
 $privacyHtml = $pageCtrl->privacy()->getBody();
@@ -96,7 +111,7 @@ $shippingHtml = $pageCtrl->shipping()->getBody();
 $termsHtml = $pageCtrl->terms()->getBody();
 $editorialHtml = $pageCtrl->editorial()->getBody();
 
-t_assert(str_contains($privacyHtml, 'Google AdSense') && str_contains($privacyHtml, 'not currently active'), 'Privacy Policy discloses Google AdSense status honestly');
+t_assert(str_contains($privacyHtml, 'Google AdSense') && str_contains($privacyHtml, 'ca-pub-6011306066788565') && !str_contains($privacyHtml, 'not currently active'), 'Privacy Policy accurately discloses Google AdSense ca-pub-6011306066788565 integration');
 t_assert(str_contains($privacyHtml, 'https://policies.google.com/technologies/partner-sites'), 'Privacy Policy includes Google Partner Sites URL');
 t_assert(str_contains($privacyHtml, 'https://adssettings.google.com/'), 'Privacy Policy includes Google Ads Settings URL');
 t_assert(str_contains($privacyHtml, "Children") && str_contains($privacyHtml, 'Updates to This Policy'), 'Privacy Policy includes Childrens Privacy and Updates sections');

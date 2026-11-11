@@ -60,9 +60,9 @@
       <li><code>_ga</code> / <code>_ga_*</code> (Google Analytics 4): Distinguishes aggregated site visits and session counts (typically up to 2 years when consented).</li>
     </ul>
 
-    <h3 style="font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem;">3.3 Advertising Cookies (Optional &amp; Currently Inactive)</h3>
+    <h3 style="font-size: 1.15rem; font-weight: 700; margin: 1.5rem 0 0.5rem;">3.3 Advertising Cookies (Optional &mdash; Consent Required)</h3>
     <p style="margin-bottom: 0.75rem;">
-      <strong>Current Status:</strong> Google AdSense is <strong>not currently active</strong> on <strong>multantech.pk</strong>, so advertising cookies are dormant at this time. If and when Google AdSense is enabled on our site and you grant Advertising consent (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>), Google and its advertising partners may set cookies or read identifiers such as:
+      <strong>multantech.pk</strong> includes the Google AdSense integration (<code>ca-pub-6011306066788565</code>) governed by Google Consent Mode v2. Advertising signals (<code>ad_storage</code>, <code>ad_user_data</code>, <code>ad_personalization</code>) stay <code>denied</code> by default until you choose to enable Advertising Cookies. When consented, Google and its advertising partners may set cookies or read identifiers such as:
     </p>
     <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.45rem;">
       <li><code>__gads</code> / <code>__gpi</code> / <code>IDE</code> (Google AdSense / DoubleClick): Used when AdSense is active to serve ads, cap frequency, measure performance, and&mdash;where consented&mdash;personalize advertising.</li>

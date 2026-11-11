@@ -81,10 +81,10 @@
 
     <h2 style="font-size: 1.4rem; margin: 2rem 0 0.75rem;">7. Google AdSense, Third-Party Advertising, Identifiers &amp; Web Beacons</h2>
     <p style="margin-bottom: 1rem;">
-      <strong>Current Status:</strong> Google AdSense advertisements are <strong>not currently active</strong> on <strong>multantech.pk</strong>. We maintain this section in preparation for displaying AdSense ads if and when our site is approved and AdSense is enabled.
+      <strong>Current Status:</strong> <strong>multantech.pk</strong> integrates the Google AdSense script (Publisher ID: <code>ca-pub-6011306066788565</code>) for site verification and Google AdSense advertising. Ad personalization and advertising storage signals remain <strong>denied by default</strong> under Google Consent Mode v2 unless you grant Advertising consent in our Privacy Preference Center.
     </p>
     <p style="margin-bottom: 1rem;">
-      When Google AdSense or third-party advertising partners are active on this website:
+      Through our Google AdSense integration and third-party advertising partners:
     </p>
     <ul style="margin-left: 1.5rem; margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
       <li>Third-party vendors, including Google, use cookies, web beacons, pixels, and device or browser identifiers to serve ads based on a user&rsquo;s prior visits to <strong>https://multantech.pk/</strong> or other websites on the Internet.</li>
