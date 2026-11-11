@@ -451,7 +451,7 @@ try {
         $deactivatedCopies = [];
         $restoredFalsePositives = [];
         $cleanedBoilerplate = 0;
-        $auditWatchIds = [108, 121, 124, 446, 530, 607, 726];
+        $auditWatchIds = [108, 121, 124, 188, 250, 251, 443, 446, 530, 607, 726];
         foreach ($allProds as $pr) {
             $pid = (int)$pr['id'];
             $blob = implode(' ', [
