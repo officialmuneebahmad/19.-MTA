@@ -200,7 +200,7 @@ if (!empty($ldMatch[1])) {
 // Check Published Guides count and no duplicate titles
 $pubGuides = $db->fetchAll("SELECT id, slug, title FROM posts WHERE status = 'published'");
 $titles = array_map(fn($r) => strtolower(trim((string)$r['title'])), $pubGuides);
-t_assert(count($pubGuides) === 5 && count(array_unique($titles)) === 5, 'Database contains exactly 5 unique published buying guides (found ' . count($pubGuides) . ')');
+t_assert(count($pubGuides) === 6 && count(array_unique($titles)) === 6, 'Database contains exactly 6 unique published buying guides (found ' . count($pubGuides) . ')');
 
 echo "\n============================================\n";
 echo "TOTAL: " . ($pass + $fail) . " | PASSED: {$pass} | FAILED: {$fail}\n";
