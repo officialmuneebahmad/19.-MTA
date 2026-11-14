@@ -20,8 +20,42 @@ class SecurityTest
         $this->testPakistaniPhoneNormalizer();
         $this->testSsrfUrlValidation();
         $this->testCsrfTokenValidation();
+        $this->testSupplierWholesalePriceStripping();
 
         echo "All Security tests passed successfully!\n";
+    }
+
+    private function testSupplierWholesalePriceStripping(): void
+    {
+        echo "Testing Security: Supplier Wholesale Price & Metadata Stripping... ";
+
+        // 1. Exact Razer Goliathus sample from live site
+        $razerRaw = "Price 300&nbsp;Wt=0.5Description:Lab-engineered by Razer's scientists and field-tested by the biggest names in esports.";
+        $cleaned1 = mta_clean_description_html($razerRaw);
+        assert(!str_contains($cleaned1, 'Price 300'), 'Must remove "Price 300"');
+        assert(!str_contains($cleaned1, 'Wt=0.5'), 'Must remove "Wt=0.5"');
+        assert(!str_contains($cleaned1, 'Description:'), 'Must remove "Description:"');
+        assert(str_starts_with($cleaned1, "Lab-engineered by Razer's scientists"), 'Must start with clean product copy');
+
+        // 2. HTML paragraph wrapping
+        $wrapped = "<p>Price 300&nbsp;Wt=0.5Description:Lab-engineered by Razer's scientists</p>";
+        $cleaned2 = mta_clean_description_html($wrapped);
+        assert(!str_contains($cleaned2, 'Price 300'));
+        assert(str_contains($cleaned2, "<p>Lab-engineered by Razer's scientists</p>"));
+
+        // 3. Security::sanitizeSupplierHtml
+        $cleaned3 = Security::sanitizeSupplierHtml($razerRaw);
+        assert(!str_contains($cleaned3, 'Price 300'));
+        assert(!str_contains($cleaned3, 'Wt=0.5'));
+        assert(!str_contains($cleaned3, 'Description:'));
+
+        // 4. Preserve legitimate editorial text mentioning price and weight
+        $legit = "<p>Premium gaming accessory offering top quality at an affordable price in Pakistan. Weight: lightweight and durable.</p>";
+        $cleaned4 = mta_clean_description_html($legit);
+        assert(str_contains($cleaned4, 'affordable price in Pakistan'));
+        assert(str_contains($cleaned4, 'Weight: lightweight'));
+
+        echo "PASSED\n";
     }
 
     private function testHtmlAllowlistSanitizer(): void

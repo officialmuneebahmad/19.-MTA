@@ -223,7 +223,7 @@ function mta_share_whatsapp_url(string $title, int|float $price, string $cleanUr
 }
 
 // ----------------------------------------------------------------------
-// Description HTML Cleaner (Removes stray &nbsp;, empty tags, duplicate titles)
+// Description HTML Cleaner (Removes stray &nbsp;, empty tags, duplicate titles, supplier wholesale artifacts)
 // ----------------------------------------------------------------------
 function mta_clean_description_html(?string $html, string $productTitle = ''): string {
     if (empty($html)) {
@@ -239,14 +239,20 @@ function mta_clean_description_html(?string $html, string $productTitle = ''): s
     // 2. Replace excessive &nbsp; runs with standard space
     $html = preg_replace('/(&nbsp;|\x{00A0})+/u', ' ', $html);
 
-    // 3. Remove empty paragraphs or spans
+    // 3. Strip supplier wholesale metadata blocks (e.g. "Price 300 Wt=0.5Description:", "Wt=0.5", "Description:")
+    $html = preg_replace('/(?<=^|>|\A)\s*Price\s*[:\s]*[\d,]+(?:\.\d+)?[\s,;.-]*(?:(?:Wt|Weight)\s*=\s*[\d\.]+(?:\s*kg)?[\s,;.-]*)?(?:Description\s*:\s*)?/i', '', $html);
+    $html = preg_replace('/(?<=^|>|\A|\s)(?:Wt|Weight)\s*=\s*[\d\.]+(?:\s*kg)?[\s,;.-]*(?:Description\s*:\s*)?/i', '', $html);
+    $html = preg_replace('/(?<=^|>|\A)\s*Description\s*:\s*/i', '', $html);
+    $html = preg_replace('/(?<=^|>|\A)\s*Price\s*[:\s]*[\d,]+(?:\.\d+)?[\s,;.-]*/i', '', $html);
+
+    // 4. Remove empty paragraphs or spans
     $html = preg_replace('/<p[^>]*>(\s|&nbsp;|<br\s*\/?>)*<\/p>/i', '', $html);
     $html = preg_replace('/<span[^>]*>(\s|&nbsp;)*<\/span>/i', '', $html);
 
-    // 4. Ensure tables have specs-table class
+    // 5. Ensure tables have specs-table class
     $html = str_replace('<table', '<table class="specs-table"', $html);
 
-    // 5. Clean up excessive line breaks
+    // 6. Clean up excessive line breaks
     $html = preg_replace('/(<br\s*\/?>\s*){3,}/i', '<br><br>', $html);
 
     return trim($html);

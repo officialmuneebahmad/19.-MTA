@@ -529,6 +529,42 @@ try {
     $pd_log("Security Audit: " . count($allUsers) . " user accounts found in database. Only {$adminEmail} is active.");
 } catch (\Throwable $e) {}
 
+// Catalog Description Integrity Migration: Strip wholesale prices, weights, and supplier artifacts from all products
+try {
+    $cleanDescCount = 0;
+    $cleanedProductsList = [];
+    $allProducts = $db->fetchAll("SELECT id, title, description_html, supplier_description_html, short_description FROM products");
+    
+    foreach ($allProducts as $prod) {
+        $id = (int)$prod['id'];
+        $title = (string)($prod['title'] ?? '');
+        $origDesc = (string)($prod['description_html'] ?? '');
+        $origSupp = (string)($prod['supplier_description_html'] ?? '');
+        $origShort = (string)($prod['short_description'] ?? '');
+        
+        $newDesc = mta_clean_description_html($origDesc, $title);
+        $newSupp = mta_clean_description_html($origSupp, $title);
+        $newShort = mta_clean_description_html($origShort, $title);
+        
+        if ($newDesc !== $origDesc || $newSupp !== $origSupp || $newShort !== $origShort) {
+            $db->execute(
+                "UPDATE products SET description_html = ?, supplier_description_html = ?, short_description = ? WHERE id = ?",
+                [$newDesc, $newSupp, $newShort, $id]
+            );
+            $cleanDescCount++;
+            $cleanedProductsList[] = "#{$id} {$title}";
+        }
+    }
+    
+    $pd_log("Catalog Integrity: Scanned " . count($allProducts) . " products. Cleaned supplier price/weight artifacts from {$cleanDescCount} products.");
+    if (!empty($cleanedProductsList)) {
+        $sampleList = array_slice($cleanedProductsList, 0, 15);
+        $pd_log("Cleaned products sample: " . implode('; ', $sampleList) . (count($cleanedProductsList) > 15 ? ' ... and ' . (count($cleanedProductsList) - 15) . ' more' : ''));
+    }
+} catch (\Throwable $e) {
+    $pd_log("Catalog Integrity error cleaning product descriptions: " . $e->getMessage());
+}
+
 // 2. Reprice all products
 $updatedCount = PricingService::repriceAllProducts();
 $pd_log("PricingService::repriceAllProducts() updated {$updatedCount} products.");

@@ -189,7 +189,7 @@ class SeoService
             'name' => $product['title'],
             'url' => mta_url('/products/' . $product['slug']),
             'sku' => $product['sku'] ?? ('MTA-' . $product['id']),
-            'description' => strip_tags($product['short_description'] ?? $product['supplier_description_html'] ?? ''),
+            'description' => strip_tags(mta_clean_description_html($product['short_description'] ?? $product['description_html'] ?? $product['supplier_description_html'] ?? '', $product['title'] ?? '')),
             'brand' => [
                 '@type' => 'Brand',
                 'name' => $product['brand_name'] ?? 'Multan Tech Accessories',

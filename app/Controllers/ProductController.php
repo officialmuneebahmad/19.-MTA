@@ -94,7 +94,8 @@ class ProductController
         $ogImageAlt = (string)$product['title'];
 
         // Build Clean Plaintext Product OG Description with Price & Store Mention
-        $cleanDesc = trim(strip_tags((string)($product['short_description'] ?: ($product['description_html'] ?: ($product['supplier_description_html'] ?: '')))));
+        $rawProductDesc = (string)($product['short_description'] ?: ($product['description_html'] ?: ($product['supplier_description_html'] ?: '')));
+        $cleanDesc = trim(strip_tags(mta_clean_description_html($rawProductDesc, (string)($product['title'] ?? ''))));
         $cleanDesc = preg_replace('/\s+/', ' ', $cleanDesc);
         $sellPriceNum = (float)($product['sell_price'] ?? 0);
         $priceText = $sellPriceNum > 0 ? 'Rs. ' . number_format($sellPriceNum) : '';

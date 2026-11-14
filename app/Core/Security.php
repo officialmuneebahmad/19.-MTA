@@ -44,6 +44,15 @@ class Security
             return "<{$tag}>";
         }, $stripped);
 
+        // Normalize non-breaking spaces
+        $clean = preg_replace('/(&nbsp;|\x{00A0})+/u', ' ', $clean);
+
+        // Strip supplier wholesale price, weight, and internal description headers
+        $clean = preg_replace('/(?<=^|>|\A)\s*Price\s*[:\s]*[\d,]+(?:\.\d+)?[\s,;.-]*(?:(?:Wt|Weight)\s*=\s*[\d\.]+(?:\s*kg)?[\s,;.-]*)?(?:Description\s*:\s*)?/i', '', $clean);
+        $clean = preg_replace('/(?<=^|>|\A|\s)(?:Wt|Weight)\s*=\s*[\d\.]+(?:\s*kg)?[\s,;.-]*(?:Description\s*:\s*)?/i', '', $clean);
+        $clean = preg_replace('/(?<=^|>|\A)\s*Description\s*:\s*/i', '', $clean);
+        $clean = preg_replace('/(?<=^|>|\A)\s*Price\s*[:\s]*[\d,]+(?:\.\d+)?[\s,;.-]*/i', '', $clean);
+
         // Clean up excessive whitespace
         $clean = preg_replace('/(\s*<br\s*\/?>\s*){3,}/i', '<br><br>', $clean);
         return trim($clean);
