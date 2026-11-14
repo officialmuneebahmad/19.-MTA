@@ -1,6 +1,113 @@
 <!DOCTYPE html>
 <html lang="en-PK" data-theme="light">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <title><?= e($meta_title ?? 'Multan Tech Accessories — Authentic Tech & Accessories in Pakistan') ?></title>
+  <meta name="description" content="<?= e($meta_description ?? 'Buy authentic computer and mobile accessories in Pakistan. Cash on Delivery across Multan, Lahore, Karachi & all cities. Free delivery over Rs. 5,000.') ?>">
+  <meta name="theme-color" content="#FAF9F5">
+  <meta name="mta-build" content="<?= defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0' ?>">
+  <link rel="canonical" href="<?= e($canonical_url ?? $canonical ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
+
+  <?php if (!empty($noindex)): ?>
+    <meta name="robots" content="noindex, follow">
+  <?php else: ?>
+    <meta name="robots" content="index, follow">
+  <?php endif; ?>
+
+  <link rel="alternate" hreflang="en-PK" href="<?= e($canonical_url ?? mta_url()) ?>">
+
+  <?php
+    $defaultOgImage = mta_url('/assets/images/og-banner-wide.jpg');
+    $currentOgImage = !empty($og_image) ? (string)$og_image : $defaultOgImage;
+    if (str_starts_with($currentOgImage, '/')) {
+        $currentOgImage = mta_url($currentOgImage);
+    }
+    // WhatsApp & social scrapers cannot render SVG or WebP in link previews; fallback to official wide raster banner
+    $rawPath = strtolower(parse_url($currentOgImage, PHP_URL_PATH) ?? '');
+    if (str_ends_with($rawPath, '.svg') || str_ends_with($rawPath, '.webp')) {
+        $currentOgImage = $defaultOgImage;
+    }
+    $ogExt = strtolower(pathinfo(parse_url($currentOgImage, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
+    $ogMime = match($ogExt) {
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        default => 'image/jpeg',
+    };
+    $ogSiteName = !empty($og_site_name) ? (string)$og_site_name : 'Multan Tech Accessories';
+    $ogTitle = !empty($og_title) ? (string)$og_title : ($meta_title ?? 'Multan Tech Accessories');
+    $ogDescription = !empty($og_description) ? (string)$og_description : ($meta_description ?? 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at Multan Tech Accessories.');
+    $ogUrl = !empty($og_url) ? (string)$og_url : (!empty($canonical_url) ? (string)$canonical_url : mta_url($_SERVER['REQUEST_URI'] ?? ''));
+    $ogType = !empty($og_type) ? (string)$og_type : 'website';
+    $ogImageAlt = !empty($og_image_alt) ? (string)$og_image_alt : $ogTitle;
+
+    // Explicit dimensions guarantee instant card rendering on WhatsApp & Facebook without waiting for scraper dimension probes
+    if (!empty($og_image_width) && !empty($og_image_height)) {
+        $resolvedWidth = (int)$og_image_width;
+        $resolvedHeight = (int)$og_image_height;
+    } elseif ($currentOgImage === $defaultOgImage) {
+        $resolvedWidth = 1200;
+        $resolvedHeight = 630;
+    } elseif ($ogType === 'product' || $ogType === 'og:product') {
+        $resolvedWidth = 800;
+        $resolvedHeight = 800;
+    } else {
+        $resolvedWidth = 1200;
+        $resolvedHeight = 630;
+    }
+  ?>
+  <!-- Open Graph / WhatsApp / Facebook / LinkedIn (Positioned early in head for scraper speed) -->
+  <meta property="og:site_name" content="<?= e($ogSiteName) ?>">
+  <meta property="og:type" content="<?= e($ogType) ?>">
+  <meta property="og:title" content="<?= e($ogTitle) ?>">
+  <meta property="og:description" content="<?= e($ogDescription) ?>">
+  <meta property="og:url" content="<?= e($ogUrl) ?>">
+  <meta property="og:image" content="<?= e($currentOgImage) ?>">
+  <meta property="og:image:secure_url" content="<?= e($currentOgImage) ?>">
+  <meta property="og:image:type" content="<?= e($ogMime) ?>">
+  <meta property="og:image:width" content="<?= $resolvedWidth ?>">
+  <meta property="og:image:height" content="<?= $resolvedHeight ?>">
+  <meta property="og:image:alt" content="<?= e($ogImageAlt) ?>">
+
+  <!-- Product Rich Snippets for WhatsApp & Social Media -->
+  <?php if ($ogType === 'product' || $ogType === 'og:product'): ?>
+    <?php if (isset($product_price) && (float)$product_price > 0): ?>
+      <meta property="product:price:amount" content="<?= number_format((float)$product_price, 2, '.', '') ?>">
+      <meta property="product:price:currency" content="PKR">
+    <?php endif; ?>
+    <?php if (!empty($product_availability)): ?>
+      <meta property="product:availability" content="<?= e($product_availability) ?>">
+    <?php endif; ?>
+    <?php if (!empty($product_brand)): ?>
+      <meta property="product:brand" content="<?= e($product_brand) ?>">
+    <?php endif; ?>
+  <?php endif; ?>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : ($resolvedWidth === 800 && $resolvedHeight === 800 ? 'summary' : 'summary_large_image') ?>">
+  <meta name="twitter:title" content="<?= e($ogTitle) ?>">
+  <meta name="twitter:description" content="<?= e($ogDescription) ?>">
+  <meta name="twitter:image" content="<?= e($currentOgImage) ?>">
+
+  <!-- Favicon (Circular) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png?v=3">
+  <link rel="shortcut icon" href="/favicon.ico?v=3">
+
+  <!-- Blocking Theme Script (Prevents flash of light/dark mode) -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('mta_theme');
+      var d = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = t || (d ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+
   <!-- Google Consent Mode v2 & Google Tag Manager - GTM-NSR7DDL8 -->
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -35,109 +142,10 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011306066788565"
        crossorigin="anonymous"></script>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
-
-  <!-- Blocking Theme Script (Prevents flash of light/dark mode) -->
-  <script>
-    (function(){
-      var t = localStorage.getItem('mta_theme');
-      var d = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var theme = t || (d ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
-      document.documentElement.style.colorScheme = theme;
-    })();
-  </script>
-
-  <title><?= e($meta_title ?? 'Multan Tech Accessories — Authentic Tech & Accessories in Pakistan') ?></title>
-  <meta name="description" content="<?= e($meta_description ?? 'Buy authentic computer and mobile accessories in Pakistan. Cash on Delivery across Multan, Lahore, Karachi & all cities. Free delivery over Rs. 5,000.') ?>">
-  <meta name="theme-color" content="#FAF9F5">
-  <meta name="mta-build" content="<?= defined('MTA_BUILD_VERSION') ? MTA_BUILD_VERSION : '2026.10.31-v2.4.0' ?>">
-  <link rel="canonical" href="<?= e($canonical_url ?? $canonical ?? mta_url($_SERVER['REQUEST_URI'] ?? '')) ?>">
-
-  <!-- Favicon (Circular) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png?v=3">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png?v=3">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png?v=3">
-  <link rel="shortcut icon" href="/favicon.ico?v=3">
-
   <!-- Google Fonts: Space Grotesk & Sora Bold (Geometric Tech Sans-Serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-
-  <?php if (!empty($noindex)): ?>
-    <meta name="robots" content="noindex, follow">
-  <?php else: ?>
-    <meta name="robots" content="index, follow">
-  <?php endif; ?>
-
-  <link rel="alternate" hreflang="en-PK" href="<?= e($canonical_url ?? mta_url()) ?>">
-
-  <?php
-    $defaultOgImage = mta_url('/assets/images/og-share.jpg');
-    $currentOgImage = !empty($og_image) ? (string)$og_image : $defaultOgImage;
-    if (str_starts_with($currentOgImage, '/')) {
-        $currentOgImage = mta_url($currentOgImage);
-    }
-    // WhatsApp scraper cannot parse SVG images; fallback to official raster share image
-    if (str_ends_with(strtolower(parse_url($currentOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
-        $currentOgImage = $defaultOgImage;
-    }
-    $ogExt = strtolower(pathinfo(parse_url($currentOgImage, PHP_URL_PATH) ?? '', PATHINFO_EXTENSION));
-    $ogMime = match($ogExt) {
-        'png' => 'image/png',
-        'webp' => 'image/webp',
-        'gif' => 'image/gif',
-        default => 'image/jpeg',
-    };
-    $ogSiteName = !empty($og_site_name) ? (string)$og_site_name : 'The Computer Shop Multan';
-    $ogTitle = !empty($og_title) ? (string)$og_title : ($meta_title ?? 'The Computer Shop Multan');
-    $ogDescription = !empty($og_description) ? (string)$og_description : ($meta_description ?? 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at The Computer Shop Multan.');
-    $ogUrl = !empty($og_url) ? (string)$og_url : (!empty($canonical_url) ? (string)$canonical_url : mta_url($_SERVER['REQUEST_URI'] ?? ''));
-    $ogType = !empty($og_type) ? (string)$og_type : 'website';
-    $ogImageAlt = !empty($og_image_alt) ? (string)$og_image_alt : $ogTitle;
-  ?>
-  <!-- Open Graph / WhatsApp / Facebook -->
-  <meta property="og:site_name" content="<?= e($ogSiteName) ?>">
-  <meta property="og:type" content="<?= e($ogType) ?>">
-  <meta property="og:title" content="<?= e($ogTitle) ?>">
-  <meta property="og:description" content="<?= e($ogDescription) ?>">
-  <meta property="og:url" content="<?= e($ogUrl) ?>">
-  <meta property="og:image" content="<?= e($currentOgImage) ?>">
-  <meta property="og:image:secure_url" content="<?= e($currentOgImage) ?>">
-  <meta property="og:image:type" content="<?= e($ogMime) ?>">
-  <?php if (!empty($og_image_width)): ?>
-    <meta property="og:image:width" content="<?= (int)$og_image_width ?>">
-  <?php elseif ($currentOgImage === $defaultOgImage): ?>
-    <meta property="og:image:width" content="1024">
-    <meta property="og:image:height" content="1024">
-  <?php endif; ?>
-  <?php if (!empty($og_image_height)): ?>
-    <meta property="og:image:height" content="<?= (int)$og_image_height ?>">
-  <?php endif; ?>
-  <meta property="og:image:alt" content="<?= e($ogImageAlt) ?>">
-
-  <!-- Product Rich Snippets for WhatsApp & Social Media -->
-  <?php if ($ogType === 'product' || $ogType === 'og:product'): ?>
-    <?php if (isset($product_price) && (float)$product_price > 0): ?>
-      <meta property="product:price:amount" content="<?= number_format((float)$product_price, 2, '.', '') ?>">
-      <meta property="product:price:currency" content="PKR">
-    <?php endif; ?>
-    <?php if (!empty($product_availability)): ?>
-      <meta property="product:availability" content="<?= e($product_availability) ?>">
-    <?php endif; ?>
-    <?php if (!empty($product_brand)): ?>
-      <meta property="product:brand" content="<?= e($product_brand) ?>">
-    <?php endif; ?>
-  <?php endif; ?>
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : 'summary_large_image' ?>">
-  <meta name="twitter:title" content="<?= e($ogTitle) ?>">
-  <meta name="twitter:description" content="<?= e($ogDescription) ?>">
-  <meta name="twitter:image" content="<?= e($currentOgImage) ?>">
 
   <?php if (!empty($product_id)): ?>
     <meta name="product-id" content="<?= (int)$product_id ?>">

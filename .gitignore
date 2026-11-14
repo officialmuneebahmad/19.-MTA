@@ -5,6 +5,8 @@ app/config.php
 app/storage/*.sqlite
 app/storage/cache/*
 !app/storage/cache/.gitkeep
+assets/cache/*
+!assets/cache/.gitkeep
 app/storage/logs/*
 !app/storage/logs/.gitkeep
 app/storage/rate_limits/*

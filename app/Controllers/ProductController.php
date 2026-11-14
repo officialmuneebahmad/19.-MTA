@@ -104,40 +104,21 @@ class ProductController
                 $cleanDesc = mb_substr($cleanDesc, 0, 117) . '...';
             }
             if ($priceText) {
-                $ogDescription = "{$cleanDesc} Price: {$priceText}. Available with Cash on Delivery at The Computer Shop Multan.";
+                $ogDescription = "{$cleanDesc} Price: {$priceText}. Available with Cash on Delivery at Multan Tech Accessories.";
             } else {
-                $ogDescription = "{$cleanDesc} Available with Cash on Delivery at The Computer Shop Multan.";
+                $ogDescription = "{$cleanDesc} Available with Cash on Delivery at Multan Tech Accessories.";
             }
         } else {
             if ($priceText) {
-                $ogDescription = "Buy authentic {$product['title']} at {$priceText} in Pakistan. 100% genuine products with Cash on Delivery at The Computer Shop Multan.";
+                $ogDescription = "Buy authentic {$product['title']} at {$priceText} in Pakistan. 100% genuine products with Cash on Delivery at Multan Tech Accessories.";
             } else {
-                $ogDescription = "Buy authentic {$product['title']} in Pakistan. 100% genuine products with Cash on Delivery at The Computer Shop Multan.";
+                $ogDescription = "Buy authentic {$product['title']} in Pakistan. 100% genuine products with Cash on Delivery at Multan Tech Accessories.";
             }
         }
 
-        // Primary Product Image: Ensure Complete Absolute HTTPS URL
-        $productOgImage = '';
-        if (!empty($product['primary_image_url'])) {
-            $img = trim((string)$product['primary_image_url']);
-            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
-                $productOgImage = $img;
-            } elseif (str_starts_with($img, '/')) {
-                $productOgImage = mta_url($img);
-            }
-        }
-        if (empty($productOgImage) && !empty($images[0]['url'])) {
-            $img = trim((string)$images[0]['url']);
-            if (str_starts_with($img, 'http://') || str_starts_with($img, 'https://')) {
-                $productOgImage = $img;
-            } elseif (str_starts_with($img, '/')) {
-                $productOgImage = mta_url($img);
-            }
-        }
-        // Fallback to dedicated raster share image if missing or SVG
-        if (empty($productOgImage) || str_ends_with(strtolower(parse_url($productOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
-            $productOgImage = mta_url('/assets/images/og-share.jpg');
-        }
+        // Dedicated High-Reliability Product Open Graph Image Endpoint on multantech.pk
+        // Guaranteed 800x800 JPEG (<100KB), avoiding cross-domain blocking, timeouts and WebP incompatibility on WhatsApp
+        $productOgImage = mta_url('/api/og-image/product/' . (int)$product['id'] . '.jpg');
 
         $availability = match((int)($product['status'] ?? 1)) {
             1 => 'in stock',
@@ -165,7 +146,10 @@ class ProductController
             'og_url' => $canonicalUrl,
             'og_image' => $productOgImage,
             'og_image_alt' => $ogImageAlt,
-            'og_site_name' => 'The Computer Shop Multan',
+            'og_image_width' => 800,
+            'og_image_height' => 800,
+            'twitter_card' => 'summary',
+            'og_site_name' => 'Multan Tech Accessories',
             'og_type' => 'product',
             'product_price' => (float)($product['sell_price'] ?? 0),
             'product_availability' => $availability,
@@ -173,6 +157,142 @@ class ProductController
         ]);
 
         return $resp->html($html);
+    }
+
+    /**
+     * GET /api/og-image/product/{id}
+     * High-reliability Open Graph JPEG generator & cache for WhatsApp / Facebook / Twitter
+     */
+    public function ogImage(string $param): Response
+    {
+        $productId = (int)preg_replace('/[^0-9]/', '', $param);
+        $resp = new Response();
+
+        $cacheDir = MTA_ROOT . '/assets/cache/og';
+        if (!is_dir($cacheDir)) {
+            @mkdir($cacheDir, 0755, true);
+        }
+        $cacheFile = $cacheDir . '/product-' . $productId . '.jpg';
+
+        // 1. Serve cached file if valid and not empty
+        if (file_exists($cacheFile) && filesize($cacheFile) > 1000) {
+            $this->streamImage($cacheFile);
+        }
+
+        // 2. Fetch product info
+        $db = Database::getInstance();
+        $product = $productId > 0 ? $db->fetch(
+            "SELECT p.id, p.title, p.primary_image_url, p.image_800, p.image_400, c.slug AS category_slug 
+             FROM products p 
+             LEFT JOIN categories c ON c.id = p.category_id 
+             WHERE p.id = ? LIMIT 1",
+            [$productId]
+        ) : null;
+
+        $fallbackBanner = MTA_ROOT . '/assets/images/og-banner-wide.jpg';
+
+        if (!$product) {
+            $this->streamImage($fallbackBanner);
+        }
+
+        // 3. Resolve source image URL
+        $rawUrl = trim((string)($product['primary_image_url'] ?? ''));
+        if (str_contains($rawUrl, 'cdn.computerzone.pk')) {
+            $rawUrl = '';
+        }
+        if ($rawUrl === '' && !empty($product['image_800'])) {
+            $rawUrl = trim((string)$product['image_800']);
+        }
+        if ($rawUrl === '' && !empty($product['image_400'])) {
+            $rawUrl = trim((string)$product['image_400']);
+        }
+
+        // If local relative path
+        if ($rawUrl !== '' && str_starts_with($rawUrl, '/')) {
+            $localPath = MTA_ROOT . $rawUrl;
+            if (file_exists($localPath)) {
+                $rawUrl = 'file://' . $localPath;
+            } else {
+                $rawUrl = mta_url($rawUrl);
+            }
+        }
+
+        // 4. Download and process image
+        $srcImage = null;
+        if ($rawUrl !== '' && (str_starts_with($rawUrl, 'http://') || str_starts_with($rawUrl, 'https://'))) {
+            $ctx = stream_context_create([
+                'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
+                'http' => [
+                    'user_agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'timeout' => 4,
+                ]
+            ]);
+            $imageData = @file_get_contents($rawUrl, false, $ctx);
+            if ($imageData && strlen($imageData) > 500) {
+                $srcImage = @imagecreatefromstring($imageData);
+            }
+        } elseif ($rawUrl !== '' && str_starts_with($rawUrl, 'file://')) {
+            $filePath = substr($rawUrl, 7);
+            if (file_exists($filePath)) {
+                $imageData = @file_get_contents($filePath);
+                if ($imageData) {
+                    $srcImage = @imagecreatefromstring($imageData);
+                }
+            }
+        }
+
+        // 5. Create 800x800 square truecolor canvas
+        if ($srcImage) {
+            $srcW = imagesx($srcImage);
+            $srcH = imagesy($srcImage);
+            if ($srcW > 10 && $srcH > 10) {
+                $targetW = 800;
+                $targetH = 800;
+                $dst = imagecreatetruecolor($targetW, $targetH);
+                $white = imagecolorallocate($dst, 255, 255, 255);
+                imagefill($dst, 0, 0, $white);
+
+                // Preserve aspect ratio with 40px safe margin (720x720 max inner)
+                $scale = min(720 / $srcW, 720 / $srcH);
+                $newW = (int)round($srcW * $scale);
+                $newH = (int)round($srcH * $scale);
+                $posX = (int)round(($targetW - $newW) / 2);
+                $posY = (int)round(($targetH - $newH) / 2);
+
+                imagecopyresampled($dst, $srcImage, $posX, $posY, 0, 0, $newW, $newH, $srcW, $srcH);
+                imagejpeg($dst, $cacheFile, 88);
+                imagedestroy($dst);
+                imagedestroy($srcImage);
+
+                if (file_exists($cacheFile) && filesize($cacheFile) > 1000) {
+                    $this->streamImage($cacheFile);
+                }
+            }
+            imagedestroy($srcImage);
+        }
+
+        // 6. Fallback if source image fetch or render failed
+        $this->streamImage($fallbackBanner);
+        return $resp;
+    }
+
+    /**
+     * Direct streaming helper with optimal caching and CORS headers
+     */
+    private function streamImage(string $filePath): void
+    {
+        if (!file_exists($filePath)) {
+            $filePath = MTA_ROOT . '/assets/images/og-banner-wide.jpg';
+        }
+        if (file_exists($filePath)) {
+            header('Content-Type: image/jpeg');
+            header('Content-Length: ' . filesize($filePath));
+            header('Cache-Control: public, max-age=604800, immutable');
+            header('Access-Control-Allow-Origin: *');
+            header('X-Content-Type-Options: nosniff');
+            readfile($filePath);
+            exit;
+        }
     }
 
     /**

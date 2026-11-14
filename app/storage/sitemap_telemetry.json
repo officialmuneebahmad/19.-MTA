@@ -1,6 +1,6 @@
 {
     "status": "success",
-    "generated_at": "2026-11-13T10:29:17+05:00",
+    "generated_at": "2026-11-14T10:04:37+05:00",
     "base_url": "https://multantech.pk",
     "total_urls": 1044,
     "indexable_urls": 1044,
@@ -11,7 +11,7 @@
             "size_bytes": 2077,
             "size_kb": 2.03,
             "url_count": 17,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap-categories.xml": {
@@ -20,7 +20,7 @@
             "size_bytes": 1285,
             "size_kb": 1.25,
             "url_count": 9,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap-brands.xml": {
@@ -29,7 +29,7 @@
             "size_bytes": 2577,
             "size_kb": 2.52,
             "url_count": 21,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap-guides.xml": {
@@ -38,16 +38,16 @@
             "size_bytes": 1021,
             "size_kb": 1,
             "url_count": 6,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap-products-1.xml": {
             "path": "/sitemap-products-1.xml",
             "sub_path": "/sitemaps/sitemap-products-1.xml",
-            "size_bytes": 207313,
-            "size_kb": 202.45,
+            "size_bytes": 207338,
+            "size_kb": 202.48,
             "url_count": 500,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap-products-2.xml": {
@@ -56,7 +56,7 @@
             "size_bytes": 203623,
             "size_kb": 198.85,
             "url_count": 491,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         },
         "sitemap.xml": {
@@ -65,7 +65,7 @@
             "size_bytes": 912,
             "size_kb": 0.89,
             "url_count": 6,
-            "last_modified": "2026-11-13 10:29:17",
+            "last_modified": "2026-11-14 10:04:37",
             "status": "active"
         }
     },

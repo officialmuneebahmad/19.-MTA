@@ -144,7 +144,11 @@ class CategoryController
             'meta_description' => $metaDescription,
             'canonical_url' => $canonicalUrl,
             'noindex' => !$isIndexable,
-            'og_image' => $categoryOgImage ?? mta_url('/assets/images/og-share.jpg'),
+            'og_image' => $categoryOgImage ?? mta_url('/assets/images/og-banner-wide.jpg'),
+            'og_image_width' => 1200,
+            'og_image_height' => 630,
+            'og_site_name' => 'Multan Tech Accessories',
+            'twitter_card' => 'summary_large_image',
         ]);
 
         return $resp->html($html);

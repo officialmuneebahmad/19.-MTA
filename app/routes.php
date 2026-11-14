@@ -63,6 +63,7 @@ $router->get('/brands', [BrandController::class, 'index']);
 $router->get('/brands/{slug}', [BrandController::class, 'show']);
 
 $router->get('/products/{slug}', [ProductController::class, 'show']);
+$router->get('/api/og-image/product/{id}', [ProductController::class, 'ogImage']);
 
 $router->get('/search', [SearchController::class, 'index']);
 $router->get('/api/search-suggestions', [SearchController::class, 'suggestions']);

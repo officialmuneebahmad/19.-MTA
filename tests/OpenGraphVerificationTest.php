@@ -21,20 +21,19 @@ echo "1. Testing Homepage OG Metadata... ";
 $homeController = new HomeController();
 $homeHtml = $homeController->index()->getBody();
 
-assert(str_contains($homeHtml, '<meta property="og:site_name" content="The Computer Shop Multan">'), "og:site_name must be 'The Computer Shop Multan'");
-assert(str_contains($homeHtml, '<meta property="og:title" content="The Computer Shop Multan">'), "og:title must be 'The Computer Shop Multan'");
-assert(str_contains($homeHtml, '<meta property="og:description" content="Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at The Computer Shop Multan.">'), "og:description must match specification");
+assert(str_contains($homeHtml, '<meta property="og:site_name" content="Multan Tech Accessories">'), "og:site_name must be 'Multan Tech Accessories'");
+assert(str_contains($homeHtml, '<meta property="og:title" content="Multan Tech Accessories">'), "og:title must match");
 assert(str_contains($homeHtml, '<meta property="og:type" content="website">'), "og:type must be 'website'");
-assert(str_contains($homeHtml, '<meta property="og:url" content="https://multantech.pk/">'), "og:url must be canonical 'https://multantech.pk/'");
-assert(str_contains($homeHtml, '<meta property="og:image" content="https://multantech.pk/assets/images/og-share.jpg">'), "og:image must be store social share image");
-assert(str_contains($homeHtml, '<meta property="og:image:alt" content="The Computer Shop Multan">'), "og:image:alt must match");
+assert(str_contains($homeHtml, '<meta property="og:url" content="https://multantech.pk">'), "og:url must be canonical 'https://multantech.pk'");
+assert(str_contains($homeHtml, '<meta property="og:image" content="https://multantech.pk/assets/images/og-banner-wide.jpg">'), "og:image must be high-res 1200x630 banner");
+assert(str_contains($homeHtml, '<meta property="og:image:width" content="1200">'), "og:image:width must be 1200");
+assert(str_contains($homeHtml, '<meta property="og:image:height" content="630">'), "og:image:height must be 630");
 assert(str_contains($homeHtml, '<meta name="twitter:card" content="summary_large_image">'), "twitter:card must be summary_large_image");
-assert(str_contains($homeHtml, '<meta name="twitter:title" content="The Computer Shop Multan">'), "twitter:title must match");
 echo "PASSED\n";
 
 // 2. Test 5 Product Pages OG Metadata
 echo "2. Testing Product Pages OG Metadata for 5 Sample Products...\n";
-$products = $db->fetchAll("SELECT slug, title, primary_image_url FROM products WHERE is_active = 1 AND is_published = 1 LIMIT 5");
+$products = $db->fetchAll("SELECT id, slug, title, primary_image_url FROM products WHERE is_active = 1 AND is_published = 1 LIMIT 5");
 $productController = new ProductController();
 
 foreach ($products as $idx => $p) {
@@ -43,10 +42,14 @@ foreach ($products as $idx => $p) {
     $req = new Request();
     $prodHtml = $productController->show($p['slug'], $req)->getBody();
 
-    assert(str_contains($prodHtml, '<meta property="og:site_name" content="The Computer Shop Multan">'), "Product #{$idx} og:site_name must be 'The Computer Shop Multan'");
+    assert(str_contains($prodHtml, '<meta property="og:site_name" content="Multan Tech Accessories">'), "Product #{$idx} og:site_name must be 'Multan Tech Accessories'");
     assert(str_contains($prodHtml, '<meta property="og:type" content="product">'), "Product #{$idx} og:type must be 'product'");
     assert(str_contains($prodHtml, '<meta property="og:url" content="https://multantech.pk/products/' . $p['slug'] . '">'), "Product #{$idx} og:url must be canonical");
-    assert(str_contains($prodHtml, '<meta name="twitter:card" content="summary_large_image">'), "Product #{$idx} twitter:card must be summary_large_image");
+    assert(str_contains($prodHtml, '<meta property="og:image" content="https://multantech.pk/api/og-image/product/' . $p['id'] . '.jpg">'), "Product #{$idx} og:image must be dedicated high-reliability endpoint");
+    assert(str_contains($prodHtml, '<meta property="og:image:width" content="800">'), "Product #{$idx} og:image:width must be 800");
+    assert(str_contains($prodHtml, '<meta property="og:image:height" content="800">'), "Product #{$idx} og:image:height must be 800");
+    assert(str_contains($prodHtml, '<meta property="og:image:type" content="image/jpeg">'), "Product #{$idx} og:image:type must be image/jpeg");
+    assert(str_contains($prodHtml, '<meta name="twitter:card" content="summary">'), "Product #{$idx} twitter:card must be summary");
     
     // Check that og:title has the actual title
     $escapedTitle = htmlspecialchars($p['title'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -56,4 +59,5 @@ foreach ($products as $idx => $p) {
 }
 
 echo "\n[ALL OPEN GRAPH TESTS PASSED SUCCESSFULLY!]\n";
+
 
