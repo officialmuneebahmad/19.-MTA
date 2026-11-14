@@ -163,9 +163,9 @@ class ProductController
      * GET /api/og-image/product/{id}
      * High-reliability Open Graph JPEG generator & cache for WhatsApp / Facebook / Twitter
      */
-    public function ogImage(string $param): Response
+    public function ogImage(string|int $id = '', ?Request $request = null): Response
     {
-        $productId = (int)preg_replace('/[^0-9]/', '', $param);
+        $productId = (int)preg_replace('/[^0-9]/', '', (string)$id);
         $resp = new Response();
 
         $cacheDir = MTA_ROOT . '/assets/cache/og';
