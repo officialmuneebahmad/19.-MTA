@@ -215,6 +215,19 @@ try {
     $pd_log("Integrations settings error: " . $e->getMessage());
 }
 
+// Bing Webmaster Verification Tag Migration
+try {
+    $existingBing = $db->fetch("SELECT `key`, `value` FROM settings WHERE `key` = 'bing_verification_tag' LIMIT 1");
+    if (!$existingBing) {
+        $db->execute("INSERT INTO settings (`key`, value, description, group_name) VALUES ('bing_verification_tag', 'F4B2E303F2C1F9F0C7B9395E143E6270', 'Bing Webmaster Verification Tag', 'analytics')");
+    } else {
+        $db->execute("UPDATE settings SET value = 'F4B2E303F2C1F9F0C7B9395E143E6270' WHERE `key` = 'bing_verification_tag'");
+    }
+    $pd_log("Integrations: bing_verification_tag confirmed set to F4B2E303F2C1F9F0C7B9395E143E6270.");
+} catch (\Throwable $e) {
+    $pd_log("Bing verification settings error: " . $e->getMessage());
+}
+
 // Domain Migration: Ensure robots.txt points to https://multantech.pk/sitemap.xml
 try {
     $robotsPath = dirname($appDir) . '/robots.txt';

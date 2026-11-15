@@ -138,6 +138,8 @@ $router->get('/sitemap-brands.xml', [SeoController::class, 'brands']);
 $router->get('/sitemap-guides.xml', [SeoController::class, 'guides']);
 $router->get('/sitemap-pages.xml', [SeoController::class, 'pages']);
 $router->get('/sitemaps/{name}', [SeoController::class, 'submap']);
+$router->get('/BingSiteAuth.xml', [SeoController::class, 'bingSiteAuth']);
+$router->get('/bingsiteauth.xml', [SeoController::class, 'bingSiteAuth']);
 
 // ======================================================================
 // 6. SECURE ADMIN DASHBOARD (Obfuscated Configurable Path)

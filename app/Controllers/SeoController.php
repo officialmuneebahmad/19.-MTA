@@ -88,4 +88,21 @@ class SeoController
         $cleanName = basename($name);
         return $this->xmlResponse($cleanName);
     }
+
+    public function bingSiteAuth(): Response
+    {
+        $filePath = MTA_ROOT . '/BingSiteAuth.xml';
+        if (file_exists($filePath)) {
+            $content = (string)file_get_contents($filePath);
+        } else {
+            $content = "<?xml version=\"1.0\"?>\n<users>\n\t<user>F4B2E303F2C1F9F0C7B9395E143E6270</user>\n</users>\n";
+        }
+
+        $resp = new Response();
+        $resp->status(200);
+        $resp->header('Content-Type', 'application/xml; charset=UTF-8');
+        $resp->header('Cache-Control', 'public, max-age=86400');
+        $resp->body($content);
+        return $resp;
+    }
 }
