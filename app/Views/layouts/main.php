@@ -315,6 +315,7 @@
             <li><a href="/editorial-and-pricing-policy" class="dropdown-item">Editorial & Pricing</a></li>
             <li><a href="/faq" class="dropdown-item">FAQ</a></li>
             <li><a href="/privacy-policy" class="dropdown-item">Privacy Policy</a></li>
+            <li><a href="/disclaimer" class="dropdown-item">Disclaimer</a></li>
             <li><a href="/terms-and-conditions" class="dropdown-item">Terms & Conditions</a></li>
             <li><a href="/sitemap" class="dropdown-item">HTML Sitemap</a></li>
           </ul>
@@ -599,6 +600,8 @@
             <li><a href="/track-order" class="footer-link">Track Your Order</a></li>
             <li><a href="/faq" class="footer-link">Frequently Asked Questions</a></li>
             <li><a href="/privacy-policy" class="footer-link">Privacy Policy</a></li>
+            <li><a href="/disclaimer" class="footer-link">Disclaimer</a></li>
+            <li><a href="/contact" class="footer-link">Contact Us</a></li>
             <li><a href="/cookie-policy" class="footer-link">Cookie Policy</a></li>
             <li><a href="/terms-and-conditions" class="footer-link">Terms & Conditions</a></li>
             <li><button type="button" class="footer-link" style="background:none;border:none;padding:0;font:inherit;cursor:pointer;text-align:left;color:inherit;" data-open-cookie-settings onclick="if(window.mtaCookieConsent){window.mtaCookieConsent.openPreferences();}return false;">Cookie Settings</button></li>

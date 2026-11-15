@@ -213,6 +213,22 @@ class PageController
         ]));
     }
 
+    public function disclaimer(): Response
+    {
+        $breadcrumbs = [
+            ['title' => 'Home', 'url' => '/'],
+            ['title' => 'Disclaimer', 'url' => null],
+        ];
+
+        $resp = new Response();
+        return $resp->html(View::render('storefront/pages/disclaimer', [
+            'breadcrumbs' => $breadcrumbs,
+            'meta_title' => SeoService::title('Legal Disclaimer & Advertising Policy'),
+            'meta_description' => 'Read the official legal disclaimer, Google AdSense policy, content liability terms, and product warranty disclosures for Multan Tech Accessories (multantech.pk).',
+            'canonical' => mta_url('/disclaimer'),
+        ]));
+    }
+
     public function sitemap(): Response
     {
         $db = Database::getInstance();

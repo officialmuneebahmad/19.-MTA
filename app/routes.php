@@ -121,6 +121,7 @@ $router->get('/returns-and-refunds', [PageController::class, 'returns']);
 $router->get('/editorial-and-pricing-policy', [PageController::class, 'editorial']);
 $router->get('/faq', [PageController::class, 'faq']);
 $router->get('/privacy-policy', [PageController::class, 'privacy']);
+$router->get('/disclaimer', [PageController::class, 'disclaimer']);
 $router->get('/terms-and-conditions', [PageController::class, 'terms']);
 $router->get('/cookie-policy', [PageController::class, 'cookie']);
 $router->get('/sitemap', [PageController::class, 'sitemap']);

@@ -83,6 +83,7 @@
         <li><a href="/track-order">Consignment & Order Tracking</a></li>
         <li><a href="/faq">Frequently Asked Questions</a></li>
         <li><a href="/privacy-policy">Customer Privacy Policy</a></li>
+        <li><a href="/disclaimer">Legal Disclaimer & Advertising Policy</a></li>
         <li><a href="/terms-and-conditions">Terms & Conditions of Sale</a></li>
         <li><a href="/cookie-policy">Cookie Policy</a></li>
       </ul>

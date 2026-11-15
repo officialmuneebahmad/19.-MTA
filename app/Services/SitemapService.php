@@ -183,6 +183,7 @@ class SitemapService
             '/returns-and-refunds' => '2026-10-30 12:00:00',
             '/editorial-and-pricing-policy' => '2026-10-30 12:00:00',
             '/privacy-policy' => '2026-10-30 12:00:00',
+            '/disclaimer' => '2026-11-15 00:00:00',
             '/terms-and-conditions' => '2026-10-30 12:00:00',
             '/cookie-policy' => '2026-10-30 12:00:00',
             '/faq' => '2026-10-30 12:00:00',
