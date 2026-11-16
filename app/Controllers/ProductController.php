@@ -285,9 +285,10 @@ class ProductController
     private function streamImage(string $filePath): void
     {
         if (!file_exists($filePath)) {
-            $filePath = MTA_ROOT . '/assets/images/og-banner-wide.jpg';
+            $filePath = MTA_ROOT . '/images/mta-og-image.jpg';
         }
         if (file_exists($filePath)) {
+            header_remove('Set-Cookie');
             header('Content-Type: image/jpeg');
             header('Content-Length: ' . filesize($filePath));
             header('Cache-Control: public, max-age=604800, immutable');

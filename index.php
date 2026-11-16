@@ -105,7 +105,10 @@ use App\Core\Cache;
 use App\Core\Middleware\SecurityHeadersMiddleware;
 use App\Core\Middleware\CsrfMiddleware;
 
-Session::start();
+$isImageEndpoint = str_starts_with($pathOnly, '/images/') || str_starts_with($pathOnly, '/api/og-image/');
+if (!$isImageEndpoint) {
+    Session::start();
+}
 
 // Apply Global Security Headers
 $secMiddleware = new SecurityHeadersMiddleware();
