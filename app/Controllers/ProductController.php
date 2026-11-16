@@ -149,7 +149,7 @@ class ProductController
             'og_image_alt' => $ogImageAlt,
             'og_image_width' => 800,
             'og_image_height' => 800,
-            'twitter_card' => 'summary',
+            'twitter_card' => 'summary_large_image',
             'og_site_name' => 'Multan Tech Accessories',
             'og_type' => 'product',
             'product_price' => (float)($product['sell_price'] ?? 0),
@@ -190,7 +190,9 @@ class ProductController
             [$productId]
         ) : null;
 
-        $fallbackBanner = MTA_ROOT . '/assets/images/og-banner-wide.jpg';
+        $fallbackBanner = file_exists(MTA_ROOT . '/images/mta-og-image.jpg') 
+            ? (MTA_ROOT . '/images/mta-og-image.jpg') 
+            : (MTA_ROOT . '/assets/images/og-banner-wide.jpg');
 
         if (!$product) {
             $this->streamImage($fallbackBanner);

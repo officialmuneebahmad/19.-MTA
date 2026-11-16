@@ -141,6 +141,28 @@ $router->get('/sitemap-pages.xml', [SeoController::class, 'pages']);
 $router->get('/sitemaps/{name}', [SeoController::class, 'submap']);
 $router->get('/BingSiteAuth.xml', [SeoController::class, 'bingSiteAuth']);
 $router->get('/bingsiteauth.xml', [SeoController::class, 'bingSiteAuth']);
+$router->get('/images/{file}', function(string $file): Response {
+    $clean = basename($file);
+    $path = MTA_ROOT . '/images/' . $clean;
+    if (file_exists($path)) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        $mime = match($ext) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+            default => 'application/octet-stream',
+        };
+        $resp = new Response();
+        $resp->status(200);
+        $resp->header('Content-Type', $mime);
+        $resp->header('Cache-Control', 'public, max-age=604800');
+        $resp->body((string)file_get_contents($path));
+        return $resp;
+    }
+    $resp = new Response();
+    $resp->status(404);
+    return $resp;
+});
 
 // ======================================================================
 // 6. SECURE ADMIN DASHBOARD (Obfuscated Configurable Path)

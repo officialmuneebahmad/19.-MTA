@@ -20,7 +20,7 @@
   <link rel="alternate" hreflang="en-PK" href="<?= e($canonical_url ?? mta_url()) ?>">
 
   <?php
-    $defaultOgImage = mta_url('/assets/images/og-banner-wide.jpg');
+    $defaultOgImage = mta_url('/images/mta-og-image.jpg');
     $currentOgImage = !empty($og_image) ? (string)$og_image : $defaultOgImage;
     if (str_starts_with($currentOgImage, '/')) {
         $currentOgImage = mta_url($currentOgImage);
@@ -37,6 +37,7 @@
         default => 'image/jpeg',
     };
     $ogSiteName = !empty($og_site_name) ? (string)$og_site_name : 'Multan Tech Accessories';
+    $ogLocale = 'en_PK';
     $ogTitle = !empty($og_title) ? (string)$og_title : ($meta_title ?? 'Multan Tech Accessories');
     $ogDescription = !empty($og_description) ? (string)$og_description : ($meta_description ?? 'Shop computer accessories, mobile accessories, laptop accessories, networking products and gadgets at Multan Tech Accessories.');
     $ogUrl = !empty($og_url) ? (string)$og_url : (!empty($canonical_url) ? (string)$canonical_url : mta_url($_SERVER['REQUEST_URI'] ?? ''));
@@ -60,6 +61,7 @@
   ?>
   <!-- Open Graph / WhatsApp / Facebook / LinkedIn (Positioned early in head for scraper speed) -->
   <meta property="og:site_name" content="<?= e($ogSiteName) ?>">
+  <meta property="og:locale" content="<?= e($ogLocale) ?>">
   <meta property="og:type" content="<?= e($ogType) ?>">
   <meta property="og:title" content="<?= e($ogTitle) ?>">
   <meta property="og:description" content="<?= e($ogDescription) ?>">
@@ -86,7 +88,7 @@
   <?php endif; ?>
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : ($resolvedWidth === 800 && $resolvedHeight === 800 ? 'summary' : 'summary_large_image') ?>">
+  <meta name="twitter:card" content="<?= !empty($twitter_card) ? e($twitter_card) : 'summary_large_image' ?>">
   <meta name="twitter:title" content="<?= e($ogTitle) ?>">
   <meta name="twitter:description" content="<?= e($ogDescription) ?>">
   <meta name="twitter:image" content="<?= e($currentOgImage) ?>">

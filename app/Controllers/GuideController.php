@@ -67,6 +67,10 @@ class GuideController
             'canonical' => mta_url('/guides'),
             'canonical_url' => mta_url('/guides'),
             'noindex' => $isFiltered,
+            'og_image' => mta_url('/images/mta-og-image.jpg'),
+            'og_image_width' => 1200,
+            'og_image_height' => 630,
+            'twitter_card' => 'summary_large_image',
         ]));
     }
 
@@ -141,7 +145,7 @@ class GuideController
             $articleImage = $imgMatch[1];
         }
         if ($articleImage === '') {
-            $articleImage = !empty($guide['author_avatar']) ? (string)$guide['author_avatar'] : '/assets/images/muneeb-ahmad.jpg';
+            $articleImage = '/images/mta-og-image.jpg';
         }
         $absoluteImageUrl = str_starts_with($articleImage, 'http') ? $articleImage : mta_url($articleImage);
 
@@ -192,6 +196,9 @@ class GuideController
             'canonical_url' => mta_url('/guides/' . $guide['slug']),
             'og_type' => 'article',
             'og_image' => $absoluteImageUrl,
+            'og_image_width' => 1200,
+            'og_image_height' => 630,
+            'twitter_card' => 'summary_large_image',
             'structured_data' => $structuredData,
         ]));
     }

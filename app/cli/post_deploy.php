@@ -578,6 +578,22 @@ try {
     $pd_log("Catalog Integrity error cleaning product descriptions: " . $e->getMessage());
 }
 
+// Open Graph Default Image Verification
+try {
+    $imgDir = MTA_ROOT . '/images';
+    if (!is_dir($imgDir)) {
+        @mkdir($imgDir, 0755, true);
+    }
+    $primaryOg = $imgDir . '/mta-og-image.jpg';
+    $assetOg = MTA_ROOT . '/assets/images/mta-og-image.jpg';
+    if (!file_exists($primaryOg) && file_exists($assetOg)) {
+        @copy($assetOg, $primaryOg);
+    }
+    $pd_log("Open Graph: /images/mta-og-image.jpg confirmed present (" . (file_exists($primaryOg) ? filesize($primaryOg) . " bytes" : "MISSING") . ").");
+} catch (\Throwable $e) {
+    $pd_log("Open Graph image verification error: " . $e->getMessage());
+}
+
 // 2. Reprice all products
 $updatedCount = PricingService::repriceAllProducts();
 $pd_log("PricingService::repriceAllProducts() updated {$updatedCount} products.");

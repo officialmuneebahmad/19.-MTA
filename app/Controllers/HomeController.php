@@ -156,7 +156,7 @@ class HomeController
             'og_title' => 'Multan Tech Accessories',
             'og_description' => 'Buy original computer & mobile accessories in Pakistan at Multan Tech Accessories. Authentic brands, fast courier delivery & Cash on Delivery nationwide.',
             'og_site_name' => 'Multan Tech Accessories',
-            'og_image' => mta_url('/assets/images/og-banner-wide.jpg'),
+            'og_image' => mta_url('/images/mta-og-image.jpg'),
             'og_image_width' => 1200,
             'og_image_height' => 630,
             'og_image_alt' => 'Multan Tech Accessories',

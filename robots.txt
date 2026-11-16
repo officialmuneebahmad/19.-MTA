@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Allow: /assets/
 Allow: /storage/images/
+Allow: /images/
 Allow: /sitemap.xml
 Allow: /sitemap-*.xml
 Allow: /sitemaps/
