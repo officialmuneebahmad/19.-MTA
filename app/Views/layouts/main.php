@@ -72,6 +72,8 @@
   <meta property="og:image:width" content="<?= $resolvedWidth ?>">
   <meta property="og:image:height" content="<?= $resolvedHeight ?>">
   <meta property="og:image:alt" content="<?= e($ogImageAlt) ?>">
+  <link rel="image_src" href="<?= e($currentOgImage) ?>">
+  <meta itemprop="image" content="<?= e($currentOgImage) ?>">
 
   <!-- Product Rich Snippets for WhatsApp & Social Media -->
   <?php if ($ogType === 'product' || $ogType === 'og:product'): ?>

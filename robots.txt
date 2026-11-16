@@ -3,6 +3,7 @@ Allow: /
 Allow: /assets/
 Allow: /storage/images/
 Allow: /images/
+Allow: /api/og-image/
 Allow: /sitemap.xml
 Allow: /sitemap-*.xml
 Allow: /sitemaps/

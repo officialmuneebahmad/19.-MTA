@@ -119,7 +119,7 @@ class ProductController
 
         // Dedicated High-Reliability Product Open Graph Image Endpoint on multantech.pk
         // Guaranteed 800x800 JPEG (<100KB), avoiding cross-domain blocking, timeouts and WebP incompatibility on WhatsApp
-        $productOgImage = mta_url('/api/og-image/product/' . (int)$product['id'] . '.jpg');
+        $productOgImage = mta_url('/images/og/product/' . (int)$product['id'] . '.jpg');
 
         $availability = match((int)($product['status'] ?? 1)) {
             1 => 'in stock',

@@ -72,7 +72,7 @@ foreach ($products as $idx => $p) {
     checkCommonOgTags($prodHtml, "Product #{$idx} [{$p['slug']}]");
     assert(str_contains($prodHtml, '<meta property="og:type" content="product">'), "Product #{$idx} og:type must be 'product'");
     assert(str_contains($prodHtml, '<meta property="og:url" content="https://multantech.pk/products/' . $p['slug'] . '">'), "Product #{$idx} og:url must be canonical");
-    assert(str_contains($prodHtml, '<meta property="og:image" content="https://multantech.pk/api/og-image/product/' . $p['id'] . '.jpg">'), "Product #{$idx} og:image must be dedicated high-reliability endpoint");
+    assert(str_contains($prodHtml, '<meta property="og:image" content="https://multantech.pk/images/og/product/' . $p['id'] . '.jpg">'), "Product #{$idx} og:image must be dedicated high-reliability endpoint");
     assert(str_contains($prodHtml, '<meta property="og:image:width" content="800">'), "Product #{$idx} og:image:width must be 800");
     assert(str_contains($prodHtml, '<meta property="og:image:height" content="800">'), "Product #{$idx} og:image:height must be 800");
     assert(str_contains($prodHtml, '<meta property="og:image:type" content="image/jpeg">'), "Product #{$idx} og:image:type must be image/jpeg");

@@ -12,6 +12,17 @@
 # Set Default Character Set
 AddDefaultCharset UTF-8
 
+# ------------------------------------------------------------
+# PageSpeed Optimization Controls
+# Preserve quotes on HTML attributes so social crawlers (WhatsApp, Facebook, Twitter) can parse meta tags
+# ------------------------------------------------------------
+<IfModule pagespeed_module>
+    ModPagespeedDisableFilters remove_quotes
+</IfModule>
+<IfModule mod_pagespeed.c>
+    ModPagespeedDisableFilters remove_quotes
+</IfModule>
+
 # Protect Hidden Files (.git, .env, etc.)
 <FilesMatch "^\.">
     Require all denied
