@@ -64,7 +64,7 @@ if ($isCacheable) {
         header('Content-Type: text/html; charset=UTF-8');
         header('X-MTA-Cache: HIT');
         header('X-MTA-Build: 2026.10.31-v2.4.0');
-        header('Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=300');
+        header('Cache-Control: public, no-transform, max-age=0, s-maxage=60, stale-while-revalidate=300');
         readfile($cacheFile);
         exit;
     }

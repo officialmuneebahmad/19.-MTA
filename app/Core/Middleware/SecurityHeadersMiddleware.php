@@ -37,7 +37,7 @@ class SecurityHeadersMiddleware
                     && !str_starts_with($request->getPath(), '/order')
                     && !str_starts_with($request->getPath(), '/track-order')
                     && !str_starts_with($request->getPath(), '/api')) {
-                    header('Cache-Control: public, max-age=0, s-maxage=60, stale-while-revalidate=300');
+                    header('Cache-Control: public, no-transform, max-age=0, s-maxage=60, stale-while-revalidate=300');
                 }
             }
 

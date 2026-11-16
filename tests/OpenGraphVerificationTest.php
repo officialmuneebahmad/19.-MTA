@@ -52,7 +52,7 @@ $homeHtml = $homeController->index()->getBody();
 checkCommonOgTags($homeHtml, "Homepage");
 assert(str_contains($homeHtml, '<meta property="og:type" content="website">'), "Homepage og:type must be 'website'");
 assert(str_contains($homeHtml, '<meta property="og:url" content="https://multantech.pk">'), "Homepage og:url must be 'https://multantech.pk'");
-assert(str_contains($homeHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image.jpg">'), "Homepage og:image must be /images/mta-og-image.jpg");
+assert(str_contains($homeHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image-v2.jpg">'), "Homepage og:image must be /images/mta-og-image-v2.jpg");
 assert(str_contains($homeHtml, '<meta property="og:image:width" content="1200">'), "Homepage og:image:width must be 1200");
 assert(str_contains($homeHtml, '<meta property="og:image:height" content="630">'), "Homepage og:image:height must be 630");
 assert(str_contains($homeHtml, '<meta property="og:image:alt" content="Multan Tech Accessories">'), "Homepage og:image:alt must match");
@@ -128,17 +128,17 @@ echo "6. Testing Static Legal Page (Disclaimer & Privacy) OG Metadata... ";
 $pageController = new PageController();
 $discHtml = $pageController->disclaimer()->getBody();
 checkCommonOgTags($discHtml, "Disclaimer Page");
-assert(str_contains($discHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image.jpg">'), "Disclaimer must use default MTA image");
+assert(str_contains($discHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image-v2.jpg">'), "Disclaimer must use default MTA image");
 
 $privHtml = $pageController->privacy()->getBody();
 checkCommonOgTags($privHtml, "Privacy Page");
-assert(str_contains($privHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image.jpg">'), "Privacy must use default MTA image");
+assert(str_contains($privHtml, '<meta property="og:image" content="https://multantech.pk/images/mta-og-image-v2.jpg">'), "Privacy must use default MTA image");
 echo "PASSED\n";
 
 // 7. Test Physical File Existence & Dimensions
-echo "7. Testing /images/mta-og-image.jpg File Integrity... ";
-$physicalPath = MTA_ROOT . '/images/mta-og-image.jpg';
-assert(file_exists($physicalPath), "Physical file /images/mta-og-image.jpg must exist");
+echo "7. Testing /images/mta-og-image-v2.jpg File Integrity... ";
+$physicalPath = MTA_ROOT . '/images/mta-og-image-v2.jpg';
+assert(file_exists($physicalPath), "Physical file /images/mta-og-image-v2.jpg must exist");
 $imgSize = getimagesize($physicalPath);
 assert($imgSize[0] === 1200, "Image width must be 1200px, found {$imgSize[0]}");
 assert($imgSize[1] === 630, "Image height must be 630px, found {$imgSize[1]}");

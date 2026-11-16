@@ -106,7 +106,7 @@ class BrandController
             'meta_description' => $metaDescription,
             'canonical_url' => $canonicalUrl,
             'noindex' => !$isIndexable,
-            'og_image' => $brandOgImage ?? mta_url('/images/mta-og-image.jpg'),
+            'og_image' => $brandOgImage ?? mta_url('/images/mta-og-image-v2.jpg'),
             'og_image_width' => 1200,
             'og_image_height' => 630,
             'og_site_name' => 'Multan Tech Accessories',

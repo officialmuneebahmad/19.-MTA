@@ -589,7 +589,12 @@ try {
     if (!file_exists($primaryOg) && file_exists($assetOg)) {
         @copy($assetOg, $primaryOg);
     }
-    $pd_log("Open Graph: /images/mta-og-image.jpg confirmed present (" . (file_exists($primaryOg) ? filesize($primaryOg) . " bytes" : "MISSING") . ").");
+    $v2Og = $imgDir . '/mta-og-image-v2.jpg';
+    $v2Asset = MTA_ROOT . '/assets/images/mta-og-image-v2.jpg';
+    if (!file_exists($v2Og) && file_exists($v2Asset)) {
+        @copy($v2Asset, $v2Og);
+    }
+    $pd_log("Open Graph: /images/mta-og-image-v2.jpg confirmed present (" . (file_exists($v2Og) ? filesize($v2Og) . " bytes" : "MISSING") . ").");
 } catch (\Throwable $e) {
     $pd_log("Open Graph image verification error: " . $e->getMessage());
 }

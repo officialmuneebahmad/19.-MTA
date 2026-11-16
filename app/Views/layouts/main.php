@@ -20,7 +20,7 @@
   <link rel="alternate" hreflang="en-PK" href="<?= e($canonical_url ?? mta_url()) ?>">
 
   <?php
-    $defaultOgImage = mta_url('/images/mta-og-image.jpg');
+    $defaultOgImage = mta_url('/images/mta-og-image-v2.jpg');
     $currentOgImage = !empty($og_image) ? (string)$og_image : $defaultOgImage;
     if (str_starts_with($currentOgImage, '/')) {
         $currentOgImage = mta_url($currentOgImage);

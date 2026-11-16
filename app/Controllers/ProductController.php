@@ -190,9 +190,9 @@ class ProductController
             [$productId]
         ) : null;
 
-        $fallbackBanner = file_exists(MTA_ROOT . '/images/mta-og-image.jpg') 
-            ? (MTA_ROOT . '/images/mta-og-image.jpg') 
-            : (MTA_ROOT . '/assets/images/og-banner-wide.jpg');
+        $fallbackBanner = file_exists(MTA_ROOT . '/images/mta-og-image-v2.jpg') 
+            ? (MTA_ROOT . '/images/mta-og-image-v2.jpg') 
+            : (MTA_ROOT . '/images/mta-og-image.jpg');
 
         if (!$product) {
             $this->streamImage($fallbackBanner);
@@ -285,7 +285,7 @@ class ProductController
     private function streamImage(string $filePath): void
     {
         if (!file_exists($filePath)) {
-            $filePath = MTA_ROOT . '/images/mta-og-image.jpg';
+            $filePath = file_exists(MTA_ROOT . '/images/mta-og-image-v2.jpg') ? (MTA_ROOT . '/images/mta-og-image-v2.jpg') : (MTA_ROOT . '/images/mta-og-image.jpg');
         }
         if (file_exists($filePath)) {
             header_remove('Set-Cookie');
