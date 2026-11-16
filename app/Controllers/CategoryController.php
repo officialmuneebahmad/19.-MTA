@@ -124,11 +124,8 @@ class CategoryController
         $metaDescription = !empty($category['meta_description']) ? $category['meta_description'] : SeoService::categoryMetaDescription($category['name']);
 
         $categoryOgImage = null;
-        if (!empty($pagination['data'][0])) {
-            $categoryOgImage = mta_product_image($pagination['data'][0], 800);
-            if (str_starts_with($categoryOgImage, '/')) {
-                $categoryOgImage = mta_url($categoryOgImage);
-            }
+        if (!empty($category['image_path'])) {
+            $categoryOgImage = mta_url($category['image_path']);
             if (str_ends_with(strtolower(parse_url($categoryOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
                 $categoryOgImage = null;
             }

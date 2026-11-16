@@ -92,14 +92,9 @@ class BrandController
         $brandOgImage = null;
         if (!empty($brand['logo_path'])) {
             $brandOgImage = mta_url($brand['logo_path']);
-        } elseif (!empty($pagination['data'][0])) {
-            $brandOgImage = mta_product_image($pagination['data'][0], 800);
-            if (str_starts_with($brandOgImage, '/')) {
-                $brandOgImage = mta_url($brandOgImage);
+            if (str_ends_with(strtolower(parse_url($brandOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
+                $brandOgImage = null;
             }
-        }
-        if ($brandOgImage && str_ends_with(strtolower(parse_url($brandOgImage, PHP_URL_PATH) ?? ''), '.svg')) {
-            $brandOgImage = null;
         }
 
         $html = View::render('storefront/brand', [
